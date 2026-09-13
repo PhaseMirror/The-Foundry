@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "founder-os-sovereign": {
+      "command": "/absolute/path/to/target/release/founder-os-sovereign-mcp"
+    }
+  }
+}
