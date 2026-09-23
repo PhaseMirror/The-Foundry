@@ -110,8 +110,8 @@ pub struct ZeroModeQuantities {
 }
 
 pub fn certify_state(zm: &ZeroModeQuantities, lambda_m: &Ratio<i64>) -> Result<(), ContractivityViolation> {
-    let g_zm = &zm.l_t * &zm.lambda_p_sum;
-    let rho = (&zm.xi_norm + &g_zm) * lambda_m;
+    let g_zm = zm.l_t * zm.lambda_p_sum;
+    let rho = (zm.xi_norm + g_zm) * lambda_m;
 
     // Sedona Spine Mandate: ρ < 1 - 1e-6
     let margin = Ratio::new(999_999, 1_000_000);

@@ -65,7 +65,7 @@ impl ZeroModeExtractable for RuntimeState {
         // Sum channel contributions: sum (weight * defect)
         for channel in &self.active_channels {
             let channel_contribution = channel.weight * channel.defect;
-            composite_l = composite_l + channel_contribution;
+            composite_l += channel_contribution;
         }
 
         // Strict contractivity bound: L_Phi < 1
