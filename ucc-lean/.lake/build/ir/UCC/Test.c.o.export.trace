@@ -1,0 +1,18 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs": "1a8d36ad81d5e433.o",
+ "log":
+ [{"message":
+   ".> /home/citizen/.elan/toolchains/leanprover--lean4---v4.34.0-rc2/bin/clang -c -o /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/UCC/Test.c.o.export /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/UCC/Test.c -I /home/citizen/.elan/toolchains/leanprover--lean4---v4.34.0-rc2/include -fstack-clash-protection -ffp-contract=off -fdata-sections -ffunction-sections -fPIC -fvisibility=hidden -Wno-unused-command-line-argument --sysroot /home/citizen/.elan/toolchains/leanprover--lean4---v4.34.0-rc2 -nostdinc -isystem /home/citizen/.elan/toolchains/leanprover--lean4---v4.34.0-rc2/include/clang -O3 -DNDEBUG -DLEAN_EXPORTING",
+   "level": "trace"}],
+ "inputs":
+ [["UCC.Test:c",
+   [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/UCC/Test.c",
+     "e376281c4e68e0ba"],
+    ["Lean 4.34.0, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d",
+     "365244c167ac8c1d"]]],
+  ["Lean 4.34.0, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d",
+   "365244c167ac8c1d"],
+  ["traceArgs: #[-O3, -DNDEBUG, -DLEAN_EXPORTING]", "c1efb66122fb2b9a"],
+  ["x86_64-unknown-linux-gnu", "53a0e8937c307c28"]],
+ "depHash": "3ec579aff8b2a1f6"}

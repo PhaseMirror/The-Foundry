@@ -1,0 +1,307 @@
+module
+public import Init
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 1000000000
+namespace PhiPiEpsilon.PhiPiEpsilon
+
+public inductive Intent where
+  | exploratory
+  | declarative
+  | reflective
+  | ambiguous
+  | coercive
+  | forcedResolution
+  | paradoxSpiral
+
+public inductive PauseReason where
+  | forcedResolution
+  | paradoxSpiral
+
+public inductive RefusalReason where
+  | safeBoundary
+  | riskAtOrAboveThreshold
+
+public inductive Decision where
+  | reflect
+  | pause (_ : PauseReason)
+  | refuse (_ : RefusalReason)
+
+public inductive Threshold where
+  | below
+  | atOrAbove
+
+public inductive DecisionKind where
+  | normal
+  | pause
+  | refusal
+
+public structure ExternalAction where
+  id : Nat
+
+public structure Authorization where
+  actionId : Nat
+  expiresAt : Nat
+  revoked : Bool
+
+public structure Context where
+  intent : Intent
+  pressure : Nat
+  recursionDepth : Nat
+
+public structure Assessment where
+  intent : Intent
+  riskScore : Nat
+
+public structure SystemState where
+  riskThreshold : Nat
+  authorization : Option (Authorization)
+  now : Nat
+
+@[expose] public def Decision.kind (d : Decision) : DecisionKind := (match d with | Decision.reflect => DecisionKind.normal | Decision.pause _ => DecisionKind.pause | Decision.refuse _ => DecisionKind.refusal)
+
+@[expose] public def isReflect (d : Decision) : Bool := (match d with | Decision.reflect => true | Decision.pause _ => false | Decision.refuse _ => false)
+
+@[expose] public def isPause (d : Decision) : Bool := (match d with | Decision.reflect => false | Decision.pause _ => true | Decision.refuse _ => false)
+
+@[expose] public def isRefusal (d : Decision) : Bool := (match d with | Decision.reflect => false | Decision.pause _ => false | Decision.refuse _ => true)
+
+@[expose] public def isOrdinary (i : Intent) : Bool := (match i with | Intent.exploratory => true | Intent.declarative => true | Intent.reflective => true | Intent.ambiguous => true | Intent.coercive => false | Intent.forcedResolution => false | Intent.paradoxSpiral => false)
+
+@[expose] public def isPauseIntent (i : Intent) : Bool := (match i with | Intent.exploratory => false | Intent.declarative => false | Intent.reflective => false | Intent.ambiguous => false | Intent.coercive => false | Intent.forcedResolution => true | Intent.paradoxSpiral => true)
+
+@[expose] public def baseRisk (i : Intent) : Nat := (match i with | Intent.exploratory => 0 | Intent.declarative => 0 | Intent.reflective => 1 | Intent.ambiguous => 3 | Intent.coercive => 10 | Intent.forcedResolution => 10 | Intent.paradoxSpiral => 10)
+
+@[expose] public def assess (ctx : Context) : Assessment := ({ intent := (ctx).intent, riskScore := ((baseRisk ((ctx).intent) + (ctx).pressure) + (ctx).recursionDepth) } : Assessment)
+
+@[expose] public def thresholdOf (risk : Nat) (threshold : Nat) : Threshold := (match (Nat.blt (risk) (threshold)) with | Bool.true => Threshold.below | Bool.false => Threshold.atOrAbove)
+
+@[expose] public def isBelow (t : Threshold) : Bool := (match t with | Threshold.below => true | Threshold.atOrAbove => false)
+
+@[expose] public def routeWith (i : Intent) (t : Threshold) : Decision := (match i with | Intent.exploratory => (match t with | Threshold.below => Decision.reflect | Threshold.atOrAbove => Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) | Intent.declarative => (match t with | Threshold.below => Decision.reflect | Threshold.atOrAbove => Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) | Intent.reflective => (match t with | Threshold.below => Decision.reflect | Threshold.atOrAbove => Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) | Intent.ambiguous => (match t with | Threshold.below => Decision.reflect | Threshold.atOrAbove => Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) | Intent.coercive => Decision.refuse (RefusalReason.safeBoundary) | Intent.forcedResolution => Decision.pause (PauseReason.forcedResolution) | Intent.paradoxSpiral => Decision.pause (PauseReason.paradoxSpiral))
+
+@[expose] public def route (st : SystemState) (a : Assessment) : Decision := routeWith ((a).intent) (thresholdOf ((a).riskScore) ((st).riskThreshold))
+
+@[expose] public def decideFor (st : SystemState) (ctx : Context) : Decision := route (st) (assess (ctx))
+
+@[expose] public def Authorization.isValidFor (auth : Authorization) (action : ExternalAction) (now : Nat) : Bool := (((!(auth).revoked) && (Nat.beq ((auth).actionId) ((action).id))) && (Nat.blt (now) ((auth).expiresAt)))
+
+@[expose] public def authorizedFor (authorization : Option (Authorization)) (action : ExternalAction) (now : Nat) : Bool := (match authorization with | Option.none => false | Option.some auth => Authorization.isValidFor (auth) (action) (now))
+
+@[expose] public def mayPerformExternalAction (st : SystemState) (d : Decision) (action : ExternalAction) : Bool := (match d with | Decision.reflect => authorizedFor ((st).authorization) (action) ((st).now) | Decision.pause _ => false | Decision.refuse _ => false)
+
+public theorem coercive_gives_safe_boundary (st : SystemState) (pressure : Nat) (recursionDepth : Nat) : (decideFor (st) (({ intent := Intent.coercive, pressure := pressure, recursionDepth := recursionDepth } : Context)) = Decision.refuse (RefusalReason.safeBoundary)) := by
+  rfl
+
+public theorem forcedResolution_gives_pause (st : SystemState) (pressure : Nat) (recursionDepth : Nat) : ((decideFor (st) (({ intent := Intent.forcedResolution, pressure := pressure, recursionDepth := recursionDepth } : Context)) = Decision.pause (PauseReason.forcedResolution)) /\ (Decision.kind (decideFor (st) (({ intent := Intent.forcedResolution, pressure := pressure, recursionDepth := recursionDepth } : Context))) = DecisionKind.pause)) := by
+  constructor
+  ·
+    rfl
+  ·
+    rfl
+
+public theorem paradoxSpiral_gives_pause (st : SystemState) (pressure : Nat) (recursionDepth : Nat) : ((decideFor (st) (({ intent := Intent.paradoxSpiral, pressure := pressure, recursionDepth := recursionDepth } : Context)) = Decision.pause (PauseReason.paradoxSpiral)) /\ (Decision.kind (decideFor (st) (({ intent := Intent.paradoxSpiral, pressure := pressure, recursionDepth := recursionDepth } : Context))) = DecisionKind.pause)) := by
+  constructor
+  ·
+    rfl
+  ·
+    rfl
+
+public theorem routeWith_reflect_exact (i : Intent) (t : Threshold) : (isReflect (routeWith (i) (t)) = (isOrdinary (i) && isBelow (t))) := by
+  cases i with
+  | exploratory =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | declarative =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | reflective =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | ambiguous =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | coercive =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | forcedResolution =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | paradoxSpiral =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+
+public theorem route_reflects_iff_ordinary_and_below_threshold (st : SystemState) (a : Assessment) : (isReflect (route (st) (a)) = (isOrdinary ((a).intent) && isBelow (thresholdOf ((a).riskScore) ((st).riskThreshold)))) := by
+  exact routeWith_reflect_exact ((a).intent) (thresholdOf ((a).riskScore) ((st).riskThreshold))
+
+public theorem routeWith_at_or_above_threshold_never_reflects (i : Intent) : (isReflect (routeWith (i) (Threshold.atOrAbove)) = false) := by
+  cases i with
+  | exploratory =>
+    rfl
+  | declarative =>
+    rfl
+  | reflective =>
+    rfl
+  | ambiguous =>
+    rfl
+  | coercive =>
+    rfl
+  | forcedResolution =>
+    rfl
+  | paradoxSpiral =>
+    rfl
+
+public theorem exploratory_at_or_above_threshold_refused : (routeWith (Intent.exploratory) (Threshold.atOrAbove) = Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) := by
+  rfl
+
+public theorem declarative_at_or_above_threshold_refused : (routeWith (Intent.declarative) (Threshold.atOrAbove) = Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) := by
+  rfl
+
+public theorem reflective_at_or_above_threshold_refused : (routeWith (Intent.reflective) (Threshold.atOrAbove) = Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) := by
+  rfl
+
+public theorem ambiguous_at_or_above_threshold_refused : (routeWith (Intent.ambiguous) (Threshold.atOrAbove) = Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) := by
+  rfl
+
+public theorem routeWith_pause_exact (i : Intent) (t : Threshold) : (isPause (routeWith (i) (t)) = isPauseIntent (i)) := by
+  cases i with
+  | exploratory =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | declarative =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | reflective =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | ambiguous =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | coercive =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | forcedResolution =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+  | paradoxSpiral =>
+    cases t with
+    | below =>
+      rfl
+    | atOrAbove =>
+      rfl
+
+public theorem route_pauses_iff_pause_intent (st : SystemState) (a : Assessment) : (isPause (route (st) (a)) = isPauseIntent ((a).intent)) := by
+  exact routeWith_pause_exact ((a).intent) (thresholdOf ((a).riskScore) ((st).riskThreshold))
+
+public theorem mayPerform_exact (st : SystemState) (d : Decision) (action : ExternalAction) : (mayPerformExternalAction (st) (d) (action) = (isReflect (d) && authorizedFor ((st).authorization) (action) ((st).now))) := by
+  cases d with
+  | reflect =>
+    rfl
+  | pause reason =>
+    rfl
+  | refuse reason =>
+    rfl
+
+public theorem no_authorization_no_action (riskThreshold : Nat) (now : Nat) (d : Decision) (action : ExternalAction) : (mayPerformExternalAction (({ riskThreshold := riskThreshold, authorization := Option.none, now := now } : SystemState)) (d) (action) = false) := by
+  cases d with
+  | reflect =>
+    rfl
+  | pause reason =>
+    rfl
+  | refuse reason =>
+    rfl
+
+public theorem pause_never_acts (st : SystemState) (reason : PauseReason) (action : ExternalAction) : (mayPerformExternalAction (st) (Decision.pause (reason)) (action) = false) := by
+  rfl
+
+public theorem refusal_never_acts (st : SystemState) (reason : RefusalReason) (action : ExternalAction) : (mayPerformExternalAction (st) (Decision.refuse (reason)) (action) = false) := by
+  rfl
+
+public theorem revoked_authorization_invalid (actionId : Nat) (expiresAt : Nat) (action : ExternalAction) (now : Nat) : (Authorization.isValidFor (({ actionId := actionId, expiresAt := expiresAt, revoked := true } : Authorization)) (action) (now) = false) := by
+  rfl
+
+public theorem pause_is_not_refusal_or_normal (reason : PauseReason) : ((isRefusal (Decision.pause (reason)) = false) /\ (isReflect (Decision.pause (reason)) = false)) := by
+  constructor
+  ·
+    rfl
+  ·
+    rfl
+
+public theorem refusal_is_not_pause_or_normal (reason : RefusalReason) : ((isPause (Decision.refuse (reason)) = false) /\ (isReflect (Decision.refuse (reason)) = false)) := by
+  constructor
+  ·
+    rfl
+  ·
+    rfl
+
+public theorem normal_is_not_pause_or_refusal : ((isPause (Decision.reflect) = false) /\ (isRefusal (Decision.reflect) = false)) := by
+  constructor
+  ·
+    rfl
+  ·
+    rfl
+
+public theorem assess_intent (ctx : Context) : ((assess (ctx)).intent = (ctx).intent) := by
+  rfl
+
+public theorem demo_low_risk_reflects : (decideFor (({ riskThreshold := 5, authorization := Option.some (({ actionId := 7, expiresAt := 100, revoked := false } : Authorization)), now := 10 } : SystemState)) (({ intent := Intent.exploratory, pressure := 1, recursionDepth := 1 } : Context)) = Decision.reflect) := by
+  rfl
+
+public theorem demo_ambiguous_over_threshold_refused : (decideFor (({ riskThreshold := 5, authorization := Option.some (({ actionId := 7, expiresAt := 100, revoked := false } : Authorization)), now := 10 } : SystemState)) (({ intent := Intent.ambiguous, pressure := 1, recursionDepth := 1 } : Context)) = Decision.refuse (RefusalReason.riskAtOrAboveThreshold)) := by
+  rfl
+
+public theorem demo_threshold_boundary_below : (thresholdOf (4) (5) = Threshold.below) := by
+  rfl
+
+public theorem demo_threshold_boundary_equal : (thresholdOf (5) (5) = Threshold.atOrAbove) := by
+  rfl
+
+public theorem demo_threshold_boundary_above : (thresholdOf (6) (5) = Threshold.atOrAbove) := by
+  rfl
+
+public theorem demo_authorized_action_allowed : (mayPerformExternalAction (({ riskThreshold := 5, authorization := Option.some (({ actionId := 7, expiresAt := 100, revoked := false } : Authorization)), now := 10 } : SystemState)) (Decision.reflect) (({ id := 7 } : ExternalAction)) = true) := by
+  rfl
+
+public theorem demo_wrong_action_denied : (mayPerformExternalAction (({ riskThreshold := 5, authorization := Option.some (({ actionId := 7, expiresAt := 100, revoked := false } : Authorization)), now := 10 } : SystemState)) (Decision.reflect) (({ id := 8 } : ExternalAction)) = false) := by
+  rfl
+
+end PhiPiEpsilon.PhiPiEpsilon

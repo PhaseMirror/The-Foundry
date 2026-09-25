@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "the_guardian_adr",
+ "options": {},
+ "name": "TheGuardianAdr.FFI",
+ "isModule": false,
+ "importArts":
+ {"TheGuardianAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/lib/lean/TheGuardianAdr/Core.olean"]]},
+ "dynlibs": []}

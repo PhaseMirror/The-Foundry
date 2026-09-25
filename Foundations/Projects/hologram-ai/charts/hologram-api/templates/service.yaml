@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hologram-api.fullname" . }}
+  labels:
+    app: {{ include "hologram-api.name" . }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http-telemetry
+      protocol: TCP
+      name: http-telemetry
+  selector:
+    app: {{ include "hologram-api.name" . }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hologram-api.fullname" . }}-config
+data:
+  routing.yaml: |
+{{ .Values.routingConfig | indent 4 }}
+---
+{{- if .Values.persistence.models.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "hologram-api.fullname" . }}-models-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistence.models.size }}
+{{- end }}
+---
+{{- if .Values.persistence.ledger.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "hologram-api.fullname" . }}-ledger-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.ledger.size }}
+{{- end }}

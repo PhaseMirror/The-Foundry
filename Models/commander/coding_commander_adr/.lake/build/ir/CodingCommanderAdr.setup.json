@@ -1,0 +1,13 @@
+{"plugins": [],
+ "package": "coding_commander_adr",
+ "options": {},
+ "name": "CodingCommanderAdr",
+ "isModule": false,
+ "importArts":
+ {"CodingCommanderAdr.Proofs":
+  [["/home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/lib/lean/CodingCommanderAdr/Proofs.olean"]],
+  "CodingCommanderAdr.FFI":
+  [["/home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/lib/lean/CodingCommanderAdr/FFI.olean"]],
+  "CodingCommanderAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/lib/lean/CodingCommanderAdr/Core.olean"]]},
+ "dynlibs": []}

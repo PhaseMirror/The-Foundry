@@ -1,0 +1,7 @@
+{"plugins": [],
+ "package": "the_examiner_adr",
+ "options": {},
+ "name": "TheExaminerAdr.Core",
+ "isModule": false,
+ "importArts": {},
+ "dynlibs": []}

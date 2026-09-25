@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["5807566d74c8c8c5.olean"],
+  "m": false,
+  "i": "131b398064329f6d.ilean",
+  "c": "ee5ca90609c2e4bb.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/TheExaminerAdr/Proofs.lean -o /home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/lib/lean/TheExaminerAdr/Proofs.olean -i /home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/lib/lean/TheExaminerAdr/Proofs.ilean -c /home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/ir/TheExaminerAdr/Proofs.c --setup /home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/ir/TheExaminerAdr/Proofs.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["the_examiner_adr/TheExaminerAdr:extraDep",
+     [["@the_examiner_adr:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["TheExaminerAdr.Core transitive imports (legacy)", "00000000000006bb"],
+      ["TheExaminerAdr.Core:importAllArts", "a5895f8fb4b85126"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/TheExaminerAdr/Proofs.lean",
+   "3db2b57e828f5ba1"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: TheExaminerAdr.Proofs", "0e647a0a637ecf41"],
+  ["Package.id?: (some the_examiner_adr)", "1c86689d13a15195"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "5606184b7cc3df00"}

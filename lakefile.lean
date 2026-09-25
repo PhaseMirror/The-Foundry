@@ -1,0 +1,50 @@
+import Lake
+open Lake DSL
+
+
+
+package foundations
+
+@[default_target]
+lean_lib Foundations where
+  roots := #[`Foundations]
+
+-- ADR formal governance library (single source of truth).
+-- This lib exposes `ADR.*` modules to `Foundations.lean` and to the
+-- `adrTest` executable. The legacy `Foundations.ADR.*` shadow namespace
+-- and the nested `adr_scaffolding` package have been removed; see ADR/README.md.
+-- Root module: `ADR.lean` (required by Lake for a library named `ADR`).
+-- `Care` (root-level `Care.lean`, the socio-atomic care-physics module) is
+-- part of this lib's roots because `ADR.Theorems.*` depend on it.
+lean_lib ADR where
+  roots := #[`ADR, `Care]
+
+-- ADR formal governance test harness (single source of truth).
+-- `lake test` builds and runs this executable, which exercises the
+-- Layer-B-gated membrane, fail-closed acceptance/mint gates, registry
+-- invariants, consequence entailment, migrated ADR-0040/0041/0043/0057-0061
+-- invariants, and export determinism.
+--
+-- All ADR sources live under `ADR.*` (this file's directory).
+@[test_driver]
+lean_exe adrTest where root := `ADR.Test
+
+-- Regenerate `docs/adr/` (Markdown + HTML + JSON + registry index) from the
+-- machine-checked ADR set. Deterministic: `lake build adrExport && ./.lake/build/bin/adrExport`.
+@[default_target]
+lean_exe adrExport where root := `ADR.Main
+
+-- Word Love hybrid primality + certified coupling (ADR-0031 §6, ADR-0033 P5).
+-- Roots map to the `Foundations.WordLove` namespace; built as `libFoundations_WordLove.so`
+-- for the `wordlove-ffi` Rust binding (`lake build WordLove:shared`).
+lean_lib WordLove where
+  roots := #[`Foundations.WordLove]
+
+-- Physics calculator library (ADR-0121: Definition of Physical Mechanisms).
+-- Provides Scalar/Vec3/Mat3/Tensor types, Newtonian mechanics models,
+-- calculation engines, and a self-contained test harness.
+-- `lake run physicsTest` executes the test suite; `lake build Physics` compiles the lib.
+lean_lib Physics where
+  roots := #[`Physics]
+
+lean_exe physicsTest where root := `Physics.Main

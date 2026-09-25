@@ -1,0 +1,11 @@
+{"plugins": [],
+ "package": "ucc",
+ "options": {"pp.unicode.fun": true, "autoImplicit": false},
+ "name": "UCC.Test",
+ "isModule": false,
+ "importArts":
+ {"UCC.Proofs":
+  [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Proofs.olean"]],
+  "UCC.Core":
+  [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Core.olean"]]},
+ "dynlibs": []}

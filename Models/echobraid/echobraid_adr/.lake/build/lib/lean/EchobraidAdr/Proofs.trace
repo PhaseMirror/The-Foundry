@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["55ba00fe4be7b2e2.olean"],
+  "m": false,
+  "i": "46570a4dc39cdbd4.ilean",
+  "c": "3b17c8d8cd68e9d3.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/EchobraidAdr/Proofs.lean -o /home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/lib/lean/EchobraidAdr/Proofs.olean -i /home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/lib/lean/EchobraidAdr/Proofs.ilean -c /home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/ir/EchobraidAdr/Proofs.c --setup /home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/ir/EchobraidAdr/Proofs.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["echobraid_adr/EchobraidAdr:extraDep",
+     [["@echobraid_adr:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["EchobraidAdr.Core transitive imports (legacy)", "00000000000006bb"],
+      ["EchobraidAdr.Core:importAllArts", "4956153ac12af9c8"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/EchobraidAdr/Proofs.lean",
+   "45fd2cd26f536ab8"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: EchobraidAdr.Proofs", "4f34022e9bf3f20c"],
+  ["Package.id?: (some echobraid_adr)", "ac96ae03f73b7289"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "c369c2f1a115477c"}

@@ -1,0 +1,37 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import { sitePath } from '../../lib/site';
+---
+<DocsLayout title="API reference" description="OpenAPI, Scalar, and native gRPC reference surfaces for Hologram Live.">
+  <h1>API reference</h1>
+  <p>GitHub Pages hosts the generated OpenAPI document for browsing without a local service. A running service additionally exposes an interactive Scalar reference on its API listener.</p>
+
+  <div class="doc-grid">
+    <article class="doc-card"><h3>Hosted schema</h3><p><a href={sitePath('/openapi.json')}>Read the OpenAPI document ↗</a></p></article>
+    <article class="doc-card"><h3>Local Scalar</h3><p><code>just dev</code>, then open <code>http://127.0.0.1:11435/docs</code>.</p></article>
+  </div>
+
+  <h2>Start the reference</h2>
+  <pre><code>just dev
+# then open http://127.0.0.1:11435/docs</code></pre>
+  <p>The Scalar JavaScript bundle is embedded in the Rust executable and served at <code>/docs/scalar.js</code>. The reference loads <code>/openapi.json</code> from the same origin, so it does not depend on a documentation CDN.</p>
+
+  <h2>REST surface</h2>
+  <p>The OpenAPI document covers health, capabilities, modules, registry object upload/list/download, file upload/list/download, <code>.holo</code> catalog and resident execution, conversation history, and control-plane node inventory. Protected routes use the configured bearer token.</p>
+  <pre><code>GET    /api/v1/holo/resident
+POST   /api/v1/holo/&#123;kappa&#125;/load
+DELETE /api/v1/holo/&#123;kappa&#125;/load
+POST   /api/v1/holo/&#123;kappa&#125;/run
+
+&#123; "inputs": [[104, 101, 108, 108, 111]] &#125;</code></pre>
+  <p>Load returns a resident record and run returns a binary-safe result. Both surfaces require and expose the request and effective-grant κ values, trusted grant source, and authorization outcome without exposing capability documents. Run results also separate byte <code>outputs</code> from typed <code>completion</code>: <code>returned</code> or <code>exited</code> with a real code. Resident authorization is audited against the authenticated service principal before provider preparation.</p>
+
+  <h2>Native gRPC surface</h2>
+  <p>The CLI and desktop client use the versioned schema at <code>proto/hologram/live/v1/live.proto</code>. Generated tonic clients call:</p>
+  <pre><code>package hologram.live.v1;
+
+service HologramLive &#123;
+  rpc Call(RpcRequest) returns (RpcResponse);
+&#125;</code></pre>
+  <div class="note"><strong>Different contracts, one application</strong>OpenAPI documents the browser-facing JSON routes. Protobuf is the source of truth for the native client/server wire format.</div>
+</DocsLayout>

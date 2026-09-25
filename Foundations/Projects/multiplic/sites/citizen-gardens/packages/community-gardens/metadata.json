@@ -1,0 +1,7 @@
+{
+  "name": "Community Gardens",
+  "description": "A vibrant community gardening platform focused on urban agriculture, sustainability, and local food systems, featuring an AI-powered growth assistant.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

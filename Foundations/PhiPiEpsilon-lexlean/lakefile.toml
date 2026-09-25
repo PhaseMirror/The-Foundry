@@ -1,0 +1,6 @@
+name = "PhiPiEpsilon"
+version = "0.1.0"
+defaultTargets = ["PhiPiEpsilon"]
+
+[[lean_lib]]
+name = "PhiPiEpsilon"

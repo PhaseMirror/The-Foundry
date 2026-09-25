@@ -1,0 +1,32 @@
+{
+  "reason": "valid consciousness-chart unpack; the reference document for kernelHash d912f35f...",
+  "document": {
+    "version": "0.1.0",
+    "dialect": "Φπε",
+    "kernel": {
+      "gamma": "1/2",
+      "lambda": "1/4",
+      "psi": 1,
+      "omega": 1,
+      "p": 1,
+      "n": 2,
+      "thetaPrev": "1/3",
+      "t": 3,
+      "doorMode": "minus"
+    },
+    "bindings": {
+      "n": { "semantic": "attentional step" },
+      "thetaPrev": { "semantic": "last integrated phase" },
+      "p": { "semantic": "how fast prior experience is discounted" },
+      "t": { "semantic": "available integration window" },
+      "doorMode": { "semantic": "minus = habituation / decay; plus = rumination / accumulation" }
+    },
+    "meta": {
+      "chartFileId": "consciousness",
+      "attribution": {
+        "cid": "QmExample",
+        "speaker": "<@985780080343142490>"
+      }
+    }
+  }
+}

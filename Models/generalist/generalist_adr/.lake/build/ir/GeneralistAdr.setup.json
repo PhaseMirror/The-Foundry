@@ -1,0 +1,13 @@
+{"plugins": [],
+ "package": "generalist_adr",
+ "options": {},
+ "name": "GeneralistAdr",
+ "isModule": false,
+ "importArts":
+ {"GeneralistAdr.Proofs":
+  [["/home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean/GeneralistAdr/Proofs.olean"]],
+  "GeneralistAdr.FFI":
+  [["/home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean/GeneralistAdr/FFI.olean"]],
+  "GeneralistAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean/GeneralistAdr/Core.olean"]]},
+ "dynlibs": []}

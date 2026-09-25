@@ -1,0 +1,3 @@
+'ToyContractivity.lip_F10' depends on axioms: [propext, Quot.sound]
+'ToyContractivity.hiding_match' depends on axioms: [propext, Quot.sound]
+'ToyContractivity.collision_gives_multiple' depends on axioms: [propext, Quot.sound]

@@ -1,0 +1,17 @@
+# Multiplic Universal cPanel .htaccess
+# Optimized for shared hosting and SPA routing.
+
+# Some hosts require FollowSymLinks, others require SymLinksIfOwnerMatch.
+# We try SymLinksIfOwnerMatch as it is generally safer and more common on modern cPanel.
+Options +SymLinksIfOwnerMatch -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Ensure RewriteBase is not causing issues (commented out by default)
+    # RewriteBase /
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.html [L]
+</IfModule>

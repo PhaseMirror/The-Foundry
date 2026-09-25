@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "generalist_adr",
+ "options": {},
+ "name": "GeneralistAdr.FFI",
+ "isModule": false,
+ "importArts":
+ {"GeneralistAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean/GeneralistAdr/Core.olean"]]},
+ "dynlibs": []}

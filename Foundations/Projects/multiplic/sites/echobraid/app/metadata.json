@@ -1,0 +1,7 @@
+{
+  "name": "EchoBraid App",
+  "description": "A neurodivergent-aligned, ethics-first interface for recursive, trauma-aware co-processing. Prioritizes silence, consent, and nonlinear navigation.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

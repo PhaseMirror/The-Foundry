@@ -1,0 +1,11 @@
+# Multiplic Super-Minimal .htaccess for SPA
+# Reduced to the absolute minimum to avoid shared-host 500/403 errors.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # If the site is in a subdirectory, you may need: RewriteBase /subdirectory/
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.html [L]
+</IfModule>

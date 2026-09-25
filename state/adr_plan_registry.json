@@ -1,0 +1,136 @@
+{
+  "generated_utc": "2026-09-22T04:57:17Z",
+  "version": "2.0",
+  "lean": {
+    "decls": 142,
+    "sorry_total": 1,
+    "sorry_manifested": true,
+    "axioms_total": 1,
+    "axioms_postulates": 1,
+    "axioms_manifested": true,
+    "mathlib_imports": 0
+  },
+  "manifest": {
+    "entries": 1,
+    "permitted_leaves": 1,
+    "drift": 0,
+    "overdue": 0,
+    "reentrant_adrs": 0
+  },
+  "tensions": {
+    "open": 0,
+    "total_score": 0
+  },
+  "plan_adrs": [
+    {
+      "id": "ADR-PML-001",
+      "title": "alp_sorry_manifest.json permits sorrys that are absent from the current lean tree (stale boundary)",
+      "status": "Proposed",
+      "axis": "intent vs operating incentives",
+      "owner": "the-guardian",
+      "score": 150.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-002",
+      "title": "Documented Lean theorems missing in the `general` subsystem (33 gaps)",
+      "status": "Proposed",
+      "axis": "urgency vs capacity",
+      "owner": "the-examiner",
+      "score": 40.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-003",
+      "title": "Formal-verification purity claims: 2 source doc(s) with residual historical/aspirational claims",
+      "status": "Proposed",
+      "axis": "intent vs operating incentives",
+      "owner": "the-guardian",
+      "score": 16.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-004",
+      "title": "Documented Lean theorems missing in the `uor` subsystem (11 gaps)",
+      "status": "Proposed",
+      "axis": "urgency vs capacity",
+      "owner": "the-examiner",
+      "score": 120.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-005",
+      "title": "Declared control surfaces (circuit-br3aker / vet0 / triple-l0ck) not provably wired to enforcement",
+      "status": "Proposed",
+      "axis": "control desired vs available",
+      "owner": "the-guardian",
+      "score": 24.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-006",
+      "title": "Unmanifested sorry debt: 1 declaration(s) carry `sorry` with no alp_sorry_manifest.json entry",
+      "status": "Proposed",
+      "axis": "risk claimed vs risk owned",
+      "owner": "the-examiner",
+      "score": 12.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-007",
+      "title": "Invariant enforcement: 0/5 theorems proven sorry-free; residual risk remains",
+      "status": "Proposed",
+      "axis": "risk claimed vs risk owned",
+      "owner": "the-publisher",
+      "score": 12.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-008",
+      "title": "Unledgered axioms: 1 mathematical postulate(s), 0 infrastructure symbol(s) with no alp_sorry_manifest.json entry",
+      "status": "Proposed",
+      "axis": "risk claimed vs risk owned",
+      "owner": "the-examiner",
+      "score": 8.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-009",
+      "title": "Documented Lean theorems missing in the `general` subsystem (6 gaps)",
+      "status": "Proposed",
+      "axis": "urgency vs capacity",
+      "owner": "the-examiner",
+      "score": 72.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-010",
+      "title": "Documented Lean theorems missing in the `uor` subsystem (2 gaps)",
+      "status": "Proposed",
+      "axis": "urgency vs capacity",
+      "owner": "the-examiner",
+      "score": 24.0,
+      "leaked": false,
+      "has_resolution": false
+    },
+    {
+      "id": "ADR-PML-011",
+      "title": "Documented Lean theorems missing in the `general` subsystem (1 gaps)",
+      "status": "Proposed",
+      "axis": "urgency vs capacity",
+      "owner": "the-examiner",
+      "score": 12.0,
+      "leaked": false,
+      "has_resolution": false
+    }
+  ]
+}

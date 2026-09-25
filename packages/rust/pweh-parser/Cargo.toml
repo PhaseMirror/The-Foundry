@@ -1,0 +1,26 @@
+[package]
+name = "pweh-parser"
+edition.workspace = true
+version.workspace = true
+rust-version = "1.89"
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Rust port of packages/rust/pweh-parser/pweh_adapter.py — PWEH checkpoint receipt validation and DecisionAssure verification output"
+
+[lib]
+name = "pweh_parser"
+path = "src/lib.rs"
+
+[[bin]]
+name = "verify-checkpoint"
+path = "src/bin/verify_checkpoint.rs"
+
+[dependencies]
+chrono = { workspace = true }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dev-dependencies]
+tempfile = "3"

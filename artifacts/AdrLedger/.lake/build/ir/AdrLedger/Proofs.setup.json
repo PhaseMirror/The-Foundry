@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "AdrLedger",
+ "options": {},
+ "name": "AdrLedger.Proofs",
+ "isModule": false,
+ "importArts":
+ {"AdrLedger.Core":
+  [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/artifacts/AdrLedger/.lake/build/lib/lean/AdrLedger/Core.olean"]]},
+ "dynlibs": []}

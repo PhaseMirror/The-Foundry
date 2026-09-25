@@ -1,0 +1,317 @@
+syntax = "proto3";
+
+package hologram.live.v1;
+
+service HologramLive {
+  rpc Call(RpcRequest) returns (RpcResponse);
+}
+
+message Empty {}
+message IdRequest { string id = 1; }
+message TracingSetRequest { string filter = 1; }
+message HoloImportRequest { string name = 1; bytes content = 2; }
+message HoloRunRequest { string kappa = 1; repeated bytes inputs = 2; }
+message HistoryCreateRequest { string title = 1; }
+message HistoryAppendRequest { string id = 1; string role = 2; string content = 3; }
+message HistoryListRequest { bool include_archived = 1; }
+message HistoryArchiveRequest { string id = 1; bool archived = 2; }
+message ChatSendRequest { string id = 1; string content = 2; }
+message FileRenameRequest { string id = 1; string filename = 2; }
+message ModelImportRequest { string path = 1; }
+message PluginCallRequest { string plugin_id = 1; string operation = 2; string payload = 3; }
+message ObjectPutRequest {
+  string kind = 1;
+  string media_type = 2;
+  optional string filename = 3;
+  bytes content = 4;
+}
+
+message RpcRequest {
+  oneof request {
+    Empty handshake = 1;
+    Empty health = 2;
+    Empty shutdown = 3;
+    Empty modules_list = 4;
+    Empty tracing_get = 5;
+    TracingSetRequest tracing_set = 6;
+    Empty registry_list = 7;
+    Empty files_list = 8;
+    HoloImportRequest holo_import = 9;
+    Empty holo_list = 10;
+    IdRequest holo_inspect = 11;
+    IdRequest holo_verify = 12;
+    IdRequest holo_remove = 13;
+    IdRequest holo_load = 14;
+    IdRequest holo_unload = 15;
+    HoloRunRequest holo_run = 16;
+    Empty holo_resident = 17;
+    HistoryCreateRequest history_create = 18;
+    HistoryListRequest history_list = 19;
+    IdRequest history_get = 20;
+    HistoryAppendRequest history_append = 21;
+    IdRequest history_delete = 22;
+    Empty nodes_list = 23;
+    NodeRecord node_heartbeat = 24;
+    ObjectPutRequest registry_put = 25;
+    IdRequest registry_get = 26;
+    ObjectPutRequest files_put = 27;
+    IdRequest files_get = 28;
+    ChatSendRequest chat_send = 29;
+    FileRenameRequest files_rename = 30;
+    HistoryArchiveRequest history_archive = 31;
+    Empty model_list = 32;
+    ModelImportRequest model_import = 33;
+    IdRequest model_remove = 34;
+    PluginCallRequest plugin_call = 35;
+    Empty plugin_list = 36;
+    IdRequest holo_plan = 37;
+  }
+}
+
+enum OperationKind {
+  OPERATION_KIND_UNSPECIFIED = 0;
+  OPERATION_KIND_READ = 1;
+  OPERATION_KIND_MUTATION = 2;
+  OPERATION_KIND_STREAM = 3;
+}
+
+message OperationInfo {
+  string id = 1;
+  OperationKind kind = 2;
+  bool fallback_safe_before_dispatch = 3;
+}
+
+message ModuleInfo {
+  string id = 1;
+  string name = 2;
+  string version = 3;
+  string state = 4;
+  repeated string dependencies = 5;
+  repeated string operations = 6;
+}
+
+message CapabilityManifest {
+  uint32 protocol_version = 1;
+  string server_version = 2;
+  string server_id = 3;
+  string role = 4;
+  repeated OperationInfo operations = 5;
+  repeated ModuleInfo modules = 6;
+  uint32 maximum_message_bytes = 7;
+}
+
+message HealthResponse {
+  string status = 1;
+  string version = 2;
+  string role = 3;
+  uint64 modules_ready = 4;
+}
+
+message ObjectMetadata {
+  string id = 1;
+  string kind = 2;
+  string media_type = 3;
+  optional string filename = 4;
+  uint64 size = 5;
+  uint64 created_at_millis = 6;
+}
+message ObjectContent { ObjectMetadata metadata = 1; bytes content = 2; }
+
+message HoloSection { string kind = 1; uint64 offset = 2; uint64 length = 3; }
+message HoloLayer {
+  uint32 position = 1;
+  string kind = 2;
+  string content_kappa = 3;
+  string entry = 4;
+  optional string architecture = 5;
+  optional string surface = 6;
+  optional string engine = 7;
+  optional string contract = 8;
+}
+message HoloChild {
+  uint32 position = 1;
+  string application_kappa = 2;
+  string capabilities_kappa = 3;
+  optional string parent_application_kappa = 4;
+  optional uint32 depth = 5;
+  optional string requires_kappa = 6;
+  optional string application_resolution_source = 7;
+  optional string capabilities_resolution_source = 8;
+}
+message HoloBlob { string kappa = 1; uint64 byte_length = 2; }
+message HoloDirectory {
+  uint32 schema_version = 1;
+  optional uint32 primary_layer = 2;
+  string requires_kappa = 3;
+  repeated HoloLayer layers = 4;
+  repeated HoloChild children = 5;
+  repeated HoloBlob blobs = 6;
+}
+message HoloInspection {
+  string kappa = 1;
+  string name = 2;
+  uint32 format_version = 3;
+  uint64 byte_length = 4;
+  string archive_fingerprint = 5;
+  bool footer_verified = 6;
+  repeated HoloSection sections = 7;
+  HoloDirectory directory = 8;
+  bool directory_embedded = 9;
+  optional string application_kappa = 10;
+}
+message HoloPlanObject {
+  string kappa = 1;
+  optional string resolution_source = 2;
+  optional uint64 byte_length = 3;
+}
+message HoloPlanProvider {
+  string status = 1;
+  optional string name = 2;
+  optional string reason = 3;
+}
+message HoloPlanLayer {
+  uint32 position = 1;
+  string kind = 2;
+  string content_kappa = 3;
+  string entry = 4;
+  optional string architecture = 5;
+  optional string surface = 6;
+  optional string engine = 7;
+  bool primary = 8;
+  optional string resolution_source = 9;
+  optional uint64 byte_length = 10;
+  HoloPlanProvider provider = 11;
+  optional string contract = 12;
+}
+message HoloPlanLimits {
+  uint64 max_layers = 1;
+  uint64 max_objects = 2;
+  uint64 max_resolved_bytes = 3;
+  uint64 max_applications = 4;
+  uint64 max_depth = 5;
+}
+message HoloPlanBlocker {
+  string kind = 1;
+  string error_code = 2;
+  string message = 3;
+}
+message HoloPlan {
+  string archive_kappa = 1;
+  string archive_fingerprint = 2;
+  string application_kappa = 3;
+  string execution_target = 4;
+  string packaging = 5;
+  optional uint32 primary_layer = 6;
+  HoloPlanObject capabilities = 7;
+  repeated HoloPlanLayer layers = 8;
+  repeated HoloChild children = 9;
+  uint64 resolved_object_count = 10;
+  uint64 resolved_bytes = 11;
+  HoloPlanLimits limits = 12;
+  bool runnable = 13;
+  repeated HoloPlanBlocker blockers = 14;
+  uint64 application_count = 15;
+  uint64 max_depth = 16;
+}
+message ResidentHolo {
+  string kappa = 1;
+  uint64 input_count = 2;
+  uint64 output_count = 3;
+  uint64 resident_bytes = 4;
+  uint64 queued = 5;
+  uint64 processed = 6;
+  string state = 7;
+  string requested_capabilities_kappa = 8;
+  string effective_grant_kappa = 9;
+  string grant_source = 10;
+  string authorization = 11;
+}
+message HoloRunResult {
+  string kappa = 1;
+  repeated bytes outputs = 2;
+  uint64 elapsed_micros = 3;
+  uint64 resident_bytes = 4;
+  string requested_capabilities_kappa = 5;
+  string effective_grant_kappa = 6;
+  string grant_source = 7;
+  string authorization = 8;
+  ApplicationCompletion completion = 9;
+}
+message ApplicationCompletion {
+  string kind = 1;
+  optional sint32 code = 2;
+}
+
+message ConversationMessage { string role = 1; string content = 2; uint64 created_at_millis = 3; }
+message Conversation {
+  string id = 1;
+  string title = 2;
+  uint64 created_at_millis = 3;
+  uint64 updated_at_millis = 4;
+  repeated ConversationMessage messages = 5;
+  bool archived = 6;
+}
+
+message NodeRecord {
+  string node_id = 1;
+  string version = 2;
+  repeated string operations = 3;
+  uint64 last_seen_millis = 4;
+}
+
+message ModelInfo {
+  string id = 1;
+  string name = 2;
+  string engine = 3;
+  string source = 4;
+  uint64 size = 5;
+  uint64 created_at_millis = 6;
+}
+
+message PluginStatus {
+  string id = 1;
+  string name = 2;
+  string version = 3;
+  repeated string operations = 4;
+  bool running = 5;
+  uint64 restart_count = 6;
+  optional string last_error = 7;
+}
+message PluginResult { string json = 1; }
+
+message ApiError { string code = 1; string message = 2; }
+message ModuleList { repeated ModuleInfo items = 1; }
+message ObjectList { repeated ObjectMetadata items = 1; }
+message HoloInspectionList { repeated HoloInspection items = 1; }
+message ResidentHoloList { repeated ResidentHolo items = 1; }
+message ConversationList { repeated Conversation items = 1; }
+message NodeList { repeated NodeRecord items = 1; }
+message ModelList { repeated ModelInfo items = 1; }
+message PluginList { repeated PluginStatus items = 1; }
+message TracingFilter { string filter = 1; }
+
+message RpcResponse {
+  oneof response {
+    CapabilityManifest capability_manifest = 1;
+    HealthResponse health = 2;
+    ModuleList modules = 3;
+    ObjectList objects = 4;
+    HoloInspection holo_inspection = 5;
+    HoloInspectionList holo_list = 6;
+    ResidentHoloList holo_resident = 7;
+    HoloRunResult holo_run = 8;
+    Conversation conversation = 9;
+    ConversationList conversations = 10;
+    NodeList nodes = 11;
+    TracingFilter tracing_filter = 12;
+    Empty accepted = 13;
+    ApiError error = 14;
+    ObjectMetadata object = 15;
+    ObjectContent object_content = 16;
+    ModelInfo model = 17;
+    ModelList models = 18;
+    PluginResult plugin_result = 19;
+    PluginList plugins = 20;
+    HoloPlan holo_plan = 21;
+  }
+}

@@ -1,0 +1,16 @@
+default_model: "qwen2.5-0.5b"
+routes:
+  - domain: "legal_scopist"
+    model_id: "qwen2.5-1.5b-legal"
+    archive_path: "/models/hologram/qwen2.5-1.5b-legal.holo"
+    description: "Highly deterministic model fine-tuned for legal ESI extraction and preservation risk."
+
+  - domain: "medical_ataraxia"
+    model_id: "llama3.2-1b-clinical"
+    archive_path: "/models/hologram/llama3.2-1b-clinical.holo"
+    description: "Clinical documentation and reasoning engine with strict safety boundaries."
+
+  - domain: "general_orchestrator"
+    model_id: "qwen2.5-0.5b"
+    archive_path: "/models/hologram/qwen2.5-0.5b.holo"
+    description: "Fast, low-latency orchestrator model for general reasoning."

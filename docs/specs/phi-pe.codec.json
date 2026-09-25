@@ -1,0 +1,422 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs/specs/phi-pe.codec.json",
+  "title": "Phi-Psi-Epsilon (Φπε) Unpack Codec",
+  "description": "Candidate codec for the Φπε string. One skeleton, many charts. This file is a codec, not a ledger object; it does not certify any speaker string as a law. Locks exactly one operator skeleton (ADR-0008 homonym discipline); every glyph has exactly one binding; target 0 unbound homonyms. Wire values are integers or exact ratios; floating point structurally forbidden (ADR-0021). Not medical, legal, or financial advice.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "dialect", "kernel", "bindings", "meta"],
+  "properties": {
+    "version": {
+      "const": "0.1.0"
+    },
+    "dialect": {
+      "const": "Φπε"
+    },
+    "kernel": {
+      "$ref": "#/$defs/kernel"
+    },
+    "bindings": {
+      "$ref": "#/$defs/bindings"
+    },
+    "meta": {
+      "$ref": "#/$defs/meta"
+    }
+  },
+  "$defs": {
+    "number": {
+      "description": "Integer or exact ratio as string 'p/q'. Float forbidden (ADR-0021).",
+      "type": ["integer", "string"],
+      "pattern": "^(0|[1-9][0-9]*|((0|-?[1-9][0-9]*)/([1-9][0-9]*)))$"
+    },
+    "doorMode": {
+      "description": "Two-door remainder. Minus: habituation / decay / drawdown / relaxation. Plus: rumination / accumulation / surplus / runaway.",
+      "enum": ["minus", "plus"]
+    },
+    "kernel": {
+      "description": "The locked skeleton inline, kernel-scope fields only. additionalProperties=false makes a third door or a new constant structurally unrepresentable.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gamma", "lambda", "psi", "omega", "p", "n", "thetaPrev", "t", "doorMode"],
+      "properties": {
+        "gamma": {
+          "$ref": "#/$defs/number",
+          "description": "Γ: spectral ordinate of the outer map."
+        },
+        "lambda": {
+          "$ref": "#/$defs/number",
+          "description": "Λ: computational weight kind, the step-weighted prior λ_p = κ p^-σ ||A_p||^-1 family. Contractive: sup_p λ_p(...) = c < 1."
+        },
+        "psi": {
+          "$ref": "#/$defs/number",
+          "description": "Ψ: constitutional direction toward completion."
+        },
+        "omega": {
+          "$ref": "#/$defs/number",
+          "description": "Ω: completion value."
+        },
+        "p": {
+          "$ref": "#/$defs/number",
+          "description": "P: discount / renormalization exponent."
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "n: discrete step / index / period / generation."
+        },
+        "thetaPrev": {
+          "$ref": "#/$defs/number",
+          "description": "Θ(n-1): last integrated phase (prior state)."
+        },
+        "t": {
+          "$ref": "#/$defs/number",
+          "description": "T: integration window / clock / budget / torsion horizon."
+        },
+        "doorMode": {
+          "$ref": "#/$defs/doorMode"
+        }
+      }
+    },
+    "bindings": {
+      "description": "Chart-local semantics. Binds exactly {n, Θ, P, T, sign} - nothing else may be rebound by a chart.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["n", "thetaPrev", "p", "t", "doorMode"],
+      "properties": {
+        "n": { "$ref": "#/$defs/bindingItem" },
+        "thetaPrev": { "$ref": "#/$defs/bindingItem" },
+        "p": { "$ref": "#/$defs/bindingItem" },
+        "t": { "$ref": "#/$defs/bindingItem" },
+        "doorMode": { "$ref": "#/$defs/bindingItem" }
+      }
+    },
+    "bindingItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantic"],
+      "properties": {
+        "semantic": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "meta": {
+      "description": "Attribution and chart identity. Never participates in kernel hashing.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chartFileId", "attribution"],
+      "properties": {
+        "chartFileId": {
+          "enum": ["consciousness", "economics", "biology"]
+        },
+        "attribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cid"],
+          "properties": {
+            "cid": {
+              "type": "string",
+              "description": "Content ID of the unpack utterance. Bound to the speaker, not to the kernel."
+            },
+            "speaker": {
+              "type": "string",
+              "description": "Discord snowflake or speaker handle. A snowflake is account-create time, not a geometric address. May never be minted into kernel bytes or geometry. If absent, attribution is anonymous."
+            }
+          }
+        }
+      }
+    },
+    "chartFile": {
+      "description": "Chart overlay file. Binds exactly {n, thetaPrev, p, t, doorMode} to one chart's semantics. Carries the pinned kernelHash; never carries kernel values (a chart changing a kernel hash is invalid by const).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "chartFileId", "kernelHash", "bindings"],
+      "properties": {
+        "schema": { "const": "phi-pe.chart.v1" },
+        "chartFileId": { "enum": ["consciousness", "economics", "biology"] },
+        "kernelHash": {
+          "const": "d912f35f5eb67e6058baa9a14daac7abb1d4997f15519e0dda01d3e358afb475"
+        },
+        "bindings": { "$ref": "#/$defs/bindings" }
+      }
+    }
+  },
+  "x-codec": {
+    "identity": {
+      "canonicalName": "Φπε",
+      "sense": "phase × prime-index × slack",
+      "skeleton": "ΓΛ^(ΨΩ) · [Λ^P · Θ(n-1)/n^P ∓ (T - n)]",
+      "status": "draft",
+      "steward": "Foundry steward",
+      "publishHorizonDays": 7,
+      "planeBinding": "The kernel is computational L0 (LawfulRecursionVersion 1.0), not civic law. Any hosted unpack of this codec is operator-LLC + commercial license (civic L0-5) or it does not ship.",
+      "artifacts": {
+        "example": "docs/specs/phi-pe.fixtures/example.json",
+        "rejects": [
+          "docs/specs/phi-pe.fixtures/reject-third-door.json",
+          "docs/specs/phi-pe.fixtures/reject-m-binding.json",
+          "docs/specs/phi-pe.fixtures/reject-speaker-in-kernel.json"
+        ],
+        "charts": [
+          "docs/specs/phi-pe.charts/consciousness.json",
+          "docs/specs/phi-pe.charts/economics.json",
+          "docs/specs/phi-pe.charts/biology.json"
+        ],
+        "referenceImplementations": ["scripts/hash_phi_pe.py"]
+      }
+    },
+    "glyphs": [
+      {
+        "glyph": "Φπε:",
+        "field": "dialect",
+        "jsonType": "string (const)",
+        "scope": "kernel",
+        "allowed": "Dialect header; phase × prime-index × slack."
+      },
+      {
+        "glyph": "Γ",
+        "field": "kernel.gamma",
+        "jsonType": "number",
+        "scope": "kernel",
+        "allowed": "Spectral ordinate of the outer map."
+      },
+      {
+        "glyph": "Λ",
+        "field": "kernel.lambda",
+        "jsonType": "number",
+        "scope": "kernel",
+        "allowed": "Computational weight kind; step-weighted prior λ_p = κ·p^-σ·||A_p||^-1, subject to sup_p = c < 1.",
+        "forbidden": [
+          "civic multiplicity scale M = 2R + 1",
+          "unbound poetic lambda",
+          "a new constant",
+          "proof of RH",
+          "ΓΛ^(ΨΩ) as proof of RH"
+        ]
+      },
+      {
+        "glyph": "Ψ",
+        "field": "kernel.psi",
+        "jsonType": "number",
+        "scope": "kernel",
+        "allowed": "Constitutional direction toward completion Ω."
+      },
+      {
+        "glyph": "Ω",
+        "field": "kernel.omega",
+        "jsonType": "number",
+        "scope": "kernel",
+        "allowed": "Completion value."
+      },
+      {
+        "glyph": "ΓΛ^(ΨΩ)",
+        "composite": true,
+        "field": "kernel.gamma,kernel.lambda,kernel.psi,kernel.omega",
+        "jsonType": "object",
+        "scope": "kernel",
+        "allowed": "Outer map; spectral ordinate × scale, then constitutional direction to completion.",
+        "forbidden": [
+          "proof of RH",
+          "membership rite"
+        ]
+      },
+      {
+        "glyph": "Λ^P · Θ(n-1)/n^P",
+        "composite": true,
+        "field": "kernel.lambda,kernel.p,kernel.thetaPrev,kernel.n",
+        "jsonType": "object",
+        "scope": "kernel",
+        "allowed": "Scale-normalized prior; last phase divided by a power of the step; must stay contractive (c < 1).",
+        "forbidden": [
+          "a new constant"
+        ]
+      },
+      {
+        "glyph": "∓(T - n)",
+        "composite": true,
+        "field": "kernel.t,kernel.n,kernel.doorMode",
+        "jsonType": "object",
+        "scope": "kernel",
+        "allowed": "Two-door remainder; clock/budget/torsion versus discrete index.",
+        "forbidden": [
+          "a third door"
+        ]
+      },
+      {
+        "glyph": "P",
+        "field": "kernel.p",
+        "jsonType": "number",
+        "scope": "kernel",
+        "allowed": "Discount / renormalization exponent."
+      },
+      {
+        "glyph": "n",
+        "field": "kernel.n",
+        "jsonType": "integer ≥ 1",
+        "scope": "kernel",
+        "allowed": "Discrete step / index / period / generation."
+      },
+      {
+        "glyph": "Θ(n-1)",
+        "field": "kernel.thetaPrev",
+        "jsonType": "number",
+        "scope": "kernel",
+        "allowed": "Last integrated phase (prior state)."
+      },
+      {
+        "glyph": "T",
+        "field": "kernel.t",
+        "jsonType": "number",
+        "scope": "kernel",
+        "allowed": "Integration window / clock / budget / torsion horizon."
+      },
+      {
+        "glyph": "±/∓",
+        "field": "kernel.doorMode",
+        "jsonType": "enum minus|plus",
+        "scope": "kernel",
+        "allowed": "Minus: habituation / decay / drawdown / relaxation. Plus: rumination / accumulation / surplus / runaway.",
+        "forbidden": [
+          "a third door"
+        ]
+      },
+      {
+        "glyph": "<@...>",
+        "field": "meta.attribution.speaker / meta.attribution.cid",
+        "jsonType": "string",
+        "scope": "meta",
+        "allowed": "Speaker CID / attribution: who uttered it.",
+        "forbidden": [
+          "coordinate on the torus",
+          "minted into geometry",
+          "a person as a constant",
+          "presence in kernel bytes or any kernel hash input"
+        ]
+      }
+    ],
+    "homonymLocks": [
+      {
+        "symbol": "Λ/M",
+        "left": "kernel.lambda - computational weight family λ_p; contractive c < 1.",
+        "right": "M = 2R + 1 - civic multiplicity scale (economics chart binding, chart-scope only).",
+        "rule": "Distinct binding identities. M may never appear as kernel.lambda; Λ may never appear as the pairing multiplicity. A chart rebinding is a chart file change, never a kernel change."
+      },
+      {
+        "symbol": "L0/civic",
+        "left": "L0 computational plane: c < 1, ||G||_1 < 1, LawfulRecursionVersion 1.0.",
+        "right": "Civic rules L0-1..L0-8.",
+        "rule": "L0 is computational; it is not a civic rule. Codec enforces the contraction invariant on the plane it operates on; it does not legislate association bylaws."
+      }
+    ],
+    "charts": {
+      "allowed": ["consciousness", "economics", "biology"],
+      "maxCharts": 3,
+      "contract": "A chart file binds only {n, thetaPrev, p, t, doorMode}. No chart may add kernel fields, constants, or doors. Cross-chart kernel hash must be identical: bindings and meta are excluded from the hash input by construction.",
+      "ranges": {
+        "consciousness": {
+          "schema": "phenomenology; not a clinical claim",
+          "yield": "whether the next state stays inside a viability ball or runs ethical drift ~ e^t; reciprocity = mutual recognition, not a token; no diagnosis, no protocol"
+        },
+        "economics": {
+          "schema": "governance pattern; not investment advice",
+          "yield": "a named door for any wire; dual seat needs two papers and one firewall; material assets need the 14-day member vote; autonomous proceeds require a named door"
+        },
+        "biology": {
+          "schema": "structural analogy; not medical advice",
+          "yield": "WardMonitor-shaped pause when output masks strain - freeze intake, 24-hour structural rest, not treatment; Buurtzorg bound: node ≤ 12, split instead of adding managers, overhead ≤ 15%"
+        }
+      }
+    },
+    "infrastructures": {
+      "named": ["consciousness", "economics", "biology", "L0 computational plane", "civic/association plane"],
+      "status": "partial",
+      "note": "Five infrastructures; three description infrastructures are named, L0 and civic are named. Do not collapse them into one company, one token, or one medical-financial-civic blob."
+    },
+    "parties": {
+      "legalPersons": ["association (civic)", "operator LLC (practice/equity)"],
+      "requiredPairs": 2,
+      "note": "Wire yield from an unpack requires two legal persons and one firewall paper; otherwise no wire."
+    },
+    "doors": {
+      "allowedInbound": ["gift", "sponsor-class membership", "recoverable grant", "operator-LLC equity"],
+      "maxInboundDoors": 4,
+      "metric": "fifthDoorCount = 0",
+      "refusal": "The association refuses any wire this glyph 'discovers' that is not one of the four doors."
+    },
+    "invariants": [
+      "Contraction c < 1: sup_p λ_p(L_A,p + L_B,p + L_E,p) = c < 1; ||G||_1 < 1; LawfulRecursionVersion 1.0.",
+      "Two legal persons on any wire (association + operator LLC), separated by one firewall paper.",
+      "Exactly four inbound doors; a fifth door is refused.",
+      "Civic L0-1: no member profit distribution.",
+      "Civic L0-8: credits never overweight votes.",
+      "Civic L0-2 analog: no cameras in a declared privacy zone; a speaker handle is never minted into geometry.",
+      "Civic L0-3: no off-purpose use of the membership list.",
+      "Civic L0-5: no third party offers Phase Mirror as a managed service without a commercial license.",
+      "Civic L0-5 hosting: any hosted unpack is operator-LLC + commercial license or it does not ship.",
+      "Speaker handle never re-enters the kernel through chart filenames or binding keys; no file may be named after a snowflake.",
+      "A passing schema is an admission filter, not a measurement: c < 1, ||G||_1 < 1, and sup_p λ_p L_p stay unmessured or the field is labeled Assumption.",
+      "HELM-D oracle rule: linear/softmax narrative scoring is allowed offline; it never binds serving or membership."
+    ],
+    "hash": {
+      "codecHash": "ff275fb38106b9df7d8bedc9cff33d4b084d77611ea3e4c8610626aaa71d5869",
+      "scheme": {
+        "algebraName": "CANON-JSON-SHA256-v1",
+        "canonicalization": {
+          "parse": "input is parsed JSON; presentation whitespace and file key order are ignored.",
+          "sortKeys": "object keys sorted by UTF-8 byte order, recursively, before serialization.",
+          "serialize": "dump with ensure_ascii=false, separators (',', ':'), no trailing newline.",
+          "numericGuard": "floating point is structurally forbidden (ADR-0021); all numbers are integers or exact ratio strings, so serialization is lossless and interpreter-stable.",
+          "encodeAndDigest": "SHA-256 over UTF-8 bytes of the canonical text; lowercase hex, no prefix."
+        },
+        "kernelHash": {
+          "input": "the unpack document reduced to keys {version, dialect, kernel}, each recursively canonicalized.",
+          "excluded": ["bindings", "meta.attribution.speaker", "meta.attribution.cid", "meta.chartFileId", "prose", "hash annotations"]
+        },
+        "codecHash": {
+          "input": "the codec file with the x-codec.hash object removed entirely, then canonicalized.",
+          "excluded": ["x-codec.hash"]
+        },
+        "referenceImplementation": "scripts/hash_phi_pe.py",
+        "rule": "kernelBytes exclude <@...>. Attribution rides in meta only."
+      },
+      "example": {
+        "version": "0.1.0",
+        "dialect": "Φπε",
+        "kernel": {
+          "gamma": "1/2",
+          "lambda": "1/4",
+          "psi": 1,
+          "omega": 1,
+          "p": 1,
+          "n": 2,
+          "thetaPrev": "1/3",
+          "t": 3,
+          "doorMode": "minus"
+        },
+        "bindings": {
+          "n": { "semantic": "attentional step" },
+          "thetaPrev": { "semantic": "last integrated phase" },
+          "p": { "semantic": "how fast prior experience is discounted" },
+          "t": { "semantic": "available integration window" },
+          "doorMode": { "semantic": "minus = habituation / decay; plus = rumination / accumulation" }
+        },
+        "meta": {
+          "chartFileId": "consciousness",
+          "attribution": {
+            "cid": "QmExample",
+            "speaker": "<@985780080343142490>"
+          }
+        },
+        "kernelHash": "d912f35f5eb67e6058baa9a14daac7abb1d4997f15519e0dda01d3e358afb475"
+      },
+      "metrics": {
+        "unboundHomonyms": 0,
+        "crossChartKernelHashIdentical": true
+      }
+    },
+    "openQuestions": [
+      "Which object is Λ when charts collide - civic M, computational λ_p, or unbound - resolver: the codec binds Λ to λ_p; M is a chart-scope binding; collision resolution belongs to the domain pack owner, not the speaker.",
+      "Who owns the chart file when bindings collide - owner: the domain pack owner named in the lever; kernel values are steward-owned.",
+      "Which legal person receives a wire attached to a Φπε unpack - default: no wire until the binder names a door, two legal persons, and one firewall paper (PMCP four gates for any managed-service path)."
+    ]
+  }
+}

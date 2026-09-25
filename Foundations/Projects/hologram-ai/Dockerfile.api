@@ -1,0 +1,36 @@
+# Builder Stage
+FROM rust:1.80-slim-bookworm AS builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y pkg-config libssl-dev build-essential
+
+# Set up the workspace
+WORKDIR /usr/src/hologram-ai
+COPY . .
+
+# Build the API binary in release mode
+RUN cargo build --release -p hologram-api
+
+# Runtime Stage
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y libssl3 ca-certificates && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy the compiled binary from the builder
+COPY --from=builder /usr/src/hologram-ai/target/release/hologram-api /app/hologram-api
+
+# Create necessary directories for volumes
+RUN mkdir -p /etc/hologram /var/log/hologram /models/hologram
+
+# Provide default environment variables
+ENV HOLOGRAM_ROUTING_PATH="/etc/hologram/routing.yaml"
+ENV HOLOGRAM_LEDGER_PATH="/var/log/hologram/hologram_archivum_ledger.jsonl"
+ENV RUST_LOG="info"
+
+# Ensure the executable has correct permissions
+RUN chmod +x /app/hologram-api
+
+# Command to run the MCP server (it operates via stdio)
+ENTRYPOINT ["/app/hologram-api"]

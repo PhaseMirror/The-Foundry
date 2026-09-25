@@ -1,0 +1,31 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["e6e83d0f01217a99.olean"],
+  "m": false,
+  "i": "3cdc2e0ff5b06d3c.ilean",
+  "c": "097b1cdfe74ffc12.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/CodingCommanderAdr/Core.lean -o /home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/lib/lean/CodingCommanderAdr/Core.olean -i /home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/lib/lean/CodingCommanderAdr/Core.ilean -c /home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/ir/CodingCommanderAdr/Core.c --setup /home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/ir/CodingCommanderAdr/Core.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["coding_commander_adr/CodingCommanderAdr:extraDep",
+     [["@coding_commander_adr:extraDep", "00000000000006bb"]]],
+    ["imports", "00000000000006bb"]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/CodingCommanderAdr/Core.lean",
+   "b68a0fc1ff2379c5"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: CodingCommanderAdr.Core", "dd716ab6ddb27720"],
+  ["Package.id?: (some coding_commander_adr)", "c29332c08afd61cb"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "0732c04b3be4c8f5"}

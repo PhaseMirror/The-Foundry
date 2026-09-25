@@ -1,0 +1,18 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs": "90a0d15688e2be1d.o",
+ "log":
+ [{"message":
+   ".> /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/clang -c -o /home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/ir/AtaraxiaAdr.c.o.export /home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/ir/AtaraxiaAdr.c -I /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/include -fstack-clash-protection -ffp-contract=off -fdata-sections -ffunction-sections -fPIC -fvisibility=hidden -Wno-unused-command-line-argument --sysroot /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1 -nostdinc -isystem /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/include/clang -O3 -DNDEBUG -fPIC -DLEAN_EXPORTING",
+   "level": "trace"}],
+ "inputs":
+ [["AtaraxiaAdr:c",
+   [["/home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/ir/AtaraxiaAdr.c",
+     "4cad2cee67b977d7"],
+    ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+     "8fa8fbe052c71a8e"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["traceArgs: #[-O3, -DNDEBUG, -fPIC, -DLEAN_EXPORTING]", "02475587579e5ab9"],
+  ["x86_64-unknown-linux-gnu", "53a0e8937c307c28"]],
+ "depHash": "c9e4558c8a3c689b"}

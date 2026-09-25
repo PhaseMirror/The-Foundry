@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["c1ed5d7dfef99f0f.olean"],
+  "m": false,
+  "i": "628a91fb01739e28.ilean",
+  "c": "abe493f8f3e0d53c.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/Main.lean -o /home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/lib/lean/Main.olean -i /home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/lib/lean/Main.ilean -c /home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/ir/Main.c --setup /home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/ir/Main.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["ataraxia_adr/ataraxia_adr:extraDep",
+     [["@ataraxia_adr:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["AtaraxiaAdr transitive imports (legacy)", "60d652781dfc3a85"],
+      ["AtaraxiaAdr:importAllArts", "5bdc9ca0d3ae8956"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/Main.lean",
+   "d49e7494d03a8e08"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: Main", "f2a1fd945cf30c62"],
+  ["Package.id?: (some ataraxia_adr)", "4b7b05add5169cb6"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "716ac367742b8618"}

@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["dd7c344118119cca.olean"],
+  "m": false,
+  "i": "bddc2378bec8f8a2.ilean",
+  "c": "f167f7fdb7b5170f.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/artifacts/AdrLedger/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.34.0-rc2/bin/lean /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/artifacts/AdrLedger/AdrLedger/Proofs.lean -o /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/artifacts/AdrLedger/.lake/build/lib/lean/AdrLedger/Proofs.olean -i /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/artifacts/AdrLedger/.lake/build/lib/lean/AdrLedger/Proofs.ilean -c /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/artifacts/AdrLedger/.lake/build/ir/AdrLedger/Proofs.c --setup /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/artifacts/AdrLedger/.lake/build/ir/AdrLedger/Proofs.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["AdrLedger/AdrLedger:extraDep",
+     [["@AdrLedger:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["AdrLedger.Core transitive imports (legacy)", "00000000000006bb"],
+      ["AdrLedger.Core:importAllArts", "3012d2989a248c2d"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.34.0, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d",
+   "365244c167ac8c1d"],
+  ["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/artifacts/AdrLedger/AdrLedger/Proofs.lean",
+   "b97d936579b5eaf9"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: AdrLedger.Proofs", "7e57d4b18215d98d"],
+  ["Package.id?: (some AdrLedger)", "26711594f2115161"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "cfafeff51c801eaf"}

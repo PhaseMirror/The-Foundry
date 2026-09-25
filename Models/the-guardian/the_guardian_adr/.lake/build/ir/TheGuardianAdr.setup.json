@@ -1,0 +1,13 @@
+{"plugins": [],
+ "package": "the_guardian_adr",
+ "options": {},
+ "name": "TheGuardianAdr",
+ "isModule": false,
+ "importArts":
+ {"TheGuardianAdr.Proofs":
+  [["/home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/lib/lean/TheGuardianAdr/Proofs.olean"]],
+  "TheGuardianAdr.FFI":
+  [["/home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/lib/lean/TheGuardianAdr/FFI.olean"]],
+  "TheGuardianAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/lib/lean/TheGuardianAdr/Core.olean"]]},
+ "dynlibs": []}

@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["09caae60b2ba4a9e.olean"],
+  "m": false,
+  "i": "81ab163d8434becc.ilean",
+  "c": "ca53c4509e39728f.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/GeneralistAdr/FFI.lean -o /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean/GeneralistAdr/FFI.olean -i /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean/GeneralistAdr/FFI.ilean -c /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/ir/GeneralistAdr/FFI.c --setup /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/ir/GeneralistAdr/FFI.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["generalist_adr/GeneralistAdr:extraDep",
+     [["@generalist_adr:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["GeneralistAdr.Core transitive imports (legacy)", "00000000000006bb"],
+      ["GeneralistAdr.Core:importAllArts", "a2cfcb72e190eec3"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/GeneralistAdr/FFI.lean",
+   "e5a85de1f00e1a41"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: GeneralistAdr.FFI", "87238d1ea411f959"],
+  ["Package.id?: (some generalist_adr)", "8765b532eac31442"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "d45bbea572f50e10"}

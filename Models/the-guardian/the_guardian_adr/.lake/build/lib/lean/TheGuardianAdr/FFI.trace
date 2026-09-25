@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["4d5e156aeea089c1.olean"],
+  "m": false,
+  "i": "bd0c405f982bf458.ilean",
+  "c": "9f6de38302ad2b70.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/TheGuardianAdr/FFI.lean -o /home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/lib/lean/TheGuardianAdr/FFI.olean -i /home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/lib/lean/TheGuardianAdr/FFI.ilean -c /home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/ir/TheGuardianAdr/FFI.c --setup /home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/.lake/build/ir/TheGuardianAdr/FFI.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["the_guardian_adr/TheGuardianAdr:extraDep",
+     [["@the_guardian_adr:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["TheGuardianAdr.Core transitive imports (legacy)", "00000000000006bb"],
+      ["TheGuardianAdr.Core:importAllArts", "03f81ce9a853d2e8"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/the-guardian/the_guardian_adr/TheGuardianAdr/FFI.lean",
+   "143b2144f6ff0956"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: TheGuardianAdr.FFI", "f5f58fd151b8ea1b"],
+  ["Package.id?: (some the_guardian_adr)", "3131eca873d3094a"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "9e4edb4999dddcb1"}

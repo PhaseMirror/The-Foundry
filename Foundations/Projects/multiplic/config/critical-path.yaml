@@ -1,0 +1,52 @@
+version: 1
+scope: sites/aiistech/mock-backend
+policy:
+  parity_scope: critical-production-path
+  registry_scope: service-first
+  include_release_blocking_control_plane: true
+  readiness_rule: Dependency-Proven Readiness Rule
+
+critical_path:
+  services:
+    - sites/aiistech/mock-backend
+
+  endpoints:
+    - POST /api/auth/login
+    - POST /api/auth/refresh
+    - GET /api/auth/me
+    - POST /api/auth/logout
+    - POST /api/projects/:slug/deploy
+    - DELETE /api/projects/:slug/deploy
+    - GET /api/projects/:slug/status
+    - GET /api/health
+
+  capabilities:
+    - auth
+    - session-storage
+    - deploy
+    - rollback
+    - baseline-observability
+
+  data_paths:
+    - auth-session
+    - project-provisioning
+    - deployment-status
+
+out_of_scope:
+  services:
+    - sites/aiistech
+  endpoints:
+    - path: GET /api/ready
+      rule: Dependency-Proven Readiness Rule
+      note: >
+        May enter scope only after it proves at least one release-relevant
+        dependency beyond process uptime, such as session storage, database
+        connectivity, provisioning backend availability, or required
+        configuration/secrets presence.
+  items:
+    - dashboard analytics parity
+    - non-critical reporting endpoints
+    - advanced observability parity
+    - secondary admin tooling
+    - general staging-environment parity
+    - non-release-blocking control-plane paths

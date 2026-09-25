@@ -1,0 +1,25 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs": "92e79b02c9a7212d",
+ "log":
+ [{"message":
+   ".> /home/citizen/.elan/toolchains/leanprover--lean4---v4.34.0-rc2/bin/clang -o /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/bin/ucc @/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/bin/ucc.rsp",
+   "level": "trace"}],
+ "inputs":
+ [["Main:linkInfo",
+   [["Module.moreLinkObjs",
+     [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/Main.c.o.export",
+       "1b20b2b1944c8885"],
+      ["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/UCC/Core.c.o.export",
+       "473a7ea2c7c7a99c"],
+      ["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/UCC/Proofs.c.o.export",
+       "984b82f5ca4ffa8f"],
+      ["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/UCC/Test.c.o.export",
+       "1a8d36ad81d5e433"]]],
+    ["Module.moreLinkLibs", "00000000000006bb"],
+    ["Module.moreLinkArgs: #[]", "00000000000006bb"]]],
+  ["LeanExe.exeOnlyLinkArgs: #[]", "00000000000006bb"],
+  ["Lean 4.34.0, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d",
+   "365244c167ac8c1d"],
+  ["x86_64-unknown-linux-gnu", "53a0e8937c307c28"]],
+ "depHash": "988d0b53dede0f87"}

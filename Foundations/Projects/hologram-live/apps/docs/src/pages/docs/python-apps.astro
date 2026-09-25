@@ -1,0 +1,300 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import { sitePath } from '../../lib/site';
+---
+<DocsLayout title="Python applications" description="Package Python as a portable Component v1 Wasm layer or a dependency-aware rootfs layer in a .holo application.">
+  <h1>Python applications</h1>
+  <p>Hologram can compile Python into either an import-free Component v1 <code>WasmCodemodule</code> or an architecture-specific <code>RootfsImage</code>, embed that payload in a <code>.holo</code> archive, and execute its <code>main(request: bytes) -&gt; bytes</code> function. Python remains a compiler input rather than a layer kind, so the canonical <code>.holo</code> model stays unchanged.</p>
+
+  <div class="note"><strong>Choose the profile explicitly</strong><code>wasi-component</code> works without Docker and runs directly or resident with dependency-free projects or locked Python 3 <code>*-none-any.whl</code> packages. <code>rootfs</code> supports native/source-only dependencies such as NumPy and pandas through an experimental direct-only Docker provider. Neither profile runs host Python or reads the developer virtual environment.</div>
+
+  <h2>What is supported</h2>
+  <div class="doc-grid">
+    <article class="doc-card"><h3>WASI Component · available</h3><p>Packages CPython 3.14, the application, and exact SHA-256-locked platform-independent wheels into an import-free Component v1 <code>wasm</code> layer. Direct and resident execution use the bounded Component provider.</p></article>
+    <article class="doc-card"><h3>Rootfs profile · available</h3><p>Packages CPython 3.12, the application, locked Linux dependencies, compiled extensions, and shared libraries into a compressed OCI image carried by a <code>rootfs</code> layer.</p></article>
+  </div>
+
+  <h2>Requirements and contract</h2>
+  <ul>
+    <li>A <code>pyproject.toml</code>, a committed <code>uv.lock</code>, and a <code>src/</code> package layout.</li>
+    <li><code>uv</code> for the portable compiler. The first build downloads the exact host-specific <code>componentize-py 0.25.0</code> wheel by URL and SHA-256 into uv's isolated tool cache, plus exact dependency wheel URLs from the lock.</li>
+    <li>Python 3.12 and a Docker-compatible engine with Linux container support and Buildx registry inspection only for the rootfs profile.</li>
+    <li>An entrypoint written as <code>module.path:function</code>. It receives one byte string and must return one byte string.</li>
+    <li>A target architecture of <code>arm64</code> or <code>x86_64</code> only for rootfs. The Component profile has no <code>arch</code> or OCI <code>base</code> field.</li>
+  </ul>
+  <p>Both profiles validate only <code>pyproject.toml</code>, the declared lock file, and <code>src/</code>; they reject absolute paths, escaping paths, and symlinks. Component compilation exposes only <code>src/</code>, a private generated adapter, and a private dependency target populated from exact lock artifacts. Rootfs compilation stages the declared project inputs and its generated launcher. The host <code>.venv</code>, Python search path, Git metadata, caches, credentials, and undeclared project files do not enter either payload.</p>
+
+  <h2>Portable example: Python Component hello</h2>
+  <p><code>examples/python-component-hello/</code> is dependency-free and compiles to the exact import-free <code>hologram:guest/component@1</code> contract. It needs no generated bindings in application source:</p>
+  <pre><code># examples/python-component-hello/src/python_component_hello/__init__.py
+import json
+import sys
+
+
+def main(request: bytes) -&gt; bytes:
+    name = request.decode("utf-8").strip() or "Hologram"
+    return json.dumps(&#123;
+        "message": f"Hello, &#123;name&#125;!",
+        "name": name,
+        "python": sys.version.split()[0],
+        "runtime": "python-component",
+    &#125;, separators=(",", ":"), sort_keys=True).encode()</code></pre>
+  <pre><code>hologram app init . \
+  --template python --profile wasi-component \
+  --project . --entry python_component_hello:main --lock uv.lock
+
+hologram compile examples/python-component-hello/hologram.json \
+  --output python-component-hello.holo
+hologram run python-component-hello.holo \
+  --input-text Ada --output-format json
+
+# Compile once, then prove direct and resident execution
+just python-component-holo-demo</code></pre>
+  <p>The compiler writes a private WIT adapter, removes <code>VIRTUAL_ENV</code>, <code>PYTHONPATH</code>, <code>PYTHONHOME</code>, index overrides, and user-site lookup, and invokes Hologram's deterministic <code>componentize-py 0.25.0 --stub-wasi</code> from an exact platform wheel in the immutable <a href="https://github.com/Hologram-Technologies/hologram-live/releases/tag/componentizer-v0.25.0-hologram.5"><code>componentizer-v0.25.0-hologram.5</code> release</a> with indexes and source builds disabled. CPython and the app are inside the roughly 18.3 MiB component. The emitted layer imports no WASI, so filesystem, network, clocks, environment, arguments, stdio, DNS, secrets, and process control are absent at runtime.</p>
+
+  <h2>Portable example: a locked dependency</h2>
+  <p><code>examples/python-component-dependency/</code> declares <code>six==1.17.0</code>. Its committed lock records the exact platform-independent wheel URL and SHA-256 hash. The application imports and reports that package at runtime:</p>
+  <pre><code># examples/python-component-dependency/pyproject.toml
+[project]
+requires-python = ">=3.14,&lt;3.15"
+dependencies = ["six==1.17.0"]
+
+# Build and run
+hologram compile examples/python-component-dependency/hologram.json \
+  --output python-component-dependency.holo
+hologram run python-component-dependency.holo \
+  --input-text Ada --output-format json</code></pre>
+  <pre><code>&#123;
+  "dependency": "six-1.17.0",
+  "message": "Hello, Ada!",
+  "name": "Ada",
+  "runtime": "python-component"
+&#125;</code></pre>
+  <p>The compiler traverses the editable project's runtime dependency graph and ignores unreferenced development/optional records. For every reached external package, it requires a registry source and an HTTPS, SHA-256-pinned Python 3 wheel ending in <code>-none-any.whl</code>. It installs only those direct URLs using <code>--no-index --no-deps --require-hashes --only-binary :all:</code>, then rejects symlinks or native library suffixes before componentization. Git/path dependencies, source-only packages, and native wheel tags fail during <code>compile --check</code> and recommend <code>profile: "rootfs"</code>.</p>
+  <div class="note"><strong>Portable boundary today</strong>Every reached runtime dependency must have a qualifying universal wheel; target-marker pruning inside that graph is deliberately conservative. Stubbed WASI bakes deterministic build-time state into the component, so <code>random</code> must not protect secrets. The patched tool controls its private preinitialization inputs, and the two-clean-builds-per-host equality matrix has passed on every supported host. Secure runtime randomness and real capability-gated WASI remain follow-up work.</div>
+
+  <h2>Build provenance</h2>
+  <p><code>compile</code> and <code>compile --check</code> expose a versioned provenance report under <code>build_provenance</code>. The report is marked <code>canonical: false</code> and is not embedded in the archive, so build-host evidence does not alter layer or application identity. Validation reports the declared toolchain, target ABI, normalized SHA-256 hashes for <code>pyproject.toml</code>, <code>uv.lock</code>, and the source tree, every selected dependency wheel URL/hash, and the exact componentizer distribution URL/hash for the build host. The componentizer's <code>patch_set</code> also records the immutable release tag/URL, patch-manifest URL/SHA-256, and <code>hologram:componentizer/preinitialization-determinism@5</code> contract. A completed build additionally reports the observed uvx/uv versions and the emitted layer κ and byte length.</p>
+  <pre><code>hologram --json compile \
+  examples/python-component-dependency/hologram.json --check \
+  | jq '.build_provenance.layers[0].source'
+
+# Save the completed report next to an archive when desired
+hologram --json compile hologram.json --output application.holo \
+  | jq '.build_provenance' &gt; application.provenance.json</code></pre>
+  <p>The source-tree digest uses lexical normalized paths and file bytes; timestamps, permissions, and directory creation order are excluded. The compiler stages the same regular files in lexical order and rejects nested symlinks. macOS arm64/x86_64, Linux arm64/x86_64, and Windows x86_64 have exact Hologram release wheel pins matching the server release matrix; any other host fails closed instead of resolving an unrecorded artifact. The patched tool fixes private preinitialization randomness, clocks, filesystem metadata, guest directory ordering, Python hash seed, allocator fills, and generated ordering. Completed builds report <code>reproducible: true</code> after workflow run <code>33227358037</code> proved two matching clean builders on every supported host. Offline <code>compile --check</code> remains false because it has not observed output.</p>
+  <pre><code># Two isolated local builds; stdout is one jq-friendly JSON document
+just python-component-repro \
+  | jq '&#123;status, target_host, equal, identities&#125;'</code></pre>
+  <p>The <code>component-reproducibility</code> workflow expands that proof to two independent clean runners for macOS arm64/x86_64, Linux arm64/x86_64, and Windows x86_64. Its aggregate artifact compares component-layer κ/size, capabilities κ, application κ, archive κ/size, footer fingerprint, complete-file SHA-256, and the exact build contract for each host. Every server release depends on this gate.</p>
+
+  <h2>Rootfs example: Python hello</h2>
+  <p><code>examples/python-hello/</code> is the small companion to the Wasm project example. It has no third-party dependencies, but it still carries a committed <code>uv.lock</code>, uses the schema-v2 rootfs recipe, and implements the real byte entrypoint contract:</p>
+  <pre><code># examples/python-hello/src/python_hello_holo/__init__.py
+import json
+
+
+def main(request: bytes) -&gt; bytes:
+    name = request.decode("utf-8").strip() or "Hologram"
+    return json.dumps(&#123;
+        "message": f"Hello, &#123;name&#125;!",
+        "name": name,
+        "runtime": "python",
+    &#125;, separators=(",", ":"), sort_keys=True).encode()</code></pre>
+  <pre><code># Validate without Docker work
+hologram --json compile examples/python-hello/hologram.json --check
+
+# Compile the project in memory and execute it
+hologram run examples/python-hello \
+  --input-text Ada --output-format json
+
+# Equivalent convenience recipe
+just python-hello-demo | jq .</code></pre>
+  <pre><code>&#123;
+  "message": "Hello, Ada!",
+  "name": "Ada",
+  "runtime": "python"
+&#125;</code></pre>
+  <p>In Desktop, add <code>examples/python-hello/</code> from <strong>Applications → Add directory</strong>. Once the Docker-backed build is Ready, choose <strong>Run</strong>, enter a name, and read the JSON response in the output panel. Existing <code>.holo</code> files can be selected with <strong>Add .holo</strong> and run the same way.</p>
+
+  <h2>Worked example: NumPy + pandas</h2>
+  <p>The repository contains the complete project under <code>examples/python-numpy-pandas/</code>. It uses the rootfs profile because NumPy contains native extensions and pandas requires NumPy. The <a href="https://numpy.org/install/">NumPy installation guide</a> recommends binary distributions when available, and the <a href="https://pandas.pydata.org/docs/getting_started/install.html#dependencies">pandas dependency guide</a> lists NumPy as required.</p>
+
+  <h3>1. Create and lock the project</h3>
+  <pre><code>uv init --app numpy-pandas-holo
+cd numpy-pandas-holo
+uv add numpy pandas
+uv lock
+uv tree</code></pre>
+  <p><a href="https://docs.astral.sh/uv/guides/projects/"><code>uv add</code></a> records the dependencies in <code>pyproject.toml</code>; <code>uv.lock</code> records the exact resolved closure. Commit both files.</p>
+  <pre><code>numpy-pandas-holo/
+├─ pyproject.toml
+├─ uv.lock
+├─ request.json
+├─ src/numpy_pandas_holo/__init__.py
+└─ hologram.json</code></pre>
+
+  <h3>2. Implement <code>main(request: bytes) -&gt; bytes</code></h3>
+  <pre><code># src/numpy_pandas_holo/__init__.py
+import json
+
+import numpy as np
+import pandas as pd
+
+
+def main(request: bytes) -&gt; bytes:
+    payload = json.loads(request)
+    frame = pd.DataFrame(payload["rows"])
+    values = frame["value"].to_numpy(dtype=np.float64)
+    result = &#123;
+        "columns": frame.columns.tolist(),
+        "mean": float(np.mean(values)),
+        "rows": int(frame.shape[0]),
+        "sum": float(np.sum(values)),
+    &#125;
+    return json.dumps(result, separators=(",", ":"), sort_keys=True).encode()</code></pre>
+  <p>The generated launcher imports the declared function, reads one request from standard input, calls it once, and writes the returned bytes to standard output. Import failures, exceptions, and non-byte return values fail the invocation.</p>
+
+  <h3>3. Generate the manifest</h3>
+  <pre><code>hologram app init . \
+  --template python \
+  --profile rootfs \
+  --project . \
+  --entry numpy_pandas_holo:main \
+  --lock uv.lock \
+  --arch arm64</code></pre>
+  <p>Use <code>x86_64</code> on an Intel/AMD host. The command writes source-manifest schema v4:</p>
+  <pre><code>&#123;
+  "schema_version": 4,
+  "primary": 0,
+  "layers": [
+    &#123;
+      "kind": "rootfs",
+      "source": &#123;
+        "language": "python",
+        "project": ".",
+        "entry": "numpy_pandas_holo:main",
+        "lock": "uv.lock",
+        "profile": "rootfs",
+        "base": "python:3.12-slim"
+      &#125;,
+      "arch": "arm64"
+    &#125;
+  ]
+&#125;</code></pre>
+  <p>The convenience default is <code>python:3.12-slim</code>. A real compile resolves a mutable tag through Docker's registry client and replaces it in the build with <code>repository@sha256:digest</code>. Supplying that digest-qualified form yourself skips the lookup. The source recipe retains the requested value; completed provenance records the immutable value actually passed to <code>FROM</code>.</p>
+
+  <h3>4. Validate without building</h3>
+  <pre><code>hologram --json compile hologram.json --check \
+  | jq '.build_provenance'</code></pre>
+  <pre><code>&#123;
+  "schema_version": 1,
+  "canonical": false,
+  "layers": [
+    &#123;
+      "layer_index": 0,
+      "language": "python",
+      "source": &#123;
+        "profile": "rootfs",
+        "target_platform": "linux/arm64",
+        "base_image": &#123;
+          "reference": "python:3.12-slim",
+          "digest_pinned": false
+        &#125;,
+        "dependency_installer": &#123; "name": "uv", "version": "0.11.8" &#125;,
+        "builder": &#123;
+          "name": "docker",
+          "archive_format": "normalized-docker-archive-v1",
+          "source_date_epoch": 0,
+          "cache_disabled": false
+        &#125;,
+        "inputs": [
+          &#123; "role": "project-metadata", "path": "pyproject.toml", "sha256": "..." &#125;,
+          &#123; "role": "lock", "path": "uv.lock", "sha256": "..." &#125;,
+          &#123; "role": "source-tree", "path": "src", "sha256": "..." &#125;
+        ],
+        "reproducibility": &#123; "reproducible": false, "blocker": "..." &#125;
+      &#125;
+    &#125;
+  ]
+&#125;</code></pre>
+  <p>This parses the schema, validates the primary layer and entrypoint, and hashes <code>pyproject.toml</code>, <code>uv.lock</code>, and the normalized <code>src/</code> tree. It does not contact the container engine, contact a registry, or write an archive. A mutable tag therefore has no <code>resolved_reference</code> during <code>--check</code>; an already digest-pinned reference is reported as resolved. The full report includes each logical input path and SHA-256; the shortened output above shows the important shape.</p>
+
+  <h3>5. Compile a self-contained archive</h3>
+  <pre><code>hologram --json compile hologram.json \
+  --output numpy-pandas.holo \
+  | jq '.build_provenance' &gt; numpy-pandas.provenance.json</code></pre>
+  <p>The compiler asks <code>docker buildx imagetools inspect --raw</code> for a mutable base's original registry manifest, verifies schema 2, hashes those exact bytes with SHA-256, and writes the resulting digest-qualified reference into the Dockerfile. A disposable Linux builder for the selected architecture installs pinned <code>uv</code> and the locked third-party dependencies, but does not install the local project as a wheel because uv's local-project cache records source timestamps. It normalizes the application and launcher to epoch zero and writes them as one lexically sorted GNU tar with numeric root ownership. Hologram copies that artifact from a stopped builder container and constructs the final image with local <code>ADD</code>. The final runtime imports the project through <code>/app/src</code> and excludes uv and transient build layers. A tag change after resolution cannot redirect either build because Docker consumes the fixed digest; copying from the stopped builder does not execute a foreign-architecture process.</p>
+  <p>Bundle schema 3 does not embed Docker's save stream directly. It hashes the exact image config and ordered layer bytes, re-addresses them under <code>blobs/sha256/&lt;digest&gt;</code>, emits only those blobs and a canonical manifest in lexical order with fixed tar headers, then applies fixed-level Zstandard compression. A completed provenance report names that representation and adds <code>base_image.resolved_reference</code>, observed Docker client/server versions, locally observed base-image identity when available, bundle schema/provider, exact output image ID, rootfs layer κ, and sizes. The requested <code>base_image.reference</code> remains intact. The report is <code>canonical: false</code>, stays outside the archive, and reports <code>reproducible: true</code> after the base is digest-bound.</p>
+  <p>Private-registry authentication remains Docker-owned. Configure the registry with <code>docker login</code> or the operator's credential helper; Hologram accepts no registry credential flags and records only image identities. The repository's <code>just python-private-registry</code> gate starts a disposable authenticated loopback registry, proves <code>compile --check</code> is offline, rejects an anonymous real compile without leaving an archive, compiles and runs after login, and scans provenance plus archive bytes for credential leakage. The rootfs release workflow requires that proof.</p>
+  <pre><code>just python-private-registry | jq .</code></pre>
+
+  <h3>6. Prove clean-build identities</h3>
+  <p>Use <code>--no-build-cache</code> when you need Docker to rebuild every generated rootfs layer. Completed provenance then records <code>builder.cache_disabled: true</code>. The repository probe performs two such compiles and emits one JSON document suitable for <code>jq</code>:</p>
+  <pre><code>just python-rootfs-repro | jq .
+just python-rootfs-repro | jq '.equal, .identities'</code></pre>
+  <p>The server release gate uses two independent clean Linux runners for each supported output target, <code>linux/amd64</code> and <code>linux/arm64</code>, and compares image, rootfs-layer, application, archive, and footer identities within each architecture. The two architectures are different artifacts and are not expected to share a κ. macOS and Windows server binaries may drive an available Docker-compatible Linux engine, but GitHub's hosted macOS and Windows runners do not provide one; release-host support and rootfs-builder support are separate contracts.</p>
+  <p>The first clean matrix completed every build with the same Docker 28.0.4 engine and pinned base, then exposed target-local differences in BuildKit's cross-stage directory serialization. After the canonical runtime-tar change, workflow run <code>33035209550</code> passed with two matching clean replicas for each Linux target. Completed builds now report <code>reproducible: true</code>. An offline check of a mutable base remains false with a blocker only until compilation resolves and binds its immutable digest.</p>
+
+  <h3>7. Execute the <code>.holo</code></h3>
+  <pre><code>hologram run numpy-pandas.holo --input request.json \
+  --output-format json</code></pre>
+  <pre><code>&#123;
+  "columns": ["label", "value"],
+  "mean": 20.0,
+  "rows": 3,
+  "sum": 60.0
+&#125;</code></pre>
+  <p>The runtime protocol remains binary-safe, but the CLI can decode a known application contract at the edge. Use <code>--output-format text</code> for UTF-8 or <code>--output-format json</code> for JSON. The default <code>raw</code> format retains the full result envelope, including κ, timing, resident size, and output byte arrays.</p>
+  <p>Hologram ensures the verified image is available, then starts its generated entrypoint for each input with networking disabled, a read-only root filesystem, all Linux capabilities dropped, <code>no-new-privileges</code>, one CPU, 1 GiB of memory, 64 PIDs, and a 64 MiB temporary filesystem. Inputs and outputs are limited to 16 MiB and execution to 30 seconds. No project directory is mounted into the container.</p>
+  <p>Bundle schema v3 records the exact Docker image ID and contains only ADR 017's normalized archive. When that same ID is already present under the content-derived local tag, Hologram skips decompressing and loading the embedded image. A missing or mismatched image takes the cold path and is restored from the archive before execution. This preserves the self-contained archive guarantee without trusting a mutable local tag.</p>
+  <p>From the repository root, <code>just python-holo-demo</code> builds the optimized release CLI and repeats this complete check against the committed example. The first invocation pays the one-time Rust release link; later invocations reuse that binary. Prefer the release CLI for large fat archives because debug-mode verification and hashing are substantially slower.</p>
+  <p>The check writes exactly one versioned JSON document to standard output and sends build progress or failures to standard error, so it composes directly with <code>jq</code>:</p>
+  <pre><code>just python-holo-demo | jq .
+just python-holo-demo | jq '.output'
+
+# Compile, execute, verify, and retain the archive
+just python-holo-package target/numpy-pandas.holo \
+  | jq '&#123;archive, archive_bytes&#125;'
+
+# Run that same self-contained file again
+target/release/hologram --json run target/numpy-pandas.holo \
+  --input examples/python-numpy-pandas/request.json
+
+# Or print only the decoded application result
+target/release/hologram run target/numpy-pandas.holo \
+  --input examples/python-numpy-pandas/request.json \
+  --output-format json</code></pre>
+
+  <h2>Local versus <code>mvm</code></h2>
+  <p>The available provider is local OCI execution. The repository's planned <code>mvm</code> boundary currently lives in <code>hologram-sandbox</code>: its hardware-backed backend requires KVM on Linux x86_64, while its guest understands the existing Hologram graph execution protocol rather than this Python OCI/rootfs envelope. It therefore cannot run this archive today, and an Apple Silicon development host cannot use that KVM backend directly.</p>
+  <p>The intended provider boundary keeps the archive stable: <code>local</code> restores or reuses the OCI image on the current machine, while a future <code>mvm</code> provider will place the same verified rootfs content behind a Linux microVM guest and warm-instance pool. Moving execution to <code>mvm</code> improves isolation and can improve warm throughput, but it does not remove the cold dependency/image build performed by <code>hologram compile</code>.</p>
+
+  <h3>What is inside?</h3>
+  <pre><code>numpy-pandas.holo
+├─ AppManifest
+│  └─ primary: RootfsImage · arm64 · κ(image bundle)
+├─ Extension: application-directory/v1
+├─ Metadata: schema-v4 source recipe
+├─ ContentBlob: κ(image bundle)
+│  ├─ Python OCI provider metadata
+│  └─ Zstandard-compressed OCI image archive
+│     ├─ CPython 3.12
+│     ├─ numpy-pandas-holo
+│     ├─ NumPy and compiled extensions
+│     ├─ pandas and transitive dependencies
+│     ├─ required Linux shared libraries
+│     └─ generated Hologram launcher
+└─ BLAKE3 footer</code></pre>
+
+  <h2>Current boundaries</h2>
+  <ul>
+    <li>The rootfs profile supports only direct execution of a self-contained fat archive. The Python Component profile is a Wasm layer and supports <code>holo load</code>.</li>
+    <li>The provider requires a local Docker-compatible engine and leaves its content-derived, image-ID-verified image in the engine cache.</li>
+    <li>Container isolation is useful for a local demo, but this provider is not advertised as an untrusted or multi-tenant security boundary.</li>
+    <li>Real builds bind mutable bases to a registry manifest digest and report the requested and resolved identities. Byte-for-byte clean-builder equality is proven for both supported Linux targets; dependency SBOMs, signed attestations, and the microVM provider remain milestone work.</li>
+    <li>Python Component v1 runs dependency-free projects and locked platform-independent wheels directly and resident. Native/source-only packages require rootfs; deterministic Component output and any real capability-gated WASI profile remain planned.</li>
+  </ul>
+
+  <p>See the <a href={sitePath('/docs/holo-files')}><code>.holo</code> format guide</a>, <code>specs/adrs/008-python-rootfs-oci-provider.md</code>, <code>specs/adrs/012-locked-python-component-dependencies.md</code>, <code>specs/adrs/014-python-rootfs-build-provenance.md</code>, <code>specs/adrs/015-python-rootfs-base-digest-binding.md</code>, and <code>specs/plans/holo-application-runtime.md</code> for the archive contract, provider and provenance decisions, and remaining milestone checklist.</p>
+</DocsLayout>

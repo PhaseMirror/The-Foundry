@@ -1,0 +1,12 @@
+{
+  "schema": "phi-pe.chart.v1",
+  "chartFileId": "economics",
+  "kernelHash": "d912f35f5eb67e6058baa9a14daac7abb1d4997f15519e0dda01d3e358afb475",
+  "bindings": {
+    "n": { "semantic": "period" },
+    "thetaPrev": { "semantic": "last reciprocity stock" },
+    "p": { "semantic": "discount / renormalization" },
+    "t": { "semantic": "treasury horizon or grant clock" },
+    "doorMode": { "semantic": "minus = drawdown toward the index; plus = surplus held for purpose" }
+  }
+}

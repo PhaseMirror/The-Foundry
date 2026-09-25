@@ -1,0 +1,17 @@
+{"plugins": [],
+ "package": "ucc",
+ "options": {"pp.unicode.fun": true, "autoImplicit": false},
+ "name": "UCC",
+ "isModule": false,
+ "importArts":
+ {"UCC.Test":
+  [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Test.olean"]],
+  "UCC.Proofs":
+  [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Proofs.olean"]],
+  "UCC.Logic":
+  [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Logic.olean"]],
+  "UCC.Export":
+  [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Export.olean"]],
+  "UCC.Core":
+  [["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Core.olean"]]},
+ "dynlibs": []}

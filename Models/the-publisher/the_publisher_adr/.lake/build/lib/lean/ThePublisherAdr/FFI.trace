@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["033d740c638fd58b.olean"],
+  "m": false,
+  "i": "6c7d6267aa3358e3.ilean",
+  "c": "d1e6c23fe50f701d.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/the-publisher/the_publisher_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/the-publisher/the_publisher_adr/ThePublisherAdr/FFI.lean -o /home/citizen/Multiplicity/Foundry/models/the-publisher/the_publisher_adr/.lake/build/lib/lean/ThePublisherAdr/FFI.olean -i /home/citizen/Multiplicity/Foundry/models/the-publisher/the_publisher_adr/.lake/build/lib/lean/ThePublisherAdr/FFI.ilean -c /home/citizen/Multiplicity/Foundry/models/the-publisher/the_publisher_adr/.lake/build/ir/ThePublisherAdr/FFI.c --setup /home/citizen/Multiplicity/Foundry/models/the-publisher/the_publisher_adr/.lake/build/ir/ThePublisherAdr/FFI.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["the_publisher_adr/ThePublisherAdr:extraDep",
+     [["@the_publisher_adr:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["ThePublisherAdr.Core transitive imports (legacy)", "00000000000006bb"],
+      ["ThePublisherAdr.Core:importAllArts", "c666bc24ec12bc09"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/the-publisher/the_publisher_adr/ThePublisherAdr/FFI.lean",
+   "ba7c589f3c4671ab"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: ThePublisherAdr.FFI", "8707cc7151c5ccb1"],
+  ["Package.id?: (some the_publisher_adr)", "5b090b6803511a66"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "1121b6e7dcaed8bc"}

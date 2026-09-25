@@ -1,0 +1,119 @@
+# Actual capabilities
+
+This document is deliberately strict about what the current stable build does and does not do.
+
+## Implemented and exercised
+
+- One executable named `hologram`.
+- Typed configuration rooted at `~/.config/hologram/` on every platform.
+- Foreground and background daemon lifecycle.
+- Statically registered, dependency-ordered modules.
+- Kappa Registry represented as the first ordinary module.
+- File listing, durable renaming, and retrieval over the content-addressed object store.
+- Versioned Protobuf/gRPC native API and client.
+- JSON REST endpoints and Utoipa-generated OpenAPI.
+- A global `--json` CLI contract covering every command result, action acknowledgement, download report, decoded run mode, and typed runtime error so stdout can be consumed consistently with `jq`.
+- Self-hosted Scalar interactive API reference.
+- Local and remote client targets with capability-aware route planning.
+- Bounded Kameo actors with links and supervision.
+- Configurable `tracing` and runtime trace-filter updates.
+- Optional OTLP/gRPC trace and RPC-metric export through OpenTelemetry.
+- An awaited JSONL audit-event boundary with typed, non-secret allow/deny
+  records for root requests, child delegations, and child requests.
+- Bearer-token authentication seam for protected routes.
+- First-class `.holo` fixture creation, import, list, inspect, payload-free plan, verify, and remove through CLI, native gRPC, JSON/HTTP, and OpenAPI surfaces.
+- `.holo` compiler/runtime/execution path: strict v4 reads and writes with required verified application directories, fat or thin packaging, explicit archive object κ / footer fingerprint / canonical application κ reporting, required source-schema-v4 Wasm guest-contract tags, exact `(LayerKind, contract)` provider selection, complete pre-provider resolution and re-hashing of root and child closures with deterministic limits/blockers, explanatory local or catalog-backed plans (including unsupported providers), transactional depth-first manifest-order prepare/start and exact reverse stop/rollback, root-primary-only invocation, aggregate tree status, multi-layer core-Wasm execution with nonzero primary positions, manifest-declared callable exports, direct service-free execution, κ-backed thin payload resolution, and idempotent resident load/unload sessions over supervised Wasmtime actors with lifecycle status.
+- `.holo` capability admission: canonical requests are distinct from trusted effective grants; zero-byte and malformed capability objects fail closed; the default local baseline has no storage/channel/network authority, explicit development grants are restricted to direct files or loopback service configuration, denial occurs before provider preparation, and durable audit rows plus run/resident results report non-secret request/grant identities, relation, principal, trusted source, and outcome across CLI, JSON/HTTP, and Protobuf/gRPC.
+- Endpoint-scoped network authority in canonical capability objects: schema 2
+  accepts strictly ordered HTTPS host/port/path-prefix scopes, child delegation
+  attenuates on exact origin and path-segment boundaries, legacy no-network
+  objects retain their identities, and legacy ambient flags fail closed. No
+  network guest interface or raw socket is linked in this slice.
+- Typed `.holo` completion across CLI, JSON/HTTP, and Protobuf/gRPC: byte
+  outputs remain separate from `returned` callable completion and real
+  `exited { code }` process status; complete authorization evidence and a typed
+  completion are required.
+- `.holo` v4 inference-model packaging, import, verified application-directory metadata, and metadata-only `hologram ai inspect`.
+- Direct execution of locked Python OCI rootfs archives through the experimental local container provider, using the current schema-3 normalized Docker archive with canonical SHA-256 blob paths, manifest/tar encoding, source epoch, and compression; non-canonical planned/completed provenance covers hashed source inputs, requested base, pinned uv, observed Docker/image identities, output layer κ, and the remaining clean-host reproducibility blocker.
+- Durable local conversation history.
+- Conversation-backed chat over a configurable inference engine (`echo` by default; `weightc` one-shot CLI or an Ollama-compatible HTTP endpoint via `live.toml`), with independent, switchable threads in the desktop app.
+- Optional resident per-conversation weightc sessions (`resident_sessions = true`): a supervised `weightc enter --jsonl` process per conversation with KV continuity, LRU-capped and lazily respawned on failure.
+- Import, listing, and removal of `weightc` `.wcpu` model artifact directories.
+- OpenAI-compatible (`/v1/chat/completions`, `/v1/models`) and Ollama-compatible (`/api/generate`, `/api/chat`, `/api/tags`, `/api/show`) HTTP inference APIs, both streaming (SSE and NDJSON respectively) and non-streaming, with an `x-hologram-stream: native | emulated` response header and token usage reported when the engine measures it.
+- Minimal control-plane node inventory and heartbeat records.
+- Dynamic third-party modules as sha256-pinned, supervised subprocess plugins speaking gRPC over a Unix socket (`plugins list` / `plugins call`); plugins receive no host resource access in v1.
+- Digest-verified update/rollback foundation.
+- Built-in browser status page.
+- Tauri desktop shell that bundles the server as a managed sidecar, persists
+  user-selected application-directory watches, debounces recursive changes,
+  compiles/imports outside the source tree, and lists/inspects the resulting
+  verified `.holo` archives through the real catalog boundary while preserving
+  the last good archive after a failed build. The persistence, filtering,
+  debounce, and build-state engine is a Tauri-independent workspace crate;
+  `src-tauri` retains only native path authority, fixed sidecar calls, and UI
+  event delivery.
+- Responsive Astro documentation website.
+- Import-free Component Model v1 execution for exact-contract Wasm layers,
+  directly and resident. Compiled components stay warm while every input uses
+  a fresh store. Runtime-owned 64 MiB memory, 100 million fuel, 1 MiB
+  input/output, and two-second deadline ceilings apply by default; admitted
+  memory and CPU-time scalars can only tighten them. Timeout and cancellation
+  use a component-local epoch-interruptible engine. No WASI or ambient host
+  interface is linked.
+- Capability-gated Component object reads under the separate
+  `hologram:guest/component-store-read@1` contract. Its fixed WIT world imports
+  only `hologram:host/store@1.0.0`; direct and resident modes share the same
+  pre-link admission and per-call exact-root check, and child applications are
+  restricted by their delegated grant. No ambient filesystem or WASI surface
+  is linked.
+- Capability-gated typed graph reads under the distinct
+  `hologram:guest/component-store-graph-read@1` contract. The fixed import
+  remains only `hologram:host/store@1.0.0`, but provider preparation resolves
+  complete local closures through registered canonical UOR realization edges,
+  verifies every κ, and enforces depth, object, edge, and aggregate-byte
+  ceilings before linking. Unknown types are opaque leaves; malformed or
+  incomplete typed closures fail closed. Exact-root reads and writes retain
+  their original semantics, and child grants attenuate graph roots.
+- Capability-gated Component object writes under the separate
+  `hologram:guest/component-store-write@1` contract. Its fixed WIT world imports
+  only `hologram:host/store-write@1.0.0`; preparation requires exact admitted
+  storage roots and nonzero quota. Each call checks the root, verifies the
+  content address, and atomically charges only newly materialized bytes against
+  a lifetime-shared quota. Rejections are redacted and leave no partial blob.
+- Capability-gated Component channels under separate publish-only and
+  subscribe-only contracts. Each linker exposes exactly one mediated channel
+  interface after nonempty exact-set admission. A runtime-owned in-memory
+  broker enforces 64 KiB messages, 64-message FIFO mailboxes, nonblocking
+  receive, explicit backpressure, and at-most-once consumption across direct
+  executions sharing one executor or resident applications sharing one
+  runtime. It does not provide broadcast, replay, acknowledgement, durability,
+  cross-process transport, or sockets.
+- Capability-gated HTTPS GET under the separate
+  `hologram:guest/component-network-fetch@1` contract. Its only import is
+  `hologram:host/network-fetch@1.0.0`; admission requires a nonempty exact
+  endpoint scope set. The host disables redirects and proxies, filters and pins
+  DNS results to public destinations, inherits no guest credentials or headers,
+  and applies 2 KiB target, 1 MiB response, 1.5-second, and eight-operation
+  concurrency ceilings. Raw sockets and announce/listen remain unavailable.
+- Python `wasi-component` source compilation with bundled CPython 3.14, locked
+  universal-wheel dependencies, exact SHA-256-pinned componentizer wheels for
+  all five server-release hosts, non-canonical build provenance, and direct or
+  resident execution. Unsupported build hosts fail closed; deterministic
+  component bytes remain unclaimed.
+
+## Present as an extension seam, not implemented by the default module set
+
+- WASI and capability-gated Component host imports beyond the shipped
+  exact-root object-read/object-write, typed graph-read, bounded channel, and
+  bounded HTTPS GET
+  profiles.
+- Independently addressable or explicitly invokable child applications; current children share their parent's lifecycle and only the root primary is invoked.
+- Uniform engine enforcement of scalar CPU, memory, deadline, priority, and
+  concurrency budgets across providers; Component v1 currently enforces its
+  memory/time subset plus host-owned ceilings.
+- `.holo` execution for `tensor`, inference-model, and non-Python/resident `rootfs` layers.
+- Full enterprise users, OIDC/SAML, organizations, and RBAC policy storage.
+- Fleet scheduling.
+- Plugin host-resource capabilities, plugin HTTP routes, and microVM-isolated plugin execution.
+
+Calls requiring a missing runtime return a typed `LIVE_CAPABILITY_MISSING` error rather than pretending execution occurred.

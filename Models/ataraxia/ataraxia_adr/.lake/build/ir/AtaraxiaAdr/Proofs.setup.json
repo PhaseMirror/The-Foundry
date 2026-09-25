@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "ataraxia_adr",
+ "options": {},
+ "name": "AtaraxiaAdr.Proofs",
+ "isModule": false,
+ "importArts":
+ {"AtaraxiaAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/lib/lean/AtaraxiaAdr/Core.olean"]]},
+ "dynlibs": []}

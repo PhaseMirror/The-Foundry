@@ -1,0 +1,39 @@
+{
+  "sites": [
+    {
+      "name": "aiistech",
+      "path": "sites/aiistech",
+      "domain": "aiistech.com"
+    },
+    {
+      "name": "citizen-gardens",
+      "path": "sites/citizen-gardens",
+      "domain": "citizengardens.org"
+    },
+    {
+      "name": "echobraid",
+      "path": "sites/echobraid/website",
+      "domain": "echobraid.com"
+    },
+    {
+      "name": "lambda",
+      "path": "sites/lambda",
+      "domain": "lambda.multiplicity.x10.mx"
+    },
+    {
+      "name": "multiplic-studio",
+      "path": "sites/multiplic-studio",
+      "domain": "multiplic.studio"
+    },
+    {
+      "name": "phase-mirror",
+      "path": "sites/phase-mirror",
+      "domain": "phasemirror.com"
+    },
+    {
+      "name": "pirtm",
+      "path": "sites/pirtm",
+      "domain": "pirtm.com"
+    }
+  ]
+}

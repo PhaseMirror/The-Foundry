@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "the_publisher_adr",
+ "options": {},
+ "name": "ThePublisherAdr.FFI",
+ "isModule": false,
+ "importArts":
+ {"ThePublisherAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/the-publisher/the_publisher_adr/.lake/build/lib/lean/ThePublisherAdr/Core.olean"]]},
+ "dynlibs": []}

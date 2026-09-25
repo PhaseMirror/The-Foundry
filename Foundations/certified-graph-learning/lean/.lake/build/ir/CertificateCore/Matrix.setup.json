@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "certificate-core",
+ "options": {},
+ "name": "CertificateCore.Matrix",
+ "isModule": false,
+ "importArts":
+ {"CertificateCore.Vector":
+  [["/home/citizen/Multiplicity/Foundations/certified-graph-learning/lean/.lake/build/lib/lean/CertificateCore/Vector.olean"]]},
+ "dynlibs": []}

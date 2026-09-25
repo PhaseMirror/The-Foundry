@@ -1,0 +1,13 @@
+{"plugins": [],
+ "package": "the_examiner_adr",
+ "options": {},
+ "name": "TheExaminerAdr",
+ "isModule": false,
+ "importArts":
+ {"TheExaminerAdr.Proofs":
+  [["/home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/lib/lean/TheExaminerAdr/Proofs.olean"]],
+  "TheExaminerAdr.FFI":
+  [["/home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/lib/lean/TheExaminerAdr/FFI.olean"]],
+  "TheExaminerAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/lib/lean/TheExaminerAdr/Core.olean"]]},
+ "dynlibs": []}

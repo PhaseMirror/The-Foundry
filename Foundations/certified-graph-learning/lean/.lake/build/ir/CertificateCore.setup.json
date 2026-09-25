@@ -1,0 +1,17 @@
+{"plugins": [],
+ "package": "certificate-core",
+ "options": {},
+ "name": "CertificateCore",
+ "isModule": false,
+ "importArts":
+ {"CertificateCore.Vector":
+  [["/home/citizen/Multiplicity/Foundations/certified-graph-learning/lean/.lake/build/lib/lean/CertificateCore/Vector.olean"]],
+  "CertificateCore.SpectralContraction":
+  [["/home/citizen/Multiplicity/Foundations/certified-graph-learning/lean/.lake/build/lib/lean/CertificateCore/SpectralContraction.olean"]],
+  "CertificateCore.Matrix":
+  [["/home/citizen/Multiplicity/Foundations/certified-graph-learning/lean/.lake/build/lib/lean/CertificateCore/Matrix.olean"]],
+  "CertificateCore.GraphLaplacian":
+  [["/home/citizen/Multiplicity/Foundations/certified-graph-learning/lean/.lake/build/lib/lean/CertificateCore/GraphLaplacian.olean"]],
+  "CertificateCore.FFI":
+  [["/home/citizen/Multiplicity/Foundations/certified-graph-learning/lean/.lake/build/lib/lean/CertificateCore/FFI.olean"]]},
+ "dynlibs": []}

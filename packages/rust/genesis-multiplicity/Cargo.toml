@@ -1,0 +1,21 @@
+[package]
+name = "genesis-multiplicity"
+edition.workspace = true
+version.workspace = true
+rust-version = "1.89"
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Rust port of packages/rust/genesis-ode/src/genesis_governance/multiplicity — prime-band allocation, multiplicity encoding/decoding (ADR-007, ADR-009) and the supporting HistoryStore"
+
+[lib]
+name = "genesis_multiplicity"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dev-dependencies]
+tempfile = "3"

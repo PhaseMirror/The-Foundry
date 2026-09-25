@@ -1,0 +1,38 @@
+replicaCount: 1
+
+image:
+  repository: hologram-api
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  requests:
+    cpu: 1000m
+    memory: 2Gi
+  limits:
+    cpu: 4000m
+    memory: 8Gi
+
+persistence:
+  models:
+    enabled: true
+    size: 20Gi
+  ledger:
+    enabled: true
+    size: 5Gi
+
+routingConfig: |
+  default_model: "qwen2.5-0.5b"
+  routes:
+    - domain: "legal_scopist"
+      model_id: "qwen2.5-1.5b-legal"
+      archive_path: "/models/hologram/qwen2.5-1.5b-legal.holo"
+      description: "Highly deterministic model fine-tuned for legal ESI extraction."
+    - domain: "medical_ataraxia"
+      model_id: "llama3.2-1b-clinical"
+      archive_path: "/models/hologram/llama3.2-1b-clinical.holo"
+      description: "Clinical documentation engine."

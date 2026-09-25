@@ -1,0 +1,545 @@
+# The hologram-ai dictionary, transcribed row-by-row from
+# docs/conceptual-model/00-source.md. This is the single source of truth the BDD
+# features and V&V witnesses are checked against by the honesty meta-gate.
+#
+# Fields:
+#   id        kebab-case row identifier (matches the feature tag @row:<id>)
+#   statement the one-line normative claim
+#   stage     S0 addressing | S1 acquisition | S2 compilation | S3 execution | S4 application
+#   status    verified | build | open           (see model/status.toml)
+#   oracles   ids from model/oracles.toml
+#   tier      suite  = implemented, gating, green
+#             target = defined behavior, measured/probed, non-gating
+#   executor  rust    = cucumber (hologram-ai-conformance)
+#             browser = cucumber-js + Playwright Chromium (apps/web/bdd)
+#   feature   path (relative to repo root) of the Gherkin definition
+
+# ───────────────────────────── S0 — addressing ─────────────────────────────
+
+[[row]]
+id = "kappa-addressing"
+statement = "A buffer's κ-label is `blake3:<hex>` of its bytes, reproducing the official BLAKE3 vectors and `holospaces::address`."
+stage = "S0"
+status = "verified"
+oracles = ["blake3-kats", "holospaces-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s0_addressing/kappa_addressing.feature"
+
+[[row]]
+id = "chunked-kappa-persisting"
+statement = "Incremental (chunked) κ-hashing of a stream equals the one-shot κ of the whole content, for every chunking."
+stage = "S0"
+status = "verified"
+oracles = ["blake3-kats"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s0_addressing/chunked_kappa_persisting.feature"
+
+[[row]]
+id = "content-verified-resolution"
+statement = "Resolving κ → bytes re-hashes the bytes; content that does not reproduce its κ is rejected with the label."
+stage = "S0"
+status = "build"
+oracles = ["blake3-kats"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s0_addressing/content_verified_resolution.feature"
+
+# ───────────────────────────── S1 — acquisition ─────────────────────────────
+
+[[row]]
+id = "hf-model-resolution"
+statement = "Any HuggingFace repo id resolves to its file manifest via the Hub API, classified into shards and companions."
+stage = "S1"
+status = "verified"
+oracles = ["hf-hub"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s1_acquisition/hf_model_resolution.feature"
+
+[[row]]
+id = "safetensors-header-streaming"
+statement = "Files produced by the reference safetensors crate stream-parse (8-byte length + JSON header + ranges) to identical tensors."
+stage = "S1"
+status = "verified"
+oracles = ["safetensors-ref"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s1_acquisition/safetensors_header_streaming.feature"
+
+[[row]]
+id = "streamed-download"
+statement = "The download worker streams shards tensor-by-tensor into the OPFS κ-store; peak transient memory is bounded by one tensor."
+stage = "S1"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s1_acquisition/streamed_download.feature"
+
+[[row]]
+id = "supported-search"
+statement = "Model discovery lists only models whose architecture family the registry supports — the journey never begins on a model preflight would reject for family support."
+stage = "S1"
+status = "build"
+oracles = ["journey-reference", "hf-hub"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s1_acquisition/supported_search.feature"
+
+[[row]]
+id = "model-preflight"
+statement = "Before any shard byte moves, the model is validated: config names a supported family with its required keys, and the parametric graph builds from config + the header-only manifest; rejection names the family/key with zero shard bytes transferred."
+stage = "S1"
+status = "build"
+oracles = ["journey-reference", "hf-hub"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s1_acquisition/model_preflight.feature"
+
+[[row]]
+id = "memory-guard"
+statement = "The resource guard is pure projection: κ-store need, measured local headroom, cache coverage, window, and stage plan are surfaced as information before transfer; the journey is never refused for resources."
+stage = "S1"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s1_acquisition/memory_guard.feature"
+
+[[row]]
+id = "network-skip"
+statement = "Transit is the set-difference from the known: under a shard's content pin (its HTTP ETag — the Hub's blob hash), ranges whose κ an earlier stream recorded never re-transit (known = provenance-recorded κ, not cached bytes; unknown runs move as coalesced ranges); a changed pin discards the prior and streams fully; no skipped byte is trusted — every κ verifies at first materialization and a wrong prior unpins and recovers."
+stage = "S1"
+status = "build"
+oracles = ["journey-reference", "hf-hub"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s1_acquisition/network_skip.feature"
+
+[[row]]
+id = "companion-assets"
+statement = "config.json, tokenizer.json, and generation_config.json are fetched and persisted under the model directory."
+stage = "S1"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s1_acquisition/companion_assets.feature"
+
+[[row]]
+id = "quantized-rest"
+statement = "A consumed wide blob never holds the quota against its own artifact."
+stage = "S1"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s1_acquisition/quantized_rest.feature"
+
+# ───────────────────────────── S2 — compilation ─────────────────────────────
+
+[[row]]
+id = "parametric-graph"
+statement = "The decoder graph is a function of config.json + the tensor manifest alone (hidden/layers/heads/kv-heads/head-dim/vocab/rope_theta/rms_norm_eps/tying/context/dtype); the family registry selects the builder; unsupported families fail loud."
+stage = "S2"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s2_compilation/parametric_graph.feature"
+
+[[row]]
+id = "streamed-weightless-compile"
+statement = "Compilation from the manifest (names/shapes/dtypes/κ) alone emits a k-form .holo whose kappa_map binds every weight constant to its κ."
+stage = "S2"
+status = "build"
+oracles = ["hf-hub"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s2_compilation/streamed_weightless_compile.feature"
+
+[[row]]
+id = "onnx-compile-parity"
+statement = "Compiled ONNX graphs execute to ONNX Runtime's outputs within tolerance, on the committed fixtures and the official node corpus."
+stage = "S2"
+status = "verified"
+oracles = ["onnx-runtime", "onnx-node-corpus", "onnx-fixtures"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s2_compilation/onnx_compile_parity.feature"
+
+[[row]]
+id = "quant-dequant"
+statement = "Q4_0/Q8_0 dequantization reproduces the GGML reference golden vectors bit-exactly."
+stage = "S2"
+status = "verified"
+oracles = ["quant-goldens"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s2_compilation/quant_dequant.feature"
+
+[[row]]
+id = "family-registry-support"
+statement = "Every registered architecture family is verified against a pinned published model: the parametric k-form compiles from the model's real config.json and safetensors manifest, its κ-map covering every tensor exactly once."
+stage = "S2"
+status = "verified"
+oracles = ["hf-hub", "smollm2-135m", "mistral-7b-instruct", "phi-4"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s2_compilation/family_registry_support.feature"
+
+[[row]]
+id = "deterministic-compile"
+statement = "The parametric k-form compile is deterministic: identical config + manifest produce a byte-identical archive (a stable κ) — content-addressing requires it, monolithic and staged."
+stage = "S2"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s2_compilation/deterministic_compile.feature"
+
+[[row]]
+id = "parametricity"
+statement = "No canonical-instance constant leaks into generic code: an arbitrary use-case instantiates the same pipeline end-to-end, and the anti-hardcode gate holds."
+stage = "S2"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s2_compilation/parametricity.feature"
+
+[[row]]
+id = "arbitrary-architecture-coverage"
+statement = "Coverage of HuggingFace architecture families by the parametric registry — measured and reported, never asserted universal."
+stage = "S2"
+status = "open"
+oracles = ["hf-hub"]
+tier = "target"
+executor = "rust"
+feature = "features/suites/s2_compilation/arbitrary_architecture_coverage.feature"
+
+# ───────────────────────────── S3 — execution ─────────────────────────────
+
+[[row]]
+id = "staged-execution"
+statement = "Windowed execution over k equals monolithic execution: the stage archives' κ-maps partition the model's tensors exactly, the staged pipeline reproduces the monolithic logits, and peak weight residency is bounded by the window, never the model."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/staged_execution.feature"
+
+[[row]]
+id = "staged-window-growth"
+statement = "The staged generation window follows the sequence, never the model: stage k-forms are weightless, so the session recompiles them per geometric window bucket up to the model's own context, per-token compute scales with the actual sequence, the regrown pipeline reproduces the fixed-window completion exactly, and a sequence past the model's context fails loud naming both lengths."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/staged_window_growth.feature"
+
+[[row]]
+id = "stage-residency-cache"
+statement = "κ-store bandwidth is paid per window, never per token, within the environment's measured headroom: materialized stage sessions stay resident across forward passes while they fit the residency budget, each stage materializes once per window, the resident set never exceeds the budget (one stage is the floor), and a zero budget is exactly the strict one-stage window; cached and strict execution produce identical completions."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/stage_residency_cache.feature"
+
+[[row]]
+id = "session-verified-kappa"
+statement = "Verification is placed at the trust boundary, once per crossing, never per traversal: a κ verifies (re-hashes) at its first materialization in a session and later rematerializations are read-only I/O; the verified set is session-scoped, so a fresh session re-verifies at first touch and rejects corrupted content naming the label."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/session_verified_kappa.feature"
+
+[[row]]
+id = "total-algebraic-path"
+statement = "Every executed kernel is a hierarchy kernel — zero runtime float dispatch, parity with the retired float reference witnessed at gate time per (op, tier); held open by the pinned substrate's float-first dispatch for float dtypes, with the float-dispatch fraction of a compiled plan measured and reported, never asserted."
+stage = "S3"
+status = "open"
+oracles = ["hologram-substrate"]
+tier = "target"
+executor = "rust"
+feature = "features/suites/s3_execution/total_algebraic_path.feature"
+
+[[row]]
+id = "saturation-residency"
+statement = "A failed verification UNPINS: the corrupted cache entry evaporates and resolution re-resolves once through the deeper tier (recorded provenance), so cache corruption degrades to a stream instead of dead-ending the journey; only the failing entry is evicted — every other cached κ (bound content) is untouched; without a deeper tier the failure stays loud naming the label, and recovered bytes must reproduce the κ before anything executes."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/saturation_residency.feature"
+
+[[row]]
+id = "derived-artifact-kappa"
+statement = "The known set closes over deterministic derivation: a window's stage archives persist under their derivation key with recorded content-κs, a later session with identical inputs resolves them (content-verified at load) instead of re-deriving, resolution and derivation are output-identical, and a corrupted entry evaporates with derivation itself as the recovery — a wrong prior never dead-ends and never executes unverified content."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/derived_artifact_kappa.feature"
+
+[[row]]
+id = "idle-derivation"
+statement = "Idle time feeds the anneal: between turns the session pre-derives the next window bucket's stage archives into the derived store — off the per-token path (no weights move, the resident window and its counters are untouched) — so a later bucket crossing resolves the window instead of compiling it on the critical path; abandoned speculation is ordinary derived content, evaporable by the same lifecycle; failed speculation is inert, never load-bearing."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/idle_derivation.feature"
+
+[[row]]
+id = "chunked-head"
+statement = "No head is too large to execute: the LM head partitions into vocab-row chunks at the pipeline's own stage granularity via κ-range bindings (a chunk binds a byte range of the whole tensor's κ; verification covers the whole content once, and it is the only whole-content read — a session-verified ranged binding rematerializes through resolve_range, moving only its slice), the concatenated chunk logits agree with the whole-head logits within kernel reduction-order tolerance with exact greedy-decode parity, no whole-vocabulary image is ever materialized, and a single-chunk head is exactly the classic head stage."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/chunked_head.feature"
+
+[[row]]
+id = "bounded-embedding"
+statement = "A model is bounded by its unavoidable per-row/per-tile work, never whole-matrix F32 materialization: the embedding gathers the token rows at the table's native dtype and widens only the gathered result, so the whole [vocab, hidden] F32 image is never materialized, and a fused Phi3-family model executes monolithically and staged to identical logits."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/bounded_embedding.feature"
+
+[[row]]
+id = "kappa-provenance-resolution"
+statement = "The κ-store is a cache over recorded provenance: a κ absent from the local store resolves from its revision-pinned source (verified by re-hashing to its κ), and the journey completes with an empty local cache — local and remote resolution are indistinguishable."
+stage = "S3"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s3_execution/kappa_provenance_resolution.feature"
+
+[[row]]
+id = "kappa-materialization"
+statement = "A k-form archive + a κ-store materialize into an executable session; every resolve is content-verified; a missing or corrupt κ aborts with the label."
+stage = "S3"
+status = "build"
+oracles = ["blake3-kats"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/kappa_materialization.feature"
+
+[[row]]
+id = "execution-parity"
+statement = "The materialized parametric pipeline reproduces ONNX Runtime logits for the same pinned model within tolerance."
+stage = "S3"
+status = "verified"
+oracles = ["onnx-runtime", "smollm2-135m"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/execution_parity.feature"
+
+[[row]]
+id = "tokenizer-parity"
+statement = "Encode/decode matches the reference HuggingFace tokenizers on the model's own published tokenizer.json."
+stage = "S3"
+status = "verified"
+oracles = ["hf-tokenizers", "smollm2-135m"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/tokenizer_parity.feature"
+
+[[row]]
+id = "structural-za"
+statement = "Addressed decode steps allocate zero runtime heap (class ZA) on the pinned substrate."
+stage = "S3"
+status = "verified"
+oracles = ["hologram-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/structural_za.feature"
+
+[[row]]
+id = "structural-zm"
+statement = "Execution moves no buffer bytes post-load (class ZM) on the pinned substrate."
+stage = "S3"
+status = "verified"
+oracles = ["hologram-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/structural_zm.feature"
+
+[[row]]
+id = "structural-ce"
+statement = "Unchanged compute cones are elided by κ-residency (class CE) on the pinned substrate."
+stage = "S3"
+status = "verified"
+oracles = ["hologram-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/structural_ce.feature"
+
+[[row]]
+id = "structural-cf"
+statement = "Only canonical forms cross the hologram boundary — closed OpKind catalog, interned shapes, canonical dtypes (class CF)."
+stage = "S3"
+status = "verified"
+oracles = ["hologram-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/structural_cf.feature"
+
+[[row]]
+id = "structural-lw"
+statement = "Every desugared lowering is held to the external reference of the op it replaces (class LW)."
+stage = "S3"
+status = "verified"
+oracles = ["onnx-runtime"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/structural_lw.feature"
+
+[[row]]
+id = "structural-im"
+statement = "Byte-level format parsing is confined to the import perimeter; nothing mid-pipeline parses raw model bytes (class IM)."
+stage = "S3"
+status = "build"
+oracles = ["hologram-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/structural_im.feature"
+
+[[row]]
+id = "single-position-head"
+statement = "Single position head operations execute within the allocated residency."
+stage = "S3"
+status = "build"
+oracles = ["hologram-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/single_position_head.feature"
+
+[[row]]
+id = "quantized-transit"
+statement = "Quantized tensors retain precision invariants during staged transit."
+stage = "S3"
+status = "build"
+oracles = ["hologram-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s3_execution/quantized_transit.feature"
+
+# ───────────────────────────── S4 — application ─────────────────────────────
+
+[[row]]
+id = "generation-loop"
+statement = "Autoregressive generation is re-execution of the compiled graph with streamed token emission and config-driven sampling; it is bounded by stop conditions, the remaining context window, and cancellation — never a fixed token cap; no KV-cache machinery exists."
+stage = "S4"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s4_application/generation_loop.feature"
+
+[[row]]
+id = "decode-elision"
+statement = "Consecutive decode steps report elided (skipped) dispatches for the unchanged prefix cone — the measured k-scaling witness."
+stage = "S4"
+status = "build"
+oracles = ["hologram-substrate"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s4_application/decode_elision.feature"
+
+[[row]]
+id = "app-domain-events"
+statement = "The app-domain projection is pure and replayable: reduce(events) is deterministic and order-respecting."
+stage = "S4"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s4_application/app_domain_events.feature"
+
+[[row]]
+id = "browser-journey"
+statement = "Download → compile → materialize → run completes in real Chromium against the hermetic fixture, exercising the genuine workers/wasm/OPFS path."
+stage = "S4"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s4_application/browser_journey.feature"
+
+[[row]]
+id = "warm-turn"
+statement = "A chat session's later turns run warm: the staged session — compiled window, resident stage sessions, session verified-κ set, derived-artifact cache — survives across sends, so a warm turn pays decode with zero window recompiles and zero stage rematerializations; the session rebuilds itself on model switch and a cold turn has identical semantics."
+stage = "S4"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s4_application/warm_turn.feature"
+
+[[row]]
+id = "session-window"
+statement = "A chat session is bounded only by the model's own context: the archive compiles at max_position_embeddings (staging absorbs the memory scaling), and a transcript that outgrows the window trims oldest-turn-first so the conversation continues — it never dead-ends."
+stage = "S4"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s4_application/session_window.feature"
+
+[[row]]
+id = "chat-handshake"
+statement = "The three-message handshake chat session completes in real Chromium on the hermetic fixture, matching the committed reference transcript deterministically."
+stage = "S4"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s4_application/chat_handshake.feature"
+
+[[row]]
+id = "live-model-journey"
+statement = "The full journey (download → compile → run → handshake) completes in real Chromium on the pinned SmolLM2-135M-Instruct."
+stage = "S4"
+status = "verified"
+oracles = ["smollm2-135m", "hf-hub"]
+tier = "suite"
+executor = "browser"
+feature = "features/suites/s4_application/live_model_journey.feature"
+
+[[row]]
+id = "deployment-gate"
+statement = "The Pages deployment requires the journey gate: the deploy workflow cannot publish without the browser suites green."
+stage = "S4"
+status = "build"
+oracles = ["journey-reference"]
+tier = "suite"
+executor = "rust"
+feature = "features/suites/s4_application/deployment_gate.feature"
+
+[[row]]
+id = "performance-contract"
+statement = "Throughput, compile-time, and reuse floors — measured and reported per environment, never asserted as invariants."
+stage = "S4"
+status = "open"
+oracles = ["hologram-substrate"]
+tier = "target"
+executor = "rust"
+feature = "features/suites/s4_application/performance_contract.feature"

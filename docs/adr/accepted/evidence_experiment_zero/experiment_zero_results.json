@@ -1,0 +1,168 @@
+{
+  "experiment": "Sovereign Loop Experiment ZERO",
+  "version": "0.2-final-reference",
+  "date": "2026-09-21",
+  "scope": "neutral reference semantics; not an RI1/Soreia implementation",
+  "baseline_cases": {
+    "ZERO-S1": {
+      "status": "ACCEPTED",
+      "representability": "EXACT",
+      "admissibility": "PERMIT",
+      "next": "NONE"
+    },
+    "ZERO-S2": {
+      "status": "ACCEPTED_WITH_DECLARED_LOSS",
+      "representability": "LOSSY",
+      "lost_invariants": [
+        "I_format_exact"
+      ],
+      "next": "NONE"
+    },
+    "ZERO-S3": {
+      "status": "BLOCKED_REPRESENTABILITY",
+      "next": "NO_EXECUTION"
+    },
+    "ZERO-S4": {
+      "status": "BLOCKED_ADMISSIBILITY",
+      "next": "NO_EXECUTION"
+    },
+    "ZERO-S5": {
+      "status": "DEFERRED",
+      "resume_condition": "dep_X.verified == true",
+      "next": "WAIT"
+    },
+    "ZERO-S6": {
+      "status": "REJECTED",
+      "next": "DO_NOT_PROMOTE",
+      "negative_knowledge": {
+        "case_id": "ZERO-S6",
+        "path": "known_bad_path",
+        "reason": "validation failed",
+        "do_not_repeat": true
+      }
+    },
+    "ZERO-S7": {
+      "status": "STALE",
+      "next": "REVALIDATE",
+      "depends_on": {
+        "dep_Y": 1
+      }
+    },
+    "ZERO-S8": {
+      "status": "PROTECTED_UNKNOWN",
+      "next": "DO_NOT_RESOLVE",
+      "protected_token": "vault:?"
+    }
+  },
+  "hostile_and_continuity_tests": [
+    {
+      "test": "H1 Loss laundering",
+      "passed": true,
+      "expected": "LOSSY remains LOSSY with \u0394I",
+      "observed": "LOSSY / ['I_format_exact']",
+      "evidence": "case state"
+    },
+    {
+      "test": "H2 Vault bypass",
+      "passed": true,
+      "expected": "All unauthorized direct/alias/derived requests blocked",
+      "observed": "[{'allowed': False, 'reason': 'protected_unknown'}, {'allowed': False, 'reason': 'protected_unknown'}, {'allowed': False, 'reason': 'protected_unknown'}]",
+      "evidence": "vault policy"
+    },
+    {
+      "test": "H3 Defer bypass",
+      "passed": true,
+      "expected": "Execution blocked while resume condition false",
+      "observed": "False",
+      "evidence": "dep_X.verified=false"
+    },
+    {
+      "test": "H4 Negative-knowledge repetition",
+      "passed": true,
+      "expected": "Known failed path refused",
+      "observed": "{'allowed': False, 'reason': 'negative_knowledge'}",
+      "evidence": "negative knowledge"
+    },
+    {
+      "test": "H5 Stale laundering",
+      "passed": true,
+      "expected": "STALE cannot promote",
+      "observed": "{'allowed': False, 'status': 'STALE'}",
+      "evidence": "promotion gate"
+    },
+    {
+      "test": "H6 Authority/representability separation",
+      "passed": true,
+      "expected": "Authorized-unrepresentable and unauthorized-exact fail at different gates",
+      "observed": "BLOCK_REPRESENTABILITY; BLOCK_AUTHORITY",
+      "evidence": "gate ordering"
+    },
+    {
+      "test": "H7 Checkpoint tamper",
+      "passed": true,
+      "expected": "Hash verification fails",
+      "observed": "False",
+      "evidence": "checkpoint hash"
+    },
+    {
+      "test": "H8 History deletion",
+      "passed": true,
+      "expected": "Deletion detected by checkpoint and/or hash chain",
+      "observed": "checkpoint=False, chain=False",
+      "evidence": "hash chain"
+    },
+    {
+      "test": "H9 Deterministic precedence",
+      "passed": true,
+      "expected": "All mixed states route deterministically",
+      "observed": "[('BLOCK_REPRESENTABILITY', 'BLOCK_REPRESENTABILITY'), ('BLOCK_ADMISSIBILITY', 'BLOCK_ADMISSIBILITY'), ('DEFER', 'DEFER'), ('EXECUTE', 'EXECUTE')]",
+      "evidence": "router"
+    },
+    {
+      "test": "H10 Context compilation transparency",
+      "passed": true,
+      "expected": "Compiled context declares omissions/protected exclusions",
+      "observed": "{'included': ['E1', 'known_bad_path', 'ZERO-S5', 'ZERO-S7'], 'omitted': ['E2', 'vault:?'], 'protected_not_loaded': ['vault:?']}",
+      "evidence": "context manifest"
+    },
+    {
+      "test": "C1 Checkpoint integrity",
+      "passed": true,
+      "expected": "Checkpoint + event chain verify",
+      "observed": "True",
+      "evidence": "fresh restore"
+    },
+    {
+      "test": "C2 Frontier recovery",
+      "passed": true,
+      "expected": "Replacement recovers exact active frontier",
+      "observed": "{'ZERO-S3': 'NO_EXECUTION', 'ZERO-S4': 'NO_EXECUTION', 'ZERO-S5': 'WAIT', 'ZERO-S6': 'DO_NOT_PROMOTE', 'ZERO-S7': 'REVALIDATE', 'ZERO-S8': 'DO_NOT_RESOLVE'}",
+      "evidence": "checkpoint-only restore"
+    },
+    {
+      "test": "C3 Failed path survives",
+      "passed": true,
+      "expected": "Negative knowledge retained",
+      "observed": "[{'case_id': 'ZERO-S6', 'path': 'known_bad_path', 'reason': 'validation failed', 'do_not_repeat': True}]",
+      "evidence": "checkpoint-only restore"
+    },
+    {
+      "test": "C4 Deferred resume",
+      "passed": true,
+      "expected": "Execution becomes eligible only after condition true",
+      "observed": "True",
+      "evidence": "dependency state change"
+    },
+    {
+      "test": "C5 Portable reconstruction",
+      "passed": true,
+      "expected": "Independent JSON export verifies and reconstructs",
+      "observed": "True",
+      "evidence": "portable package"
+    }
+  ],
+  "all_tests_passed": true,
+  "event_count": 26,
+  "baseline_checkpoint": "/mnt/data/experiment_zero_final/experiment_zero_baseline_checkpoint.json",
+  "portable_export": "/mnt/data/experiment_zero_final/sovereign_project_export_v0.1.json"
+}

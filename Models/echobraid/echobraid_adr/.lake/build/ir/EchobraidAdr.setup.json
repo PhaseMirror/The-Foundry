@@ -1,0 +1,13 @@
+{"plugins": [],
+ "package": "echobraid_adr",
+ "options": {},
+ "name": "EchobraidAdr",
+ "isModule": false,
+ "importArts":
+ {"EchobraidAdr.Proofs":
+  [["/home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/lib/lean/EchobraidAdr/Proofs.olean"]],
+  "EchobraidAdr.FFI":
+  [["/home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/lib/lean/EchobraidAdr/FFI.olean"]],
+  "EchobraidAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/lib/lean/EchobraidAdr/Core.olean"]]},
+ "dynlibs": []}

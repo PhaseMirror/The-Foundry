@@ -1,0 +1,30 @@
+{
+  "reason": "reject: civic M = 2R+1 must not be minted into bindings; chart binding set locked to {n, thetaPrev, p, t, doorMode}",
+  "document": {
+    "version": "0.1.0",
+    "dialect": "Φπε",
+    "kernel": {
+      "gamma": "1/2",
+      "lambda": "1/4",
+      "psi": 1,
+      "omega": 1,
+      "p": 1,
+      "n": 2,
+      "thetaPrev": "1/3",
+      "t": 3,
+      "doorMode": "minus"
+    },
+    "bindings": {
+      "n": { "semantic": "period" },
+      "thetaPrev": { "semantic": "last reciprocity stock" },
+      "p": { "semantic": "discount / renormalization" },
+      "t": { "semantic": "treasury horizon or grant clock" },
+      "doorMode": { "semantic": "minus = drawdown; plus = surplus" },
+      "Mscale": { "semantic": "2R+1" }
+    },
+    "meta": {
+      "chartFileId": "economics",
+      "attribution": { "cid": "QmExample" }
+    }
+  }
+}

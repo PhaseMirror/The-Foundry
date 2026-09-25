@@ -1,0 +1,112 @@
+**Legal person on this wire:** computational substrate of `PhaseMirror/Foundry` (UCC / UOR Foundry monorepo). Not the UNA/DUNA, not operator-LLC equity, not a membership instrument. Phase Mirror here is a build-time diagnostic, not a runtime firewall. Civic L0 and computational L0 stay on separate planes. Year-one product remains UCC-as-a-service; UAC stays research until a partner QPU queue exists.
+
+Scan target: [https://github.com/PhaseMirror/Foundry](https://github.com/PhaseMirror/Foundry) at `main` `6f7ee139…`. One branch. Zero open issues in this repo. Stars ~1–2. Nested R4 workspace is `packages/rust/uor/r4`. Root wrappers: `r4-app.sh`, `uor-r4-cli`, `r4_worker.js`.
+
+---
+
+## Homonym lock first
+
+ADR-0008 is accepted and load-bearing. “R4 work” is five objects. Mixing them is how this repo looks larger than it is.
+
+| Object | What it is | Where it lives now |
+|---|---|---|
+| \(R^4\) / `uor-r4` | Experimental geometric / transformerless language system | `packages/rust/uor/r4` |
+| Gate R4 | Template BDD: no stubbed capability claims | verification / conformance surface |
+| Hologram v4 | `HOLO\x04` packaging | PrismPM / hologram path, not the LM |
+| \(F_4\) | Exceptional group from Atlas fold | Atlas research, not serving |
+| \(R_{96}\) | 96 resonance classes on the 12,288 torus | Atlas / Archivum, not exported by `uor-r4` |
+
+Decision already on the tree: \(R^4\) is a **downstream consumer** of `UOR-Framework` / `uor-addr`. It does not drive Archivum–CRMF–ACE, Φ, \(C_{768}\), or \(R_{96}\) at runtime.
+
+---
+
+## What is actually on the tree
+
+Two architectures sit beside each other and barely touch.
+
+**1. Serving / compiler stack (product path).**  
+`uor-r4-core` transformerless compiler + integer runtime; `uor-r4-graph-format` R4G1; compiler / runtime / certify / CLI; `uor-r4-proof-model`. Teacher is a pinned Hugging Face model (default SmolLM2-135M-Instruct). Deployed kernel contract: XOR/AND/OR/shift/rotate/popcount/int add-sub/compare/table reads only — no multiply, divide, or float on the hot path. Allocation-free prediction. Deterministic artifacts. `ask` refuses a continuation bundle that has not passed an imported `instruction-chat` evaluation.
+
+Landed: TLA5 + TLS1 bundles, R4G1 cover → score pipeline, Gate C reports, UOR CID objects, local `r4` CLI / HTTP server, WASM dashboard for the geometric router only.
+
+**2. Geometric router stack (exploratory).**  
+`uor-r4-router`: 512-dim zeta-zero grid, 4D block-norm, Hopf on \(S^3\). Explicitly **out of the graph migration path**. Dashboard works without a chat model. Static WASM still falls back here because it has no native graph loader.
+
+**3. Geometric Intelligence Programme (authority after 2026-08-26).**  
+Root `ROADMAP.md` defers to `docs/geometric_intelligence_programme.md` and ADR-0005. Priority: source-free geometric intelligence where the route is the data location. Source weights are offline teachers only. Softmax and dense all-prefix work are allowed only as an **offline oracle**.
+
+Nested `packages/rust/uor/r4/ROADMAP.md` is older and thinner: transformerless wrap is done (2026-07-18); text AI is partial; image/audio/video, `/v1/chat`, agentic harness, deploy, hologram SDK are unchecked.
+
+---
+
+## Measured current state (not hope)
+
+Established
+
+- **#989** table baseline: 99,362 / 446,342 held-out top-1 (22.26%) vs unigram 5.41% (+16.85 pp), byte-identical double run.
+- **#953** one permitted geometric overlay `MultiscaleCountRadiusR4V1`: 23.21% (+0.95 pp over #989). Bounded source-free increment. Not semantics, not chat, not release.
+- **#973 HELM-D-R4** full-decoder softmax parity: `PASS_HELM_D_R4_GAUGE_SOFTMAX_FULL_DECODER_PARITY_ADVANCE_TO_INTRINSIC_R4`. Max logit δ ≈ \(1.05\times10^{-5}\), mean δ ≈ \(2.27\times10^{-6}\), 3/3 teacher-forced top-1, identical greedy continuation `, and`, 0 future reads, live frame-permutation control (max δ ≈ 23). This is **gauge-equivalent to the donor**. It is not geometric advantage.
+
+Negative / parked (do not retry in place)
+
+- Geometric scoring channels on the serving stack: zero or negative (#374 campaign).
+- E8 flattened into **keys**: negative. Law: lattice belongs on the **comparison** side.
+- Cayley–Dickson token-id score: dead, removed.
+- #967 `RETAIN_STATE_ONLY` (Cayley distance collapsed distinct states).
+- #970 heatmap readout: `RETAIN_H4_STATE_ONLY_ADVANCE_MULTICHANNEL_A1Q`.
+- #983 construction transfer: 0/6, `UNAVAILABLE_ZERO_CONSTRUCTION_TRANSFER`.
+- #986 frame/population unavailable.
+- #973 document placement, gated-delta vs plain delta, DirectAttention V3, ConnectionGaugeCovariance V4 held-out: negative.
+
+Blocked
+
+- **#954** until intrinsic R4 qualifies.
+- Later: #955 → #962 (chat / hive memory) → #963–#965.
+- Resonance sieve, recurrence, H4/Q29 table lowering: blocked until the intrinsic arm qualifies.
+- Upstream HELM-D checkpoint parity: `NOT_RUN`.
+
+Computational L0 (separate plane from civic L0): LawfulRecursionVersion 1.0, contraction \(c < 1\), \(\|G\|_1 < 1\). The deployed kernel’s no-multiply rule is the serving expression of that plane. HELM-D softmax is an oracle, not the serving kernel. Do not collapse those two.
+
+---
+
+## Phase Mirror dissonances (named, not resolved)
+
+1. **Monorepo myth vs inbound-only experiment.** Foundry README presents a civic + formal + crypto substrate. ADR-0008 says \(R^4\) does not export geometry to that substrate. Treating R4 as “the Foundry engine” is a fifth door.
+2. **Two stacks, one product name.** Router geometry was not the board that got measured. Serving inherited teacher sign-bit geometry + NGRAM memorization. Programme now tries to put geometry back on the load-bearing path without pretending the 2026-08 campaign did not happen.
+3. **Accuracy vs compliance on the same seat.** HELM-D parity optimizes donor-faithful logits. The serving contract forbids float/multiply. Intrinsic R4 must not smuggle the oracle into production. Civic L0-8 (credits do not overweight votes) is the civic analog; here the analog is: softmax scores do not overweight the serving claim.
+4. **Issue plane missing on this GitHub person.** Programme cites #953/#973/#989 as native GitHub relationships. This repo has **zero issues, one unprotected `main`**. Nested `AGENTS.md` still says “no direct pushes to main” and names a ruleset on another tree. The board and the mirror are not the same legal/git person.
+5. **Phase Mirror used as runtime hope.** Style invariant: Phase Mirror names dissonance; it does not bind serving. `ask` already has a quality gate (evaluation report CID). That is the right pattern. Do not auto-certify a HELM-D PASS as instruction-chat.
+6. **Five infrastructures collapsing.** Lean F1-square, SPIRAL_CORE, PIRTM/UAC, R4 serving, and civic DUNA language share one repo. Computational research must not mint a diploma or a department. Civic L0-9: the association is not a PAC. Computational L0 is not a membership rule.
+
+---
+
+## Next steps (sequence the tree already wrote)
+
+Do this in order. Do not open #954 early. Do not add scoring terms to the serving stack.
+
+1. **Freeze one intrinsic R4 attention arm on #973.** Replace only donor compatibility + linear value aggregation with a declared R4 distance and geometric weighted centroid. Keep real-language effect. Compare donor, gauge-equivalent R4 reference, and equal-budget Euclidean/plain controls.
+2. **Keep the four local gates green** in `packages/rust/uor/r4`: workspace test, clippy `-D warnings`, fmt, `graph-format` no_std ladder. κ-reproduction is ignored-skip if `/tmp/ref/out/model.bin` is missing — treat vacuous green as a named unknown, not a pass.
+3. **Bind the issue plane to this repo or stop citing foreign issue numbers as Foundry truth.** One public register of programme issues, or a written import of kappas/CIDs only.
+4. **Product slice stays UCC.** Chat (`#962`), cloud deploy, image/audio, agentic loop, and hologram SDK stay later. Instruction-chat remains behind `evaluate-report` + import firewall.
+5. **Do not retune frozen negatives.** New placement needs a new population/frame, not more rows on a known fixture.
+6. **If the intrinsic arm fails,** record the terminal and stop. Resonance/recurrence/lowering stay blocked. The Phase Mirror does not resolve that — it names it.
+
+### Levers
+
+| Owner | Lever | Metric | Horizon |
+|---|---|---|---|
+| R4 / #973 steward | Freeze intrinsic R4 distance + centroid arm; one matched run vs donor / gauge-R4 / Euclidean | Predeclared loss/top-1/decode gates; no future reads | 14 days |
+| Foundry maintainer | Either protect `main` + restore issue board, or write a CID-only evidence import so foreign #IDs cannot bind this person | Issue/PR count > 0 or import artifact hashed | 7 days |
+| Compiler owner | Fail CI if κ tests skip for missing teacher checkpoint when the job claims Gate E | Vacuous-skip rate = 0 on claimed runs | 7 days |
+| Product owner (operator LLC seat, not UNA) | Keep `ask` behind evaluation CID; no HELM-D PASS → chat promotion | 0 unverified instruction-chat imports | 21 days |
+| Formal steward | Keep LawfulRecursionVersion 1.0 and \(c < 1\) off the membership plane; cite computational L0 only in kernel/oracle docs | Zero civic filings that quote \(c\) as a vote rule | standing |
+
+Optional artifact: *Parity is a mirror. Advantage is a lever. Serving is a kernel.*
+
+---
+
+**Precision question (blocking if unanswered in an artifact):** Does the next #973 arm optimize for donor-parity accuracy or for the deployed no-multiply / \(c < 1\) kernel — and which metric wins if those collide?
+
+Four questions still open until an artifact answers them: accuracy vs compliance; cost vs dignity if a human loop is added; which legal person receives any wire attached to R4 hosting; whether a dual seat is practice, equity, or both and where the firewall paper is.
+
+Two persons. Five infrastructures. Four doors. The Phase Mirror does not resolve dissonance — it names it.

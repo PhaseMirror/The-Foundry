@@ -1,0 +1,33 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["a9976059665c0ed8.olean"],
+  "m": false,
+  "i": "3ce1fa4e8859aa03.ilean",
+  "c": "818987cd5a41db66.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/TheGeniusAdr/Proofs.lean -o /home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/lib/lean/TheGeniusAdr/Proofs.olean -i /home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/lib/lean/TheGeniusAdr/Proofs.ilean -c /home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/ir/TheGeniusAdr/Proofs.c --setup /home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/ir/TheGeniusAdr/Proofs.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["the_genius_adr/TheGeniusAdr:extraDep",
+     [["@the_genius_adr:extraDep", "00000000000006bb"]]],
+    ["imports",
+     [["TheGeniusAdr.Core transitive imports (legacy)", "00000000000006bb"],
+      ["TheGeniusAdr.Core:importAllArts", "2dccc9abb1ab3168"]]]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/TheGeniusAdr/Proofs.lean",
+   "80d62c99e9147a52"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: TheGeniusAdr.Proofs", "141a1fa329af0ff7"],
+  ["Package.id?: (some the_genius_adr)", "0fac9105906af657"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "757c80b6a1a0b273"}

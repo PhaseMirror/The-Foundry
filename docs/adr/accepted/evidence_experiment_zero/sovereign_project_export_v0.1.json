@@ -1,0 +1,448 @@
+{
+  "schema": "sovereign-project-package/0.1",
+  "state": {
+    "project_id": "EXP-ZERO-2026-09-21",
+    "executor_at_checkpoint": "Executor-A",
+    "policy_version": "ZERO-POLICY-0.2",
+    "cases": {
+      "ZERO-S1": {
+        "status": "ACCEPTED",
+        "representability": "EXACT",
+        "admissibility": "PERMIT",
+        "next": "NONE"
+      },
+      "ZERO-S2": {
+        "status": "ACCEPTED_WITH_DECLARED_LOSS",
+        "representability": "LOSSY",
+        "lost_invariants": [
+          "I_format_exact"
+        ],
+        "next": "NONE"
+      },
+      "ZERO-S3": {
+        "status": "BLOCKED_REPRESENTABILITY",
+        "next": "NO_EXECUTION"
+      },
+      "ZERO-S4": {
+        "status": "BLOCKED_ADMISSIBILITY",
+        "next": "NO_EXECUTION"
+      },
+      "ZERO-S5": {
+        "status": "DEFERRED",
+        "resume_condition": "dep_X.verified == true",
+        "next": "WAIT"
+      },
+      "ZERO-S6": {
+        "status": "REJECTED",
+        "next": "DO_NOT_PROMOTE",
+        "negative_knowledge": {
+          "case_id": "ZERO-S6",
+          "path": "known_bad_path",
+          "reason": "validation failed",
+          "do_not_repeat": true
+        }
+      },
+      "ZERO-S7": {
+        "status": "STALE",
+        "next": "REVALIDATE",
+        "depends_on": {
+          "dep_Y": 1
+        }
+      },
+      "ZERO-S8": {
+        "status": "PROTECTED_UNKNOWN",
+        "next": "DO_NOT_RESOLVE",
+        "protected_token": "vault:?"
+      }
+    },
+    "negative_knowledge": [
+      {
+        "case_id": "ZERO-S6",
+        "path": "known_bad_path",
+        "reason": "validation failed",
+        "do_not_repeat": true
+      }
+    ],
+    "dependencies": {
+      "dep_X": {
+        "version": 1,
+        "verified": false
+      },
+      "dep_Y": {
+        "version": 2,
+        "verified": true
+      }
+    },
+    "events": [
+      {
+        "seq": 1,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S1",
+        "event_type": "REQUEST",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "representability": "EXACT",
+          "admissibility": "PERMIT"
+        },
+        "prev_hash": "GENESIS",
+        "event_hash": "84592eb594b5fd462c940e4e9d02be463b5916e925344d70e37e07e5ed82609e"
+      },
+      {
+        "seq": 2,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S1",
+        "event_type": "EXECUTE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "transition_type": "micro"
+        },
+        "prev_hash": "84592eb594b5fd462c940e4e9d02be463b5916e925344d70e37e07e5ed82609e",
+        "event_hash": "3d326e7423ad7692030f4ab48abf6bbbd25649988235f874392c39faf4dbcd84"
+      },
+      {
+        "seq": 3,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S1",
+        "event_type": "VALIDATE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "passed": true
+        },
+        "prev_hash": "3d326e7423ad7692030f4ab48abf6bbbd25649988235f874392c39faf4dbcd84",
+        "event_hash": "9479d82b332dfacbb8837ee67ed4bcfba54cf66e8ba9d13cd433a0cfa77755aa"
+      },
+      {
+        "seq": 4,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S1",
+        "event_type": "PROMOTE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "status": "ACCEPTED"
+        },
+        "prev_hash": "9479d82b332dfacbb8837ee67ed4bcfba54cf66e8ba9d13cd433a0cfa77755aa",
+        "event_hash": "03f11319190239f845a1f6f9c520a489a2df561ad5bb0a562d933b3919129b77"
+      },
+      {
+        "seq": 5,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S2",
+        "event_type": "REQUEST",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "representability": "LOSSY",
+          "lost_invariants": [
+            "I_format_exact"
+          ]
+        },
+        "prev_hash": "03f11319190239f845a1f6f9c520a489a2df561ad5bb0a562d933b3919129b77",
+        "event_hash": "db9267731c0832469bc95a7fa4c3c34aaccd67018a945cc88de6730af847c009"
+      },
+      {
+        "seq": 6,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S2",
+        "event_type": "LOSS_DECLARED",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "lost_invariants": [
+            "I_format_exact"
+          ],
+          "approved": true
+        },
+        "prev_hash": "db9267731c0832469bc95a7fa4c3c34aaccd67018a945cc88de6730af847c009",
+        "event_hash": "417b56b60f0029961fcd978010e0a3de006644160e5ef6c2d03b8c5edcaf5e6f"
+      },
+      {
+        "seq": 7,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S2",
+        "event_type": "EXECUTE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "transition_type": "representation"
+        },
+        "prev_hash": "417b56b60f0029961fcd978010e0a3de006644160e5ef6c2d03b8c5edcaf5e6f",
+        "event_hash": "5275fa908556b96a307bc3fcd673231d00b5f4b0e78a40a65cc5f441d3f7c1de"
+      },
+      {
+        "seq": 8,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S2",
+        "event_type": "VALIDATE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "passed": true,
+          "remaining_invariants": [
+            "I_semantic"
+          ]
+        },
+        "prev_hash": "5275fa908556b96a307bc3fcd673231d00b5f4b0e78a40a65cc5f441d3f7c1de",
+        "event_hash": "384292c37b7ae38e3a5ce8136cda9ee1deecaf3a9961d2f699d1ba89009254e3"
+      },
+      {
+        "seq": 9,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S3",
+        "event_type": "REQUEST",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "representability": "UNREPRESENTABLE",
+          "reason": "I_semantic cannot survive target representation"
+        },
+        "prev_hash": "384292c37b7ae38e3a5ce8136cda9ee1deecaf3a9961d2f699d1ba89009254e3",
+        "event_hash": "b1bf613162979dd5fb0f8a7ae7a99bf3f4753ab56cc6fc06a95b23efd95cb71f"
+      },
+      {
+        "seq": 10,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S3",
+        "event_type": "BLOCK",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "stage": "REPRESENTABILITY"
+        },
+        "prev_hash": "b1bf613162979dd5fb0f8a7ae7a99bf3f4753ab56cc6fc06a95b23efd95cb71f",
+        "event_hash": "d2b8bd0fa39fa706eab445c55025aa35db889be9096bde6cae5dff20f4653629"
+      },
+      {
+        "seq": 11,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S4",
+        "event_type": "REQUEST",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "representability": "EXACT",
+          "admissibility": "DENY",
+          "reason": "authority_missing"
+        },
+        "prev_hash": "d2b8bd0fa39fa706eab445c55025aa35db889be9096bde6cae5dff20f4653629",
+        "event_hash": "851941dd989fbe53c1673d46e3264b10a88a3dfe79f273c042adda48f1f2967b"
+      },
+      {
+        "seq": 12,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S4",
+        "event_type": "BLOCK",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "stage": "ADMISSIBILITY"
+        },
+        "prev_hash": "851941dd989fbe53c1673d46e3264b10a88a3dfe79f273c042adda48f1f2967b",
+        "event_hash": "d1e33fb9b2689bb5ea789d632113d161af86173943e10f9b085c207c39ba43cf"
+      },
+      {
+        "seq": 13,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S5",
+        "event_type": "REQUEST",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "representability": "EXACT",
+          "admissibility": "DEFER",
+          "reason": "dependency_X_unverified",
+          "resume_condition": "dep_X.verified == true"
+        },
+        "prev_hash": "d1e33fb9b2689bb5ea789d632113d161af86173943e10f9b085c207c39ba43cf",
+        "event_hash": "295ba0b4aa7893cca074b27bbbdfee28411eccabdc2cc1df35b79d5d2dfef784"
+      },
+      {
+        "seq": 14,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S5",
+        "event_type": "DEFER",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "writes_frozen": true,
+          "resume_condition": "dep_X.verified == true"
+        },
+        "prev_hash": "295ba0b4aa7893cca074b27bbbdfee28411eccabdc2cc1df35b79d5d2dfef784",
+        "event_hash": "15967851862db1c10b3b56a53aa5e8c91f17ba1158460a3ecde923882dafb696"
+      },
+      {
+        "seq": 15,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S6",
+        "event_type": "REQUEST",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "representability": "EXACT",
+          "admissibility": "PERMIT"
+        },
+        "prev_hash": "15967851862db1c10b3b56a53aa5e8c91f17ba1158460a3ecde923882dafb696",
+        "event_hash": "67b2f34fe49c32ffce45456e5478007aa3109b25d9d5733250af25db9e18ea65"
+      },
+      {
+        "seq": 16,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S6",
+        "event_type": "EXECUTE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "method": "known_bad_path"
+        },
+        "prev_hash": "67b2f34fe49c32ffce45456e5478007aa3109b25d9d5733250af25db9e18ea65",
+        "event_hash": "7a31e81bdf1819421310c77030c47e039295c83167f9ab77a9c4bce7d1914d7f"
+      },
+      {
+        "seq": 17,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S6",
+        "event_type": "VALIDATE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "passed": false,
+          "reason": "expected checksum mismatch"
+        },
+        "prev_hash": "7a31e81bdf1819421310c77030c47e039295c83167f9ab77a9c4bce7d1914d7f",
+        "event_hash": "784532cd69a7f80df727950de6aadb2459cedbf2133fada0a1726b1bd1e10c83"
+      },
+      {
+        "seq": 18,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S6",
+        "event_type": "NEGATIVE_KNOWLEDGE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "path": "known_bad_path",
+          "reason": "validation failed",
+          "do_not_repeat": true
+        },
+        "prev_hash": "784532cd69a7f80df727950de6aadb2459cedbf2133fada0a1726b1bd1e10c83",
+        "event_hash": "2b0e5b4ae46dc91ff129c20d64df314f0305f03ff4c6858396019f38b6cfe0f6"
+      },
+      {
+        "seq": 19,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S7",
+        "event_type": "REQUEST",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "representability": "EXACT",
+          "admissibility": "PERMIT",
+          "depends_on": {
+            "dep_Y": 1
+          }
+        },
+        "prev_hash": "2b0e5b4ae46dc91ff129c20d64df314f0305f03ff4c6858396019f38b6cfe0f6",
+        "event_hash": "b578049073b18bc824b4663fcbd1edc4e0993e17292dfd1942f6a803f57f73b5"
+      },
+      {
+        "seq": 20,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S7",
+        "event_type": "EXECUTE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {},
+        "prev_hash": "b578049073b18bc824b4663fcbd1edc4e0993e17292dfd1942f6a803f57f73b5",
+        "event_hash": "6ba96997bcf5f549b1d995b197aed36ff71ff82e6574e49a0209466b2758f361"
+      },
+      {
+        "seq": 21,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S7",
+        "event_type": "VALIDATE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "passed": true
+        },
+        "prev_hash": "6ba96997bcf5f549b1d995b197aed36ff71ff82e6574e49a0209466b2758f361",
+        "event_hash": "75246677e36a7d76d6830c6591aa257e8381bbf1a31dcdcc947d248780e15c5a"
+      },
+      {
+        "seq": 22,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S7",
+        "event_type": "PROMOTE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "status": "ACCEPTED"
+        },
+        "prev_hash": "75246677e36a7d76d6830c6591aa257e8381bbf1a31dcdcc947d248780e15c5a",
+        "event_hash": "fd1c1e3573bad3763bcfa0316e3b172eba604cd4ce5b24cc6c28d40fd28e34df"
+      },
+      {
+        "seq": 23,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S7",
+        "event_type": "DEPENDENCY_CHANGE",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "dependency": "dep_Y",
+          "old_version": 1,
+          "new_version": 2
+        },
+        "prev_hash": "fd1c1e3573bad3763bcfa0316e3b172eba604cd4ce5b24cc6c28d40fd28e34df",
+        "event_hash": "35b72ff68fea561442ee25937f5b9137c8442973a7efa824dff7152e6870a217"
+      },
+      {
+        "seq": 24,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S7",
+        "event_type": "IMPACT",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "status": "STALE",
+          "reason": "dependency version changed"
+        },
+        "prev_hash": "35b72ff68fea561442ee25937f5b9137c8442973a7efa824dff7152e6870a217",
+        "event_hash": "17b5ef2873c9b973a9a4b6435ef62731d65e82eea1abc12491ffc3270d0460e5"
+      },
+      {
+        "seq": 25,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S8",
+        "event_type": "REQUEST",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "representability": "EXACT",
+          "admissibility": "PERMIT"
+        },
+        "prev_hash": "17b5ef2873c9b973a9a4b6435ef62731d65e82eea1abc12491ffc3270d0460e5",
+        "event_hash": "271833996d4b170195e80ca80465564b72b261198efb781ccbb5bc663eb5e4f3"
+      },
+      {
+        "seq": 26,
+        "project_id": "EXP-ZERO-2026-09-21",
+        "case_id": "ZERO-S8",
+        "event_type": "PROTECTED_UNKNOWN",
+        "executor": "Executor-A",
+        "policy_version": "ZERO-POLICY-0.2",
+        "data": {
+          "token": "vault:?",
+          "resolution_policy": "explicit_authorization_required"
+        },
+        "prev_hash": "271833996d4b170195e80ca80465564b72b261198efb781ccbb5bc663eb5e4f3",
+        "event_hash": "86280aece80ad9008770da646189edf364407a950b236ba05d6d11444928ba62"
+      }
+    ],
+    "event_chain_head": "86280aece80ad9008770da646189edf364407a950b236ba05d6d11444928ba62",
+    "checkpoint_hash": "9d1b7f5cbcd937f87b91bd809fe68d5f2c02024572c17062fcd3834acb0e96d4"
+  },
+  "manifest_hash": "1f846b2466bda42814b322b25b6b94b4baa864b8f8d83dc69424249c18c6ed7a"
+}

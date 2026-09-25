@@ -1,0 +1,12 @@
+{
+  "schema": "phi-pe.chart.v1",
+  "chartFileId": "biology",
+  "kernelHash": "d912f35f5eb67e6058baa9a14daac7abb1d4997f15519e0dda01d3e358afb475",
+  "bindings": {
+    "n": { "semantic": "generation or cycle index" },
+    "thetaPrev": { "semantic": "last expression / phenotype phase" },
+    "p": { "semantic": "allometric exponent" },
+    "t": { "semantic": "developmental or thermal window" },
+    "doorMode": { "semantic": "minus = relaxation toward baseline; plus = runaway accumulation" }
+  }
+}

@@ -1,0 +1,52 @@
+
+<div 
+  class="group relative h-full flex flex-col justify-between bg-[rgba(255,255,255,0.04)] backdrop-blur-[16px] border border-[rgba(255,255,255,0.08)] rounded-[20px] p-7 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-[var(--card-glow-color)] motion-safe:hover:border-[var(--card-accent-color)]"
+  [style.--card-accent-color]="card().accentColor"
+  [style.--card-glow-color]="card().glowColor"
+  >
+  <div>
+    <div class="flex items-center space-x-4">
+      <div [innerHTML]="card().icon" [style.color]="card().accentColor" class="transition-colors duration-300"></div>
+      <span class="font-semibold text-[#F0F0F5]">{{ card().type }}</span>
+    </div>
+
+    @if (card().type === 'Intrinsic') {
+      <div class="relative w-40 h-40 mx-auto my-6 flex items-center justify-center">
+        <svg class="absolute inset-0" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" stroke="rgba(255, 255, 255, 0.1)" stroke-width="5" fill="none" />
+          <path 
+            [attr.d]="'M 50,5 A 45,45 0 1,1 49.99,5.0001'" 
+            stroke="url(#intrinsicGradient)" 
+            stroke-width="5" 
+            fill="none" 
+            stroke-linecap="round"
+            [style.stroke-dasharray]="282.74"
+            [style.stroke-dashoffset]="282.74 * (1 - (card().progress ?? 0) / 100)"
+            class="transition-all duration-1000 ease-out"
+          />
+          <defs>
+            <linearGradient id="intrinsicGradient">
+              <stop offset="0%" stop-color="#F0F0F5" />
+              <stop offset="100%" stop-color="#8B8FA3" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="text-center">
+          <div class="font-mono text-3xl font-bold text-[#F0F0F5]">{{ card().progress }}%</div>
+          <div class="text-xs text-[#8B8FA3]">To Next Level</div>
+        </div>
+      </div>
+    } @else {
+      <div class="my-6">
+        <p class="font-mono text-4xl font-bold text-[#F0F0F5]">{{ formattedBalance() }}</p>
+      </div>
+      <div class="h-[60px] w-full">
+        <app-sparkline [data]="card().sparklineData" [color]="card().accentColor"></app-sparkline>
+      </div>
+    }
+
+    <div class="mt-4 text-xs uppercase tracking-wider text-[#8B8FA3]">{{ card().status }}</div>
+  </div>
+
+  <div class="absolute bottom-0 left-0 right-0 h-0.5" [class]="card().bottomBar"></div>
+</div>

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  hologram-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: hologram-api:latest
+    container_name: hologram-api-node
+    restart: unless-stopped
+    environment:
+      - HOLOGRAM_ROUTING_PATH=/etc/hologram/routing.yaml
+      - HOLOGRAM_LEDGER_PATH=/var/log/hologram/hologram_archivum_ledger.jsonl
+      - RUST_LOG=info
+    ports:
+      - "8080:8080" # Exposed port for /health and /ready liveness probes
+    volumes:
+      - ./apps/hologram-api/routing.yaml:/etc/hologram/routing.yaml:ro
+      - hologram_ledger_data:/var/log/hologram/
+      - hologram_models_data:/models/hologram/
+    stdin_open: true  # Required for stdio MCP JSON-RPC
+    tty: true
+
+volumes:
+  hologram_ledger_data:
+    description: "Persistent storage for immutable Archivum JSONL ledgers"
+  hologram_models_data:
+    description: "Persistent storage for compiled .holo model graphs"

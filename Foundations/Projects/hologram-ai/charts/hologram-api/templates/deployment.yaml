@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hologram-api.fullname" . }}
+  labels:
+    app: {{ include "hologram-api.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "hologram-api.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "hologram-api.name" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http-telemetry
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http-telemetry
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-telemetry
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          env:
+            - name: HOLOGRAM_ROUTING_PATH
+              value: "/etc/hologram/routing.yaml"
+            - name: HOLOGRAM_LEDGER_PATH
+              value: "/var/log/hologram/hologram_archivum_ledger.jsonl"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: routing-config
+              mountPath: /etc/hologram
+              readOnly: true
+            - name: hologram-models
+              mountPath: /models/hologram
+            - name: hologram-ledger
+              mountPath: /var/log/hologram
+      volumes:
+        - name: routing-config
+          configMap:
+            name: {{ include "hologram-api.fullname" . }}-config
+        - name: hologram-models
+          {{- if .Values.persistence.models.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "hologram-api.fullname" . }}-models-pvc
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: hologram-ledger
+          {{- if .Values.persistence.ledger.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "hologram-api.fullname" . }}-ledger-pvc
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

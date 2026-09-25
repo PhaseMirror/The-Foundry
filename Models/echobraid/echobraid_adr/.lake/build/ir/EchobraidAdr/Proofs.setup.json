@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "echobraid_adr",
+ "options": {},
+ "name": "EchobraidAdr.Proofs",
+ "isModule": false,
+ "importArts":
+ {"EchobraidAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/echobraid/echobraid_adr/.lake/build/lib/lean/EchobraidAdr/Core.olean"]]},
+ "dynlibs": []}

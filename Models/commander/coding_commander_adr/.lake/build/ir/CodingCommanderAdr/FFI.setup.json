@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "coding_commander_adr",
+ "options": {},
+ "name": "CodingCommanderAdr.FFI",
+ "isModule": false,
+ "importArts":
+ {"CodingCommanderAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/commander/coding_commander_adr/.lake/build/lib/lean/CodingCommanderAdr/Core.olean"]]},
+ "dynlibs": []}

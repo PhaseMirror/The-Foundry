@@ -1,0 +1,13 @@
+{"plugins": [],
+ "package": "ataraxia_adr",
+ "options": {},
+ "name": "AtaraxiaAdr",
+ "isModule": false,
+ "importArts":
+ {"AtaraxiaAdr.Proofs":
+  [["/home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/lib/lean/AtaraxiaAdr/Proofs.olean"]],
+  "AtaraxiaAdr.FFI":
+  [["/home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/lib/lean/AtaraxiaAdr/FFI.olean"]],
+  "AtaraxiaAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/ataraxia/ataraxia_adr/.lake/build/lib/lean/AtaraxiaAdr/Core.olean"]]},
+ "dynlibs": []}

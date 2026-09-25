@@ -1,0 +1,8 @@
+{
+  "circuit": "ace.circom",
+  "components": {
+    "Num2Bits": 1,
+    "Poseidon": 1
+  },
+  "total_constraints": null
+}

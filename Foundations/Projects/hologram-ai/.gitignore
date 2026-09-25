@@ -1,0 +1,32 @@
+/target
+.holoarch/
+**/*.onnx
+**/*.gguf
+!oracles/**/*.onnx
+models/
+.mypy_cache
+.claude/
+test-output/
+.archon/
+output/
+specs/scratch.md
+.lexicon/
+!crates/hologram-ai-conformance/fixtures/*
+# Generated TinyLlama probe fixtures (250MB+ each)
+crates/hologram-ai-conformance/fixtures/tinyllama_*.onnx
+**/.hypergrep
+**/.gitignore
+!/.gitignore
+
+# TypeScript incremental-build cache
+**/*.tsbuildinfo
+
+# `tsc -b` outputs for vite.config.ts (referenced by tsconfig.node.json).
+# The source is the .ts file; the .d.ts/.js next to it are generated.
+apps/*/vite.config.d.ts
+apps/*/vite.config.js
+.worktrees/
+node_modules/
+dist/
+apps/web/src/wasm/
+apps/web/public/extension.zip

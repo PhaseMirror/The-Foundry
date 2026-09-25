@@ -1,0 +1,7 @@
+{"plugins": [],
+ "package": "the_guardian_adr",
+ "options": {},
+ "name": "TheGuardianAdr.Core",
+ "isModule": false,
+ "importArts": {},
+ "dynlibs": []}

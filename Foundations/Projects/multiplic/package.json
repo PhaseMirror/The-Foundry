@@ -1,0 +1,63 @@
+{
+  "name": "multiplic",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "server",
+    "cli",
+    "sites/*",
+    "sites/aiistech/app",
+    "sites/aiistech/app/src/services/hosting",
+    "shared"
+  ],
+  "scripts": {
+    "test": "jest --runInBand",
+    "test:unit": "jest tests/unit",
+    "test:int": "jest tests/integration",
+    "test:watch": "jest --watch",
+    "lint": "eslint server/ cli/ --ext .js",
+    "start": "node server/app.js",
+    "start:sync": "node server/sync.js",
+    "dev": "nodemon server/app.js"
+  },
+  "devDependencies": {
+    "dompurify": "^3.4.5",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "jsdom": "^29.1.1",
+    "nodemon": "^3.0.0",
+    "supertest": "^6.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/sites/aiistech/app/src/services/hosting"],
+    "setupFiles": ["<rootDir>/sites/aiistech/app/src/services/hosting/tests/setup.js"],
+    "testPathIgnorePatterns": ["/node_modules/"],
+    "collectCoverageFrom": [
+      "sites/aiistech/app/src/services/hosting/server/**/*.js",
+      "sites/aiistech/app/src/services/hosting/cli/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": { "branches": 80, "functions": 80, "lines": 80 }
+    }
+  },
+  "overrides": {
+    "undici": "^7.24.5",
+    "flatted": "^3.4.2",
+    "esbuild": "^0.25.0",
+    "citizen-gardens": {
+      "react": "19.2.4",
+      "react-dom": "19.2.4"
+    },
+    "phase-mirror---website-agent": {
+      "react": "19.2.4",
+      "react-dom": "19.2.4"
+    },
+    "react-example": {
+      "react": "19.2.4",
+      "react-dom": "19.2.4"
+    },
+    "three": "0.181.2",
+    "dompurify": "^3.4.5"
+  }
+}

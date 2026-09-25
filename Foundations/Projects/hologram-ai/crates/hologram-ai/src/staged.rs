@@ -1,0 +1,980 @@
+//! Staged (windowed) execution over k — dictionary row `staged-execution`.
+//!
+//! The classical "whole model resident in memory" assumption is a residency
+//! assumption, not a law (`docs/conceptual-model/01-k-representation.md`).
+//! This module removes it: the parametric decoder is compiled as a sequence
+//! of **stage archives** (embedding, decoder-layer blocks, head), each an
+//! ordinary k-form `.holo` whose weight constants are κ-bound placeholders.
+//! Execution materializes one stage against the κ-store, runs it, hands its
+//! output activations to the next stage, and **drops the session before the
+//! next stage materializes** — peak weight residency is a parametric WINDOW
+//! (the largest stage × context), never the model. The model itself lives in
+//! the κ-store (OPFS in the browser, a directory natively).
+//!
+//! Staged and monolithic execution are the same computation: the stage
+//! graphs are emitted by the same layer-emission recipe as the monolithic
+//! graph and run the same kernels in the same per-layer order, so the staged
+//! pipeline reproduces the monolithic logits **byte-for-byte** (the
+//! `staged-execution` witness), with the head-stage boundary placed on the
+//! fused final-norm operands — see
+//! [`hologram_ai_safetensors::parametric::build_parametric_stage_graphs`].
+
+use std::collections::HashMap;
+use std::num::NonZeroU64;
+
+use anyhow::{anyhow, bail, ensure, Context, Result};
+use hologram_ai_common::{shape_from_concrete, AiParam, DType, TensorInfo};
+use hologram_archive::{decode_ports, HoloLoader, SectionKind};
+use hologram_exec::OutputBuffer;
+
+use crate::engine::{LmSession, SessionProvider};
+use crate::materialize::{materialize_archive_with, KappaStore};
+use crate::runner::{HoloRunner, PortInfo};
+use crate::{ModelCompiler, ModelSource};
+
+/// Compile the parametric decoder as **stage archives** (k-form `.holo`
+/// bytes, in execution order): embedding, `ceil(L / layers_per_stage)`
+/// decoder-layer blocks, head. Mirrors the monolithic streamed compile
+/// (`ModelSource::SafetensorsStreamed`): every stage's weights are
+/// [`AiParam::External`] κ-bindings, so the archives are weightless structure
+/// and the κ-store holds the parameters exactly once — a tensor consumed by
+/// two stages (the tied embedding) binds the same κ in both stage κ-maps.
+///
+/// The manifest is the parallel `keys`/`kappas`/`shapes`/`dtypes` slices of
+/// the streamed download; `context_length` follows the monolithic rule
+/// (`Some(n)` validated against the model's effective ceiling, `None` = the
+/// model's own trained context). Fails loud if any manifest tensor is
+/// consumed by no stage — the partition never silently drops a weight.
+pub fn compile_stages(
+    config_json: &str,
+    keys: &[String],
+    kappas: &[String],
+    shapes: &[Vec<u64>],
+    dtypes: &[DType],
+    context_length: Option<u64>,
+    layers_per_stage: NonZeroU64,
+) -> Result<Vec<Vec<u8>>> {
+    ensure!(
+        keys.len() == kappas.len() && keys.len() == shapes.len() && keys.len() == dtypes.len(),
+        "manifest slices disagree: {} keys, {} κs, {} shapes, {} dtypes",
+        keys.len(),
+        kappas.len(),
+        shapes.len(),
+        dtypes.len()
+    );
+    let config: serde_json::Value =
+        serde_json::from_str(config_json).context("parsing config.json")?;
+    let graphs = hologram_ai_safetensors::parametric::build_parametric_stage_graphs(
+        &config,
+        keys,
+        dtypes,
+        context_length,
+        layers_per_stage,
+    )?;
+
+    let mut bound = vec![false; keys.len()];
+    let mut archives = Vec::with_capacity(graphs.len());
+    for (stage, mut graph) in graphs.into_iter().enumerate() {
+        // Bind the κ of every manifest tensor this stage declares. Only
+        // declared names are bound — a stage's κ-map is exactly the weights
+        // its layers consume, which is what the partition witness checks.
+        let name_to_id: HashMap<String, u32> = graph
+            .tensor_names
+            .iter()
+            .map(|(id, name)| (name.clone(), *id))
+            .collect();
+        for (i, key) in keys.iter().enumerate() {
+            let Some(&id) = name_to_id.get(key) else {
+                continue;
+            };
+            // A chunked stage binds a RANGE of the tensor: the builder
+            // recorded `kappa_range:<name>` metadata and declared the CHUNK
+            // shape itself — honor both; the κ stays the whole tensor's.
+            let range = graph
+                .metadata
+                .get(&format!("kappa_range:{key}"))
+                .and_then(|v| match v {
+                    hologram_ai_common::MetaValue::Str(s) => {
+                        let (off, len) = s.split_once('+')?;
+                        Some((off.parse().ok()?, len.parse().ok()?))
+                    }
+                    _ => None,
+                });
+            let info =
+                match range {
+                    Some(_) => graph.tensor_info.get(&id).cloned().unwrap_or_else(|| {
+                        TensorInfo::new(dtypes[i], shape_from_concrete(&shapes[i]))
+                    }),
+                    None => TensorInfo::new(dtypes[i], shape_from_concrete(&shapes[i])),
+                };
+            graph.tensor_info.insert(id, info.clone());
+            graph.params.insert(
+                id,
+                AiParam::External {
+                    kappa: kappas[i].clone(),
+                    info,
+                    range,
+                },
+            );
+            bound[i] = true;
+        }
+        let archive = ModelCompiler::default()
+            .compile(ModelSource::AiGraph(graph))
+            .with_context(|| format!("compiling stage {stage}"))?;
+        archives.push(archive.bytes);
+    }
+
+    if let Some(i) = bound.iter().position(|b| !b) {
+        bail!(
+            "manifest tensor `{}` is consumed by no stage graph — the staged \
+             partition must cover the model's tensors exactly",
+            keys[i]
+        );
+    }
+    Ok(archives)
+}
+
+/// A κ-store adapter that tallies the bytes it resolves — the per-stage
+/// weight-residency instrument of the [`StagedRunner`].
+struct CountingStore<'s> {
+    inner: &'s mut dyn KappaStore,
+    bytes: u64,
+}
+
+impl KappaStore for CountingStore<'_> {
+    fn resolve(&mut self, kappa: &str) -> Result<Vec<u8>> {
+        let content = self.inner.resolve(kappa)?;
+        self.bytes += content.len() as u64;
+        Ok(content)
+    }
+
+    fn invalidate(&mut self, kappa: &str) {
+        self.inner.invalidate(kappa);
+    }
+
+    fn resolve_range(&mut self, kappa: &str, offset: u64, len: u64) -> Result<Vec<u8>> {
+        let content = self.inner.resolve_range(kappa, offset, len)?;
+        self.bytes += content.len() as u64;
+        Ok(content)
+    }
+}
+
+/// Resolves the k-form archive bytes of stage `i` — a `Vec` of precompiled
+/// archives natively, an OPFS read in the browser. Archives are weightless
+/// k-forms (structure + κ-bindings), so resolving one moves no parameters.
+pub type StageResolver<'a> = Box<dyn FnMut(usize) -> Result<Vec<u8>> + 'a>;
+
+/// Per-stage observer: `(stage, stage_count, materialized_weight_bytes)`,
+/// called after a stage materializes and before it executes.
+pub type StageObserver<'a> = Box<dyn FnMut(usize, usize, u64) + 'a>;
+
+/// A [`StageObserver`] shared across the regrown runners of a
+/// [`GrowableStagedSession`].
+type SharedStageObserver = std::rc::Rc<std::cell::RefCell<dyn FnMut(usize, usize, u64)>>;
+
+/// Admission probe: consulted before a stage session is kept resident,
+/// with the byte MARGIN the pipeline must keep free — the structural
+/// transient bound of its largest stage (archive copy + materialized copy +
+/// loaded constants + up-to-2× dtype widening ≤ 4× the stage's raw weight
+/// bytes). `false` means the environment measurably lacks that headroom —
+/// the session drops (strict windowing) instead of risking the heap. A
+/// fixed margin crashed a 1.5B model at its head stage while smaller
+/// stages held the room; the margin is a function of the MODEL, so the
+/// probe receives it. Raw κ-byte budgets under-count a live session's true
+/// footprint; only the environment can answer whether it has room, so
+/// admission asks it directly.
+pub type AdmissionProbe<'a> = Box<dyn Fn(u64) -> bool + 'a>;
+
+/// The structural transient bound of a stage's materialize-and-execute:
+/// the raw copies (archive + materialized image, plus slack for the loaded
+/// runner) and TWO full F32 images of the stage's elements — the kernel
+/// widens a narrow-dtype panel to F32 and holds a pre-transposed scratch of
+/// the same size. Parametric in elements, not bytes: a bf16 stage's
+/// execution image is twice its storage.
+fn stage_transient_bound(stage_weight_bytes: u64, stage_elements: u64) -> u64 {
+    stage_weight_bytes
+        .saturating_mul(3)
+        .saturating_add(stage_elements.saturating_mul(8))
+}
+
+/// Windowed execution over the stage archives of [`compile_stages`].
+///
+/// One token-window forward pass runs the stages in order: resolve the
+/// stage's k-form archive, materialize it against the κ-store, load a
+/// [`HoloRunner`], execute it with the previous stage's output bytes as
+/// input, and **drop the session before the next stage materializes**. Stage
+/// 0 consumes the `input_ids` window; the final stage produces the logits.
+/// Peak resident weight bytes are therefore bounded by the largest stage —
+/// the window — never the model, and the per-stage accounting
+/// ([`Self::stage_weight_bytes`], [`Self::peak_resident_weight_bytes`])
+/// measures exactly that.
+///
+/// Implements [`LmSession`] + [`SessionProvider`], so
+/// [`generate_stream`](crate::commands::generate::generate_stream) drives it
+/// unchanged.
+pub struct StagedRunner<'a> {
+    resolve_stage: StageResolver<'a>,
+    store: Box<dyn KappaStore + 'a>,
+    stage_count: usize,
+    input_ports: Vec<PortInfo>,
+    output_ports: Vec<PortInfo>,
+    /// The compiled `input_ids` window (element count) of stage 0.
+    window: usize,
+    /// Weight bytes materialized per stage — written on execution (a stage
+    /// that has not run yet reports 0).
+    stage_weight_bytes: Vec<u64>,
+    /// The largest single-stage weight residency observed across executions.
+    peak_resident_weight_bytes: u64,
+    /// Observer called after each stage materializes, before it executes:
+    /// `(stage, stage_count, materialized_weight_bytes)`. Lets a UI surface
+    /// per-stage progress instead of a silent first-token wait.
+    on_stage: Option<StageObserver<'a>>,
+    /// Residency budget (bytes) for keeping materialized stage sessions
+    /// across forward passes — `0` (the default) is strict windowing: every
+    /// pass rematerializes every stage. See [`Self::set_residency_budget`].
+    residency_budget: u64,
+    /// Materialized stage sessions held under the budget, with their weight
+    /// bytes. `None` = not resident (drops after its pass).
+    resident: Vec<Option<(HoloRunner, u64)>>,
+    /// Weight bytes currently held by `resident`.
+    resident_bytes: u64,
+    /// Stage materializations performed over this runner's lifetime — the
+    /// bandwidth instrument (`resident` hits don't count).
+    materialization_count: u64,
+    /// Environment headroom probe consulted at admission (see
+    /// [`AdmissionProbe`]). `None` = admission by byte budget alone.
+    admission_probe: Option<AdmissionProbe<'a>>,
+    /// Expected (raw weight bytes, element count) per stage, computed by the
+    /// session from the manifest BEFORE anything materializes — the largest
+    /// transient bound drives the admission margin. Falls back to measured
+    /// bytes as stages run.
+    expected_stage_bytes: Vec<(u64, u64)>,
+    /// The session verified-κ set (row `session-verified-kappa`): a κ
+    /// verifies at its first materialization this session; later
+    /// rematerializations are read-only I/O. Shared across regrows of a
+    /// growable session — the session, not the window, is the trust scope.
+    verified: std::rc::Rc<std::cell::RefCell<std::collections::HashSet<String>>>,
+}
+
+impl<'a> StagedRunner<'a> {
+    /// Build a runner over `stage_count` stages resolved on demand through
+    /// `resolve_stage`, materializing κs against `store`. Reads the LM port
+    /// contract from the k-form archives' port sections (weight-free): stage
+    /// 0 must declare an `input_ids` input and the final stage a `logits`
+    /// output.
+    pub fn new(
+        stage_count: usize,
+        mut resolve_stage: StageResolver<'a>,
+        store: Box<dyn KappaStore + 'a>,
+    ) -> Result<Self> {
+        ensure!(
+            stage_count >= 1,
+            "a staged pipeline needs at least one stage"
+        );
+
+        let first = resolve_stage(0).context("resolving the stage 0 archive")?;
+        let input_ports =
+            archive_ports(&first, SectionKind::Inputs).context("reading stage 0 input ports")?;
+        drop(first);
+        let last = resolve_stage(stage_count - 1).context("resolving the final stage archive")?;
+        let output_ports = archive_ports(&last, SectionKind::Outputs)
+            .context("reading final stage output ports")?;
+        drop(last);
+
+        let window = input_ports
+            .iter()
+            .find(|p| p.name == "input_ids")
+            .map(|p| p.element_count)
+            .ok_or_else(|| {
+                anyhow!(
+                    "stage 0 declares no `input_ids` input port (its ports are {:?})",
+                    input_ports
+                        .iter()
+                        .map(|p| p.name.as_str())
+                        .collect::<Vec<_>>()
+                )
+            })?;
+        ensure!(
+            output_ports.iter().any(|p| p.name == "logits"),
+            "the final stage declares no `logits` output port (its ports are {:?})",
+            output_ports
+                .iter()
+                .map(|p| p.name.as_str())
+                .collect::<Vec<_>>()
+        );
+
+        Ok(Self {
+            resolve_stage,
+            store,
+            stage_count,
+            input_ports,
+            output_ports,
+            window,
+            stage_weight_bytes: vec![0; stage_count],
+            peak_resident_weight_bytes: 0,
+            on_stage: None,
+            residency_budget: 0,
+            resident: (0..stage_count).map(|_| None).collect(),
+            resident_bytes: 0,
+            materialization_count: 0,
+            admission_probe: None,
+            expected_stage_bytes: Vec::new(),
+            verified: std::rc::Rc::new(std::cell::RefCell::new(std::collections::HashSet::new())),
+        })
+    }
+
+    /// Provide the manifest-derived (raw weight bytes, element count) per
+    /// stage (known before any materialization) — the largest stage's
+    /// transient bound is the margin every admission must leave free.
+    pub fn set_expected_stage_bytes(&mut self, bytes: Vec<(u64, u64)>) {
+        self.expected_stage_bytes = bytes;
+    }
+
+    /// The admission margin: the largest stage transient bound, expected
+    /// (manifest-derived) or measured, whichever is larger. Measured raw
+    /// bytes carry no dtype, so their element count is bounded by bytes
+    /// (1-byte elements — the widest F32 image a byte count can imply).
+    fn admission_margin(&self) -> u64 {
+        let expected = self
+            .expected_stage_bytes
+            .iter()
+            .map(|&(bytes, elems)| stage_transient_bound(bytes, elems))
+            .max()
+            .unwrap_or(0);
+        let measured = self
+            .stage_weight_bytes
+            .iter()
+            .map(|&bytes| stage_transient_bound(bytes, bytes / 4))
+            .max()
+            .unwrap_or(0);
+        expected.max(measured)
+    }
+
+    /// Adopt a shared session verified-κ set (a growable session forwards
+    /// one across window regrows — same session, same trust scope).
+    pub fn share_verified_set(
+        &mut self,
+        set: std::rc::Rc<std::cell::RefCell<std::collections::HashSet<String>>>,
+    ) {
+        self.verified = set;
+    }
+
+    /// Install an environment headroom probe consulted at every admission —
+    /// a resident set can only grow while the environment measurably has
+    /// room (see [`AdmissionProbe`]).
+    pub fn set_admission_probe(&mut self, p: AdmissionProbe<'a>) {
+        self.admission_probe = Some(p);
+    }
+
+    /// Set the residency budget: materialized stage sessions stay resident
+    /// across forward passes while their cumulative weight bytes fit, so the
+    /// κ-store bandwidth of a stage is paid once per window instead of once
+    /// per token (row `stage-residency-cache`). `0` is strict windowing —
+    /// peak weight residency is exactly one stage, the original contract.
+    /// The budget is an environment measurement (heap ceiling minus working
+    /// margin), never a preference: a model whose stages fit runs at
+    /// resident-session speed, one that doesn't falls back to the window.
+    pub fn set_residency_budget(&mut self, bytes: u64) {
+        self.residency_budget = bytes;
+        if bytes == 0 {
+            for slot in self.resident.iter_mut() {
+                *slot = None;
+            }
+            self.resident_bytes = 0;
+        }
+    }
+
+    /// Stage materializations performed so far — κ-store bandwidth in units
+    /// of stage loads (resident-session hits don't rematerialize).
+    pub fn materialization_count(&self) -> u64 {
+        self.materialization_count
+    }
+
+    /// Install a per-stage observer: called after each stage materializes
+    /// (before it executes) with `(stage, stage_count, weight_bytes)`.
+    pub fn set_stage_observer(&mut self, f: StageObserver<'a>) {
+        self.on_stage = Some(f);
+    }
+
+    /// Convenience over an in-memory list of stage archives (the native path:
+    /// `compile_stages` output plus a [`DirKappaStore`](crate::materialize::DirKappaStore)).
+    pub fn from_archives(stages: Vec<Vec<u8>>, store: Box<dyn KappaStore + 'a>) -> Result<Self> {
+        let stage_count = stages.len();
+        let resolve = Box::new(move |i: usize| {
+            stages.get(i).cloned().ok_or_else(|| {
+                anyhow!("stage {i} is out of range (the pipeline has {stage_count} stages)")
+            })
+        });
+        Self::new(stage_count, resolve, store)
+    }
+
+    /// Number of stages in the pipeline.
+    pub fn stage_count(&self) -> usize {
+        self.stage_count
+    }
+
+    /// The compiled token window (stage 0's `input_ids` element count).
+    pub fn window(&self) -> usize {
+        self.window
+    }
+
+    /// Weight bytes materialized per stage, indexed by stage. A stage that
+    /// has not executed yet reports 0; after one forward pass every entry is
+    /// the stage's real κ-resolved weight residency.
+    pub fn stage_weight_bytes(&self) -> &[u64] {
+        &self.stage_weight_bytes
+    }
+
+    /// The largest single-stage weight residency observed — the measured
+    /// peak, which the windowed design bounds by the largest stage (sessions
+    /// are dropped between stages, so stages never coexist).
+    pub fn peak_resident_weight_bytes(&self) -> u64 {
+        self.peak_resident_weight_bytes
+    }
+
+    /// One windowed forward pass: stages in order, previous outputs feeding
+    /// the next stage's inputs, one materialized session resident at a time.
+    fn execute_window(&mut self, inputs: &[&[u8]]) -> Result<Vec<OutputBuffer>> {
+        let mut carried: Vec<Vec<u8>> = Vec::new();
+        for stage in 0..self.stage_count {
+            // Resident hit: the session's weights are already materialized —
+            // no κ-store traffic for this stage. Taking the slot removes its
+            // bytes from the held tally until (re-)admission below.
+            let taken = self.resident[stage].take();
+            if let Some((_, b)) = &taken {
+                self.resident_bytes -= b;
+            }
+            let mut runner = if let Some((runner, _)) = taken {
+                runner
+            } else {
+                let archive = (self.resolve_stage)(stage)
+                    .with_context(|| format!("resolving the stage {stage} archive"))?;
+                let mut counting = CountingStore {
+                    inner: self.store.as_mut(),
+                    bytes: 0,
+                };
+                let verified = std::rc::Rc::clone(&self.verified);
+                let material =
+                    materialize_archive_with(&archive, &mut counting, &mut verified.borrow_mut())
+                        .with_context(|| format!("materializing stage {stage}"))?;
+                drop(archive);
+                self.stage_weight_bytes[stage] = counting.bytes;
+                self.materialization_count += 1;
+                if let Some(f) = self.on_stage.as_mut() {
+                    f(stage, self.stage_count, counting.bytes);
+                }
+                HoloRunner::from_bytes(material)
+                    .with_context(|| format!("loading stage {stage}"))?
+            };
+
+            let refs: Vec<&[u8]> = if stage == 0 {
+                inputs.to_vec()
+            } else {
+                carried.iter().map(Vec::as_slice).collect()
+            };
+            let outputs = runner
+                .execute(&refs)
+                .with_context(|| format!("executing stage {stage}"))?;
+
+            // Keep the session resident while it fits the budget; otherwise
+            // it drops here, before the next stage materializes — the
+            // residency window. `resident[stage]` was `take`n above, so
+            // `resident_bytes` counts it at most once.
+            let bytes = self.stage_weight_bytes[stage];
+            let margin = self.admission_margin();
+            let admissible = bytes > 0
+                && self.resident_bytes + bytes <= self.residency_budget
+                && self.admission_probe.as_ref().is_none_or(|p| p(margin));
+            if admissible {
+                self.resident[stage] = Some((runner, bytes));
+                self.resident_bytes += bytes;
+            } else if bytes > 0 && self.resident_bytes > 0 {
+                tracing::debug!(
+                    stage,
+                    margin,
+                    "residency full — the stage streams per pass (projection, not refusal)"
+                );
+            }
+            self.peak_resident_weight_bytes = self
+                .peak_resident_weight_bytes
+                .max(self.resident_bytes.max(bytes));
+
+            if stage + 1 == self.stage_count {
+                return Ok(outputs);
+            }
+            carried = outputs.into_iter().map(|o| o.bytes).collect();
+        }
+        bail!("the staged pipeline executed no stages")
+    }
+}
+
+impl LmSession for StagedRunner<'_> {
+    fn input_port_info(&self) -> Vec<PortInfo> {
+        self.input_ports.clone()
+    }
+
+    fn output_port_info(&self) -> Vec<PortInfo> {
+        self.output_ports.clone()
+    }
+
+    fn input_index_by_name(&self, name: &str) -> Option<usize> {
+        self.input_ports.iter().position(|p| p.name == name)
+    }
+
+    fn output_index_by_name(&self, name: &str) -> Option<usize> {
+        self.output_ports.iter().position(|p| p.name == name)
+    }
+
+    fn execute(&mut self, inputs: &[&[u8]]) -> Result<Vec<OutputBuffer>> {
+        self.execute_window(inputs)
+    }
+}
+
+impl SessionProvider for StagedRunner<'_> {
+    fn session_for(&mut self, want: usize) -> Result<&mut dyn LmSession> {
+        if want > self.window {
+            bail!(
+                "the sequence needs a window of {want} tokens but the staged pipeline was \
+                 compiled at a fixed window of {}; recompile the stages with a larger \
+                 context_length",
+                self.window
+            );
+        }
+        Ok(self)
+    }
+
+    fn max_window(&self) -> usize {
+        self.window
+    }
+}
+
+/// Decode the named ports of a `.holo` archive section (`Inputs`/`Outputs`)
+/// without loading a session — k-form archives carry their port contract
+/// independent of the (placeholder) weights.
+fn archive_ports(archive: &[u8], kind: SectionKind) -> Result<Vec<PortInfo>> {
+    let loader =
+        HoloLoader::from_bytes(archive).map_err(|e| anyhow!("loading stage archive: {e:?}"))?;
+    let plan = loader
+        .into_plan()
+        .map_err(|e| anyhow!("decoding stage archive sections: {e:?}"))?;
+    let bytes = plan
+        .section(kind)
+        .map_err(|e| anyhow!("stage archive has no {kind:?} section: {e:?}"))?;
+    let ports = decode_ports(bytes).map_err(|e| anyhow!("decoding {kind:?} ports: {e:?}"))?;
+    Ok(ports
+        .into_iter()
+        .map(|p| PortInfo {
+            name: p.name,
+            dtype: p.dtype,
+            element_count: p.element_count as usize,
+            shape: p.shape.iter().map(|&d| d as usize).collect(),
+        })
+        .collect())
+}
+
+/// A shared-store adapter so a [`GrowableStagedSession`] can hand each
+/// regrown [`StagedRunner`] the same underlying κ-store without moving it.
+struct SharedStore(std::rc::Rc<std::cell::RefCell<Box<dyn KappaStore>>>);
+
+impl KappaStore for SharedStore {
+    fn resolve(&mut self, kappa: &str) -> Result<Vec<u8>> {
+        self.0.borrow_mut().resolve(kappa)
+    }
+
+    fn invalidate(&mut self, kappa: &str) {
+        self.0.borrow_mut().invalidate(kappa);
+    }
+
+    fn resolve_range(&mut self, kappa: &str, offset: u64, len: u64) -> Result<Vec<u8>> {
+        self.0.borrow_mut().resolve_range(kappa, offset, len)
+    }
+}
+
+/// A length-adaptive staged provider: the window follows the SEQUENCE, never
+/// the model (journey S4 / dictionary row `staged-window-growth`).
+///
+/// [`StagedRunner`] alone serves one fixed window — the window its stage
+/// archives were compiled at. Compiling stages at the model's own context and
+/// executing every token against that full window makes the first token of a
+/// short prompt cost a full-context forward pass (O(context²) attention per
+/// layer): a 10-token chat message against a 32k-context model is a
+/// months-long "hang" in a browser tab. But stage archives are weightless
+/// k-forms — recompiling them at a smaller window moves no weights and costs
+/// well under a second — so the window can track the sequence the way the
+/// monolithic [`GrowableSession`](crate::engine::GrowableSession) already
+/// does: geometric buckets from the shared
+/// [`geometric_window`](crate::engine::geometric_window) policy, capped at
+/// the model's own context. Peak weight residency stays one stage; per-token
+/// compute scales with the actual sequence, not the model.
+pub struct GrowableStagedSession {
+    config_json: String,
+    keys: Vec<String>,
+    kappas: Vec<String>,
+    shapes: Vec<Vec<u64>>,
+    dtypes: Vec<DType>,
+    layers_per_stage: NonZeroU64,
+    /// The window ceiling — the model's own context (or the validated
+    /// download-time choice).
+    max_window: usize,
+    store: std::rc::Rc<std::cell::RefCell<Box<dyn KappaStore>>>,
+    on_stage: Option<SharedStageObserver>,
+    on_window: Option<Box<dyn FnMut(usize, bool)>>,
+    residency_budget: u64,
+    admission_probe: Option<std::rc::Rc<dyn Fn(u64) -> bool>>,
+    verified: std::rc::Rc<std::cell::RefCell<std::collections::HashSet<String>>>,
+    derived_store: Option<Box<dyn DerivedStore>>,
+    derived_hits: u64,
+    current: Option<(usize, StagedRunner<'static>)>,
+}
+
+impl GrowableStagedSession {
+    /// Build from the streamed-download manifest (the same inputs as
+    /// [`compile_stages`]) plus the κ-store the stages materialize against.
+    /// `max_window` follows the monolithic rule: `Some(n)` is the validated
+    /// download-time context, `None` means the model's own trained context
+    /// (read from the config by the stage compiler on first growth).
+    #[allow(clippy::too_many_arguments)] // the streamed-download manifest is parallel slices
+    pub fn new(
+        config_json: String,
+        keys: Vec<String>,
+        kappas: Vec<String>,
+        shapes: Vec<Vec<u64>>,
+        dtypes: Vec<DType>,
+        context_length: Option<u64>,
+        layers_per_stage: NonZeroU64,
+        store: Box<dyn KappaStore>,
+    ) -> Result<Self> {
+        let config: serde_json::Value =
+            serde_json::from_str(&config_json).context("parsing config.json")?;
+        let model_context = config
+            .get("max_position_embeddings")
+            .and_then(|v| v.as_u64())
+            .unwrap_or(u64::MAX);
+        let max_window = context_length.unwrap_or(model_context).min(model_context) as usize;
+        ensure!(max_window >= 1, "the model declares no usable context");
+        Ok(Self {
+            config_json,
+            keys,
+            kappas,
+            shapes,
+            dtypes,
+            layers_per_stage,
+            max_window,
+            store: std::rc::Rc::new(std::cell::RefCell::new(store)),
+            on_stage: None,
+            on_window: None,
+            residency_budget: 0,
+            admission_probe: None,
+            verified: std::rc::Rc::new(std::cell::RefCell::new(std::collections::HashSet::new())),
+            derived_store: None,
+            derived_hits: 0,
+            current: None,
+        })
+    }
+
+    /// Install an environment headroom probe forwarded to every regrown
+    /// runner (see [`AdmissionProbe`]).
+    pub fn set_admission_probe(&mut self, p: std::rc::Rc<dyn Fn(u64) -> bool>) {
+        self.admission_probe = Some(p);
+    }
+
+    /// (Raw weight bytes, element count) each stage of `archives` will
+    /// materialize — summed per constant from its κ-map entries' manifest
+    /// sizes, known BEFORE any byte moves.
+    fn expected_stage_bytes(&self, archives: &[Vec<u8>]) -> Vec<(u64, u64)> {
+        let size_of: std::collections::HashMap<&str, (u64, u64)> = self
+            .kappas
+            .iter()
+            .zip(self.shapes.iter().zip(&self.dtypes))
+            .map(|(kappa, (shape, dtype))| {
+                let elems: u64 = shape.iter().product();
+                (
+                    kappa.as_str(),
+                    (elems * dtype.byte_size().unwrap_or(1) as u64, elems),
+                )
+            })
+            .collect();
+        archives
+            .iter()
+            .map(|archive| {
+                crate::materialize::kappa_requirements(archive)
+                    .map(|reqs| {
+                        reqs.iter()
+                            .map(|r| {
+                                let (bytes, elems) =
+                                    size_of.get(r.kappa.as_str()).copied().unwrap_or((0, 0));
+                                match r.range {
+                                    // A ranged binding materializes only its
+                                    // slice — the chunk, not the tensor.
+                                    Some((_, len)) => {
+                                        let elem_size = bytes.checked_div(elems).unwrap_or(1);
+                                        (len, len / elem_size.max(1))
+                                    }
+                                    None => (bytes, elems),
+                                }
+                            })
+                            .fold((0u64, 0u64), |(b, e), (rb, re)| (b + rb, e + re))
+                    })
+                    .unwrap_or((0, 0))
+            })
+            .collect()
+    }
+
+    /// Forward a residency budget (bytes) to every regrown runner: stages
+    /// whose materialized sessions fit stay resident across tokens (row
+    /// `stage-residency-cache`), so κ-store bandwidth is paid per window
+    /// instead of per token. `0` (the default) is strict one-stage windowing.
+    pub fn set_residency_budget(&mut self, bytes: u64) {
+        self.residency_budget = bytes;
+        if let Some((_, runner)) = self.current.as_mut() {
+            runner.set_residency_budget(bytes);
+        }
+    }
+
+    /// Install a per-stage observer forwarded into every regrown runner:
+    /// `(stage, stage_count, weight_bytes)` after each stage materializes.
+    pub fn set_stage_observer(&mut self, f: Box<dyn FnMut(usize, usize, u64)>) {
+        self.on_stage = Some(std::rc::Rc::from(std::cell::RefCell::new(f)));
+    }
+
+    /// Install a window observer: called with the bucket size when a window
+    /// (re)builds, and whether it RESOLVED from the derived store (true) or
+    /// compiled fresh (false) — the narration must not say "compiling" for a
+    /// resolution.
+    pub fn set_window_observer(&mut self, f: Box<dyn FnMut(usize, bool)>) {
+        self.on_window = Some(f);
+    }
+
+    /// Pre-derive the next geometric window bucket's stage archives into the
+    /// derived store, OFF the per-token path (row `idle-derivation`): no
+    /// weights move (stage k-forms are weightless), the resident window is
+    /// untouched, and a later crossing resolves the bucket instead of
+    /// compiling it on the critical path. Returns the pre-derived bucket, or
+    /// `None` at the ceiling. Abandoned speculation is ordinary derived
+    /// content — evaporable by the same lifecycle that admitted it.
+    pub fn prederive_next_window(&mut self) -> Result<Option<usize>> {
+        let next = match &self.current {
+            Some((current, _)) if *current >= self.max_window => return Ok(None),
+            Some((current, _)) => {
+                crate::engine::geometric_window(current.saturating_mul(2), self.max_window)
+            }
+            None => crate::engine::geometric_window(1, self.max_window),
+        };
+        if matches!(&self.current, Some((current, _)) if *current >= next) {
+            return Ok(None);
+        }
+        // Derivation persists via the derived store; the result is dropped —
+        // this call moves no weights and swaps no runner.
+        let _ = self.stages_for_window(next)?;
+        Ok(Some(next))
+    }
+
+    /// The stage count of the currently-resident window (0 before the first).
+    pub fn stage_count(&self) -> usize {
+        self.current.as_ref().map_or(0, |(_, r)| r.stage_count())
+    }
+}
+
+impl SessionProvider for GrowableStagedSession {
+    fn session_for(&mut self, want: usize) -> Result<&mut dyn LmSession> {
+        if want > self.max_window {
+            bail!(
+                "the sequence needs a window of {want} tokens but the model's context length \
+                 is {}",
+                self.max_window
+            );
+        }
+        let fits = matches!(&self.current, Some((cur, _)) if *cur >= want);
+        if !fits {
+            let window = crate::engine::geometric_window(want, self.max_window);
+            tracing::info!(window, want, "building staged generation window");
+            // Drop the previous window first: peak residency stays one stage.
+            self.current = None;
+            let (archives, resolved) = self.stages_for_window(window)?;
+            if let Some(f) = self.on_window.as_mut() {
+                f(window, resolved);
+            }
+            let expected = self.expected_stage_bytes(&archives);
+            let mut runner = StagedRunner::from_archives(
+                archives,
+                Box::new(SharedStore(std::rc::Rc::clone(&self.store))),
+            )
+            .with_context(|| format!("loading the {window}-token staged window"))?;
+            if let Some(hook) = &self.on_stage {
+                let hook = std::rc::Rc::clone(hook);
+                runner.set_stage_observer(Box::new(move |s, n, b| {
+                    (hook.borrow_mut())(s, n, b);
+                }));
+            }
+            runner.set_residency_budget(self.residency_budget);
+            runner.share_verified_set(std::rc::Rc::clone(&self.verified));
+            runner.set_expected_stage_bytes(expected);
+            if let Some(probe) = &self.admission_probe {
+                let probe = std::rc::Rc::clone(probe);
+                runner.set_admission_probe(Box::new(move |margin| probe(margin)));
+            }
+            self.current = Some((window, runner));
+        }
+        Ok(&mut self.current.as_mut().expect("window just ensured").1)
+    }
+
+    fn max_window(&self) -> usize {
+        self.max_window
+    }
+}
+
+// ── Derived-artifact closure (row `derived-artifact-kappa`) ──────────────────
+
+/// A derived-artifact store: the known set closes over deterministic
+/// derivation (resource model, Closure). A window's stage archives are
+/// computed deterministically from κ inputs (config, manifest, window,
+/// partition — `deterministic-compile` witnesses bit-identity), so they are
+/// themselves content: derived once, persisted under their derivation key
+/// with their recorded content-κs, and RESOLVED by later sessions instead of
+/// re-derived. Soundness is inherited: content verifies against its recorded
+/// κ at load (once per load — off the per-token path), a mismatch evaporates
+/// the entry and recovery is derivation itself, and everything here is
+/// re-derivable locally, so a wrong prior can never dead-end or execute
+/// unverified content.
+pub trait DerivedStore {
+    /// The archives + recorded content-κs stored under `key`, if present.
+    fn load(&mut self, key: &str) -> Option<(Vec<Vec<u8>>, Vec<String>)>;
+    /// Persist `stages` (+ their content-κs) under `key`.
+    fn store(&mut self, key: &str, stages: &[Vec<u8>], kappas: &[String]);
+    /// Evaporate a corrupted or stale entry (the unpin of this tier).
+    fn evaporate(&mut self, key: &str);
+}
+
+/// [`DerivedStore`] over a directory: `{key}/{i}.holo` + `{key}/kappas.json`
+/// (the native mirror of the browser's `models/<dir>/derived/` layout).
+pub struct DirDerivedStore {
+    root: std::path::PathBuf,
+}
+
+impl DirDerivedStore {
+    /// Create a derived-artifact store rooted at `root`.
+    pub fn new(root: impl Into<std::path::PathBuf>) -> Self {
+        Self { root: root.into() }
+    }
+}
+
+impl DerivedStore for DirDerivedStore {
+    fn load(&mut self, key: &str) -> Option<(Vec<Vec<u8>>, Vec<String>)> {
+        let dir = self.root.join(key);
+        let kappas: Vec<String> =
+            serde_json::from_slice(&std::fs::read(dir.join("kappas.json")).ok()?).ok()?;
+        let mut stages = Vec::with_capacity(kappas.len());
+        for i in 0..kappas.len() {
+            stages.push(std::fs::read(dir.join(format!("{i}.holo"))).ok()?);
+        }
+        Some((stages, kappas))
+    }
+
+    fn store(&mut self, key: &str, stages: &[Vec<u8>], kappas: &[String]) {
+        let dir = self.root.join(key);
+        let write = || -> std::io::Result<()> {
+            std::fs::create_dir_all(&dir)?;
+            for (i, stage) in stages.iter().enumerate() {
+                std::fs::write(dir.join(format!("{i}.holo")), stage)?;
+            }
+            std::fs::write(
+                dir.join("kappas.json"),
+                serde_json::to_vec(kappas).expect("κ list serializes"),
+            )
+        };
+        // Persistence is an optimization; a failed write only costs a
+        // future re-derivation.
+        let _ = write();
+    }
+
+    fn evaporate(&mut self, key: &str) {
+        let _ = std::fs::remove_dir_all(self.root.join(key));
+    }
+}
+
+impl GrowableStagedSession {
+    /// Install a derived-artifact store: window regrows resolve their stage
+    /// archives from it (content-verified at load) and persist fresh
+    /// derivations into it. Without one, every window compiles fresh — the
+    /// same semantics, more derivation.
+    pub fn set_derived_store(&mut self, store: Box<dyn DerivedStore>) {
+        self.derived_store = Some(store);
+    }
+
+    /// Window regrows served from the derived store instead of compiled —
+    /// the derivation-reuse instrument.
+    pub fn derived_hits(&self) -> u64 {
+        self.derived_hits
+    }
+
+    /// Stage materializations of the resident window's runner (0 before the
+    /// first window) — the cross-turn bandwidth instrument: a second
+    /// generation over a warm session adds none while the resident set holds.
+    pub fn materialization_count(&self) -> u64 {
+        self.current
+            .as_ref()
+            .map_or(0, |(_, r)| r.materialization_count())
+    }
+
+    /// The derivation key of this session's stages at `window`: a κ over the
+    /// exact inputs the derivation is a deterministic function of. Two
+    /// sessions with identical inputs resolve each other's artifacts; any
+    /// input change is a different key, never a reinterpretation.
+    fn derivation_key(&self, window: usize) -> String {
+        let mut ingest = format!(
+            "stage-archives:v2:window={window}:layers_per_stage={}:context={}:config=",
+            self.layers_per_stage, self.max_window
+        )
+        .into_bytes();
+        ingest.extend_from_slice(self.config_json.as_bytes());
+        for (key, kappa) in self.keys.iter().zip(&self.kappas) {
+            ingest.extend_from_slice(key.as_bytes());
+            ingest.push(b'=');
+            ingest.extend_from_slice(kappa.as_bytes());
+            ingest.push(b';');
+        }
+        crate::materialize::kappa_of(&ingest)
+    }
+
+    /// Resolve the window's stage archives: derived store first (verified at
+    /// load; a mismatch evaporates the entry — derive-as-recovery), else
+    /// compile and persist the fresh derivation.
+    fn stages_for_window(&mut self, window: usize) -> Result<(Vec<Vec<u8>>, bool)> {
+        let key = self.derivation_key(window);
+        if let Some(store) = self.derived_store.as_mut() {
+            if let Some((stages, kappas)) = store.load(&key) {
+                let intact = stages.len() == kappas.len()
+                    && !stages.is_empty()
+                    && stages
+                        .iter()
+                        .zip(&kappas)
+                        .all(|(s, k)| crate::materialize::kappa_of(s) == *k);
+                if intact {
+                    self.derived_hits += 1;
+                    tracing::info!(window, "staged window resolved from derived κ-store");
+                    return Ok((stages, true));
+                }
+                // Corrupted or torn: evaporate and recover by deriving.
+                store.evaporate(&key);
+            }
+        }
+        let stages = compile_stages(
+            &self.config_json,
+            &self.keys,
+            &self.kappas,
+            &self.shapes,
+            &self.dtypes,
+            Some(window as u64),
+            self.layers_per_stage,
+        )
+        .with_context(|| format!("compiling a {window}-token staged window"))?;
+        if let Some(store) = self.derived_store.as_mut() {
+            let kappas: Vec<String> = stages
+                .iter()
+                .map(|s| crate::materialize::kappa_of(s))
+                .collect();
+            store.store(&key, &stages, &kappas);
+        }
+        Ok((stages, false))
+    }
+}

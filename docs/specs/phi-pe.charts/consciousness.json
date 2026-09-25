@@ -1,0 +1,12 @@
+{
+  "schema": "phi-pe.chart.v1",
+  "chartFileId": "consciousness",
+  "kernelHash": "d912f35f5eb67e6058baa9a14daac7abb1d4997f15519e0dda01d3e358afb475",
+  "bindings": {
+    "n": { "semantic": "attentional step" },
+    "thetaPrev": { "semantic": "last integrated phase" },
+    "p": { "semantic": "how fast prior experience is discounted" },
+    "t": { "semantic": "available integration window" },
+    "doorMode": { "semantic": "minus = habituation / decay; plus = rumination / accumulation" }
+  }
+}

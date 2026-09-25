@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "the_examiner_adr",
+ "options": {},
+ "name": "TheExaminerAdr.Proofs",
+ "isModule": false,
+ "importArts":
+ {"TheExaminerAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/the-examiner/the_examiner_adr/.lake/build/lib/lean/TheExaminerAdr/Core.olean"]]},
+ "dynlibs": []}

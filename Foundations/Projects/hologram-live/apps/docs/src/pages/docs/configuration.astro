@@ -1,0 +1,103 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+<DocsLayout title="Configuration" description="Configure Hologram Live server, client, tracing, telemetry, modules, and update behavior.">
+  <h1>Configuration</h1>
+  <p>All platforms use <code>~/.config/hologram/live.toml</code>. The schema is typed, versioned, and rejects unknown fields.</p>
+
+  <h2>Representative configuration</h2>
+  <pre><code>schema_version = 2
+role = "node"
+
+[paths]
+config_dir = "~/.config/hologram"
+data_dir = "~/.local/share/hologram"
+state_dir = "~/.local/state/hologram"
+cache_dir = "~/.cache/hologram"
+
+[server]
+listen = "127.0.0.1:11435"
+max_rpc_bytes = 33554432
+max_http_body_bytes = 33554432
+graceful_shutdown_secs = 30
+actor_mailbox_capacity = 128
+
+[client]
+preference = "local"
+local_endpoint = "http://127.0.0.1:11435"
+allow_read_fallback = true
+request_timeout_secs = 30
+
+[auth]
+required = false
+token_env = "HOLOGRAM_AUTH_TOKEN"
+
+[tracing]
+filter = "info,hologram_live=debug"
+format = "pretty"
+include_target = true
+include_thread_ids = false
+
+[telemetry]
+enabled = true
+service_name = "hologram-live"
+export_timeout_secs = 5
+
+[modules]
+enabled = [
+    "dev.hologram.live.system",
+    "dev.hologram.live.kappa-registry",
+    "dev.hologram.live.files",
+    "dev.hologram.live.holo",
+    "dev.hologram.live.history",
+    "dev.hologram.live.chat",
+    "dev.hologram.live.inference",
+    "dev.hologram.live.openai-compat",
+    "dev.hologram.live.ollama-compat",
+    "dev.hologram.live.control-plane",
+]
+
+[update]
+channel = "stable"
+
+[inference]
+engine = "echo"
+default_model = ""
+weightc_path = "weightc"
+ollama_endpoint = "http://127.0.0.1:11434"
+request_timeout_secs = 300
+resident_sessions = false
+max_resident_sessions = 4
+
+[holo]
+# Development only; relative paths resolve from paths.config_dir.
+# development_grant = "development-grant.json"
+
+[plugins]
+enabled = false
+modules = []</code></pre>
+  <p>Schema version 2 is current, and a file written by an earlier build still starts. Missing sections and fields fall back to the defaults shown above, and an older <code>schema_version</code> is upgraded and written back so the next start reads a current file. The rewrite records only what the file itself declares: values injected by an environment override are applied to the running process but never persisted.</p>
+  <p>Two cases are still refused rather than guessed at. Unknown fields are rejected instead of ignored, so a misspelled key is a startup error rather than a setting that silently does nothing. A <code>schema_version</code> newer than the running build supports is refused instead of being downgraded, since a newer file may carry settings this build would drop on write.</p>
+  <p>When a key is removed from the schema, the removal comes with a <code>schema_version</code> bump, and files written before that bump keep starting: the retired key is dropped during the upgrade, named in a warning, and absent from the rewritten file. Files already at the current version are not swept this way, so an unrecognised key there remains a startup error rather than being discarded as though it were retired.</p>
+  <div class="note"><strong>Telemetry remains local by default</strong>Leave <code>telemetry.endpoint</code> unset to prevent any telemetry network connection.</div>
+
+  <h2><code>.holo</code> development grants</h2>
+  <p>Resident applications normally receive the local baseline grant, which has no storage roots, channels, or network endpoint scopes. Set <code>holo.development_grant</code> only for a local demo that intentionally needs more authority. The file uses the same source schema as <code>capabilities.json</code>, but it is read from trusted host configuration and is never taken from the archive or a remote request. Endpoint scopes do not enable networking without a separately shipped mediated guest profile. This option is rejected when <code>server.listen</code> is not loopback.</p>
+
+  <h2>Environment overrides</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Variable</th><th>Configuration</th></tr></thead>
+    <tbody>
+      <tr><td><code>HOLOGRAM_CONFIG</code></td><td>Explicit configuration file used by the CLI.</td></tr>
+      <tr><td><code>HOLOGRAM_LISTEN</code></td><td>Server listen address.</td></tr>
+      <tr><td><code>HOLOGRAM_MAX_RPC_BYTES</code></td><td>Maximum gRPC request and response size in bytes. The desktop raises this for rootfs-backed application imports.</td></tr>
+      <tr><td><code>HOLOGRAM_REMOTE_ENDPOINT</code></td><td>Remote client authority.</td></tr>
+      <tr><td><code>HOLOGRAM_LOG</code> / <code>RUST_LOG</code></td><td>Tracing filter.</td></tr>
+      <tr><td><code>OTEL_EXPORTER_OTLP_ENDPOINT</code></td><td>OTLP/gRPC collector endpoint.</td></tr>
+      <tr><td><code>OTEL_SERVICE_NAME</code></td><td>Telemetry service identity.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Remote safety</h2>
+  <p>A non-loopback server listener requires authentication. Non-loopback client endpoints require HTTPS. Authentication, authorization, TLS, and integrity failures never trigger fallback to a different authority.</p>
+</DocsLayout>

@@ -1,0 +1,126 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/kappa-core",
+    "crates/kappa-types",
+    "crates/kappa-server",
+    "crates/kappa-store-redb",
+    "crates/kappa-module-oci",
+    "crates/kappa-module-identity",
+    "crates/kappa-module-distribution",
+    "crates/kappa-akd",
+    "crates/kappa-reconcile",
+    "crates/kappa-transport-veilid",
+    "crates/kappa-module-git",
+    "crates/kappa-module-s3",
+    "crates/kappa-module-nix",
+    "crates/kappa-conformance",
+    "crates/kappa-module-atproto",
+]
+
+[workspace.package]
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.95"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[workspace.dependencies]
+# Deterministic CBOR (dCBOR, draft-mcnally-deterministic-cbor)
+dcbor = { git = "https://github.com/usrbinkat/bc-dcbor-rust", branch = "feat/dcbor-derive", features = ["derive", "multithreaded"] }
+
+# Hashing
+sha2 = "0.11"
+sha3 = "0.12"
+blake3 = "1"
+sha1-checked = "0.10"
+hex = "0.4"
+
+# Crypto ecosystem -- rand 0.10 lineage (frost 3.0.0 + ed25519-dalek 3.0.0)
+rand = { version = "0.10", default-features = false }
+rand_core = { version = "0.10", default-features = false }
+getrandom = { version = "0.4", features = ["sys_rng"] }
+
+# Signing -- single-signer
+ed25519-dalek = { version = "3", default-features = false, features = ["rand_core"] }
+p256 = { version = "0.14", features = ["ecdsa"] }
+k256 = { version = "0.14", features = ["ecdsa"] }
+signature = "3"
+
+# Signing -- threshold (all no_std+alloc, NCC-audited v3.0.0)
+frost-core = { version = "3", features = ["serialization"] }
+frost-ed25519 = { version = "3", features = ["serialization"] }
+frost-p256 = { version = "3", features = ["serialization"] }
+frost-secp256k1 = { version = "3", features = ["serialization"] }
+
+# Symmetric encryption (AES-256-GCM + AEGIS-128L via rekindle-aead)
+rekindle-aead = { git = "https://github.com/ScopeCreep-zip/rekindle", branch = "feat/cli-tui-restructure-rewrite", default-features = false }
+
+# Key management
+zeroize = "1.9"
+
+# Errors
+thiserror = "2"
+
+# Observability
+tracing = "0.1"
+
+# HTTP types
+http = "1"
+
+# HTTP framework
+topcoat = { git = "https://github.com/usrbinkat/topcoat", branch = "usrbinkat/feat/trailing-slash-tolerance-v2", features = ["router", "serve", "tower", "websocket", "outbound"] }
+
+# Async runtime
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal", "net", "time", "sync"] }
+
+# Embedded KV store (optional query accelerator)
+redb = "4"
+
+# Identifiers
+uuid = { version = "1", features = ["v4"] }
+chrono = "0.4"
+
+# Filesystem / temp
+tempfile = "3"
+
+# Serialization for non-canonical paths (checkpoints, HTTP JSON compat)
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+postcard = { version = "1", features = ["alloc"] }
+
+# Rate limiting
+governor = "0.10"
+
+# Concurrent hash map
+dashmap = "6"
+
+# AKD (std-only, kappa-akd crate only)
+akd = { version = "0.12", features = ["serde_serialization", "whatsapp_v1"] }
+async-trait = "0.1"
+
+# JSON Schema validation
+jsonschema = "0.49"
+
+# Merkle search tree for reconciliation
+merkle-search-tree = "0.8"
+
+# Inter-crate
+kappa-core = { path = "crates/kappa-core" }
+kappa-types = { path = "crates/kappa-types" }
+kappa-store-redb = { path = "crates/kappa-store-redb" }
+kappa-module-oci = { path = "crates/kappa-module-oci" }
+kappa-module-identity = { path = "crates/kappa-module-identity" }
+kappa-akd = { path = "crates/kappa-akd" }
+kappa-reconcile = { path = "crates/kappa-reconcile" }
+
+[patch.crates-io]
+matchit = { git = "https://github.com/usrbinkat/matchit", branch = "usrbinkat/feat/non-terminal-catch-all" }
+
+[[test]]
+name = "bdd"
+harness = false
+
+[profile.release]
+lto = true
+strip = true

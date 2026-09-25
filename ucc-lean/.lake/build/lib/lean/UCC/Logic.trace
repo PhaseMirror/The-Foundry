@@ -1,0 +1,32 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["9ee049eefafb2c62.olean"],
+  "m": false,
+  "i": "e496347330a72c34.ilean",
+  "c": "05f1206d27458d09.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.34.0-rc2/bin/lean /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/UCC/Logic.lean -o /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Logic.olean -i /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/lib/lean/UCC/Logic.ilean -c /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/UCC/Logic.c --setup /media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/.lake/build/ir/UCC/Logic.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["ucc/UCC:extraDep", [["@ucc:extraDep", "00000000000006bb"]]],
+    ["imports", "00000000000006bb"]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.34.0, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d",
+   "365244c167ac8c1d"],
+  ["/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/Foundry/ucc-lean/UCC/Logic.lean",
+   "6aed9d1d6f524163"],
+  ["options",
+   [["-Dpp.unicode.fun=true", "9b94070140457fab"],
+    ["-DautoImplicit=false", "4a85acb881fd49d0"]]],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: UCC.Logic", "9c822cb6ba20da85"],
+  ["Package.id?: (some ucc)", "85b29d444eb49ac0"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "f90ba75b4b91597a"}

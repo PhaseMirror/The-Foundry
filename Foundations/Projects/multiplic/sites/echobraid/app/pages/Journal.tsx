@@ -1,0 +1,211 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { PRIME_PROMPTS } from '../constants';
+import { PrimePrompt, SavedReflection } from '../types';
+import { Hash, Mic, MicOff, Trash2, Save, Check } from 'lucide-react';
+
+const Journal: React.FC = () => {
+  // Persistence Initialization
+  const [selectedPrompt, setSelectedPrompt] = useState<PrimePrompt | null>(() => {
+    const savedId = localStorage.getItem('echo_journal_prompt_id');
+    if (savedId) {
+        return PRIME_PROMPTS.find(p => p.id === savedId) || null;
+    }
+    return null;
+  });
+
+  const [journalEntry, setJournalEntry] = useState(() => {
+    return localStorage.getItem('echo_journal_content') || '';
+  });
+
+  // UI State
+  const [isListening, setIsListening] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // Persistence Effects
+  useEffect(() => {
+    if (selectedPrompt) {
+        localStorage.setItem('echo_journal_prompt_id', selectedPrompt.id);
+    } else {
+        localStorage.removeItem('echo_journal_prompt_id');
+    }
+  }, [selectedPrompt]);
+
+  useEffect(() => {
+    localStorage.setItem('echo_journal_content', journalEntry);
+  }, [journalEntry]);
+
+  // Speech Recognition Setup
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event: any) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + ' ';
+          }
+        }
+        if (finalTranscript) {
+          setJournalEntry(prev => prev + finalTranscript);
+        }
+      };
+
+      recognition.onerror = () => setIsListening(false);
+      recognition.onend = () => setIsListening(false);
+      recognitionRef.current = recognition;
+    }
+
+    return () => {
+      recognitionRef.current?.stop();
+    };
+  }, []);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      if (selectedPrompt) {
+        recognitionRef.current?.start();
+        setIsListening(true);
+      }
+    }
+  };
+
+  const handleClear = () => {
+    if (window.confirm("Clear this reflection? The words will fade, leaving space for new ones.")) {
+      setJournalEntry('');
+      setSelectedPrompt(null);
+      localStorage.removeItem('echo_journal_content');
+      localStorage.removeItem('echo_journal_prompt_id');
+      if (isListening) recognitionRef.current?.stop();
+    }
+  };
+
+  const handleSave = () => {
+    if (!journalEntry.trim()) return;
+
+    const savedReflections: SavedReflection[] = JSON.parse(localStorage.getItem('echo_saved_reflections') || '[]');
+    const newReflection: SavedReflection = {
+      id: Math.random().toString(36).substr(2, 9),
+      text: journalEntry,
+      promptText: selectedPrompt?.text || "Freestyle",
+      timestamp: Date.now()
+    };
+
+    localStorage.setItem('echo_saved_reflections', JSON.stringify([newReflection, ...savedReflections]));
+    
+    setIsSaving(true);
+    setTimeout(() => setIsSaving(false), 2000);
+  };
+
+  return (
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 md:pl-20 p-6 transition-colors duration-300">
+      <div className="max-w-4xl mx-auto">
+        <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-light text-stone-700 dark:text-stone-200 mb-2">Journal</h1>
+            <p className="text-stone-500 dark:text-stone-500 text-sm">Linearity is optional. Start anywhere.</p>
+          </div>
+          
+          <div className="flex items-center gap-2 bg-white dark:bg-stone-900 p-2 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm">
+            <button 
+              onClick={toggleListening}
+              disabled={!selectedPrompt}
+              className={`p-3 rounded-xl transition-all duration-300 flex items-center gap-2 ${
+                isListening 
+                  ? 'bg-teal-100 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400 animate-pulse' 
+                  : 'text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 disabled:opacity-30'
+              }`}
+              title={isListening ? "Stop Listening" : "Talk to Type"}
+            >
+              {isListening ? <Mic size={20} /> : <MicOff size={20} />}
+              <span className="text-xs font-medium hidden sm:inline">Voice Type</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Prime Board */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          {PRIME_PROMPTS.map((prompt) => (
+            <button
+              key={prompt.id}
+              onClick={() => setSelectedPrompt(prompt)}
+              className={`
+                text-left p-6 rounded-[2rem] border transition-all duration-300
+                ${selectedPrompt?.id === prompt.id 
+                  ? 'bg-white dark:bg-stone-800 border-stone-500 dark:border-stone-500 shadow-md transform scale-[1.01]' 
+                  : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-stone-400 dark:hover:border-stone-600 hover:shadow-sm'}
+              `}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500 dark:text-stone-600">
+                  Prime {prompt.prime} • {prompt.category}
+                </span>
+                <Hash size={14} className="text-stone-400 dark:text-stone-700" />
+              </div>
+              <p className="text-stone-700 dark:text-stone-300 font-medium leading-relaxed">
+                {prompt.text}
+              </p>
+            </button>
+          ))}
+        </div>
+
+        {/* Writing Area */}
+        <div className={`transition-all duration-700 ${selectedPrompt ? 'opacity-100 translate-y-0' : 'opacity-40 translate-y-4'}`}>
+          <div className={`bg-white dark:bg-stone-900 rounded-[2.5rem] p-8 border shadow-sm min-h-[450px] flex flex-col transition-all duration-300 ${isListening ? 'border-teal-200 dark:border-teal-800 ring-2 ring-teal-50 dark:ring-teal-900/10' : 'border-stone-200 dark:border-stone-800'}`}>
+            <div className="flex-1">
+                <textarea
+                className="w-full h-full min-h-[350px] resize-none border-none focus:ring-0 text-stone-800 dark:text-stone-200 text-xl leading-relaxed font-serif placeholder:text-stone-400 dark:placeholder:text-stone-700 bg-transparent"
+                placeholder={selectedPrompt ? (isListening ? "Listening to your resonance..." : "The space is yours...") : "Select a Prime Tile above to begin your reflection."}
+                value={journalEntry}
+                onChange={(e) => setJournalEntry(e.target.value)}
+                disabled={!selectedPrompt}
+                />
+            </div>
+            
+            <div className="mt-8 flex flex-col sm:flex-row justify-between items-center border-t border-stone-100 dark:border-stone-800 pt-6 gap-4">
+               <div className="flex gap-2 flex-wrap justify-center">
+                 {['#clarity', '#needs', '#unsaid', '#regulation'].map(tag => (
+                   <button key={tag} className="px-4 py-1.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-500 text-xs hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors border border-transparent hover:border-stone-300 dark:hover:border-stone-700">
+                     {tag}
+                   </button>
+                 ))}
+               </div>
+               
+               <div className="flex items-center gap-4">
+                 <button 
+                  onClick={handleSave}
+                  disabled={!journalEntry.trim() || isSaving}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-500 ${isSaving ? 'bg-teal-500 text-white shadow-teal-200' : 'bg-stone-800 dark:bg-stone-200 text-stone-100 dark:text-stone-900 hover:scale-105 active:scale-95 disabled:opacity-30'}`}
+                 >
+                   {isSaving ? <Check size={18} /> : <Save size={18} />}
+                   <span className="text-sm font-medium">{isSaving ? "Saved" : "Save Reflection"}</span>
+                 </button>
+
+                 <button 
+                  className="flex items-center gap-2 text-stone-400 hover:text-red-600 dark:text-stone-700 dark:hover:text-red-400/80 text-sm transition-colors group"
+                  onClick={handleClear}
+                 >
+                   <Trash2 size={16} className="group-hover:scale-110 transition-transform" />
+                   <span>Incinerate</span>
+                 </button>
+               </div>
+            </div>
+          </div>
+        </div>
+
+        <footer className="mt-12 text-center text-stone-400 dark:text-stone-700 text-[10px] font-mono uppercase tracking-widest">
+            Non-Linear Coprocessing Loop Active
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default Journal;

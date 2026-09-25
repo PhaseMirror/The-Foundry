@@ -1,0 +1,7 @@
+{"plugins": [],
+ "package": "ucc",
+ "options": {"pp.unicode.fun": true, "autoImplicit": false},
+ "name": "UCC.Core",
+ "isModule": false,
+ "importArts": {},
+ "dynlibs": []}

@@ -1,0 +1,11 @@
+{"plugins": [],
+ "package": "certificate-core",
+ "options": {},
+ "name": "CertificateCore.GraphLaplacian",
+ "isModule": false,
+ "importArts":
+ {"CertificateCore.Vector":
+  [["/home/citizen/Multiplicity/Foundations/certified-graph-learning/lean/.lake/build/lib/lean/CertificateCore/Vector.olean"]],
+  "CertificateCore.Matrix":
+  [["/home/citizen/Multiplicity/Foundations/certified-graph-learning/lean/.lake/build/lib/lean/CertificateCore/Matrix.olean"]]},
+ "dynlibs": []}

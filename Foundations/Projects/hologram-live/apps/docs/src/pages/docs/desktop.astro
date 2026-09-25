@@ -1,0 +1,71 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+<DocsLayout title="Desktop application" description="Develop and package the Tauri desktop shell for Hologram Live.">
+  <h1>Desktop application</h1>
+  <p>The Tauri application in <code>apps/desktop</code> packages Hologram's background service and provides a focused workspace for chat, files, watched <code>.holo</code> applications, and modules. Its sidebar follows the desktop navigation model and offers remembered light and dark appearances, while a system menu-bar item reports Hologram's state and provides Open, Start, Restart, Stop, and Quit actions after the main window closes.</p>
+
+  <h2>Run in development</h2>
+  <pre><code>just tauri
+# equivalent to: cd apps/desktop &amp;&amp; npm install &amp;&amp; npm run dev</code></pre>
+  <p>The preparation script explicitly builds the root <code>hologram-live</code> package's <code>hologram</code> binary and copies it to Tauri's ignored, target-specific sidecar staging location before the desktop shell starts. The server source remains outside <code>src-tauri</code>.</p>
+
+  <h2>Build a release bundle</h2>
+  <pre><code>just tauri build</code></pre>
+  <p>Tauri builds the web frontend, compiles the native shell, and includes the release sidecar in the platform bundle.</p>
+
+  <h2>Watch an application directory</h2>
+  <ol>
+    <li>Put a valid <code>hologram.json</code> and its referenced layer files in one project directory.</li>
+    <li>Open <strong>Applications</strong> in the desktop sidebar and choose <strong>Add directory</strong>.</li>
+    <li>Select the project directory. Hologram compiles a fat archive into its desktop cache, imports it into the local catalog, and shows the watch as <strong>Ready</strong>.</li>
+    <li>Choose <strong>Run</strong> on the ready project to open its inspector. Enter a text input for a one-shot non-View application, or choose <strong>Open application</strong> for a portable View.</li>
+    <li>Select a catalog row to inspect the verified archive and application identities, capability request, logical layers, physical section offsets, and embedded blobs.</li>
+    <li>Edit <code>hologram.json</code> or a project file. Recursive changes are debounced, then compiled and imported again. A changed archive replaces only the prior variant produced by that watch.</li>
+    <li>Choose <strong>Stop watching</strong> when the development loop is finished. The final immutable catalog archive remains available until it is explicitly removed.</li>
+  </ol>
+  <p>To run an existing archive instead of source, choose <strong>Add .holo</strong> and select it with the native file picker. Hologram verifies and imports the archive and selects it in the catalog. Desktop verifies the catalog object and downloads the immutable archive to a κ-derived application-cache path. Non-View applications use the shared one-shot direct executor; portable Views use an explicit Desktop-owned application session. Neither path exposes cache paths to either webview.</p>
+  <div class="note"><strong>Safe failure behavior</strong>A failed compile changes the watch to <strong>Failed</strong> and shows the compiler diagnostic, but it does not discard the last successful archive. Fixing the source triggers another build and returns the watch to <strong>Ready</strong>.</div>
+  <p>Watch registrations are stored in the desktop application's configuration and restored after restart. Generated archives live under the desktop cache, never inside the selected project, which prevents output-triggered rebuild loops. Common dependency and build trees such as <code>.git</code>, <code>.venv</code>, <code>node_modules</code>, <code>target</code>, and <code>__pycache__</code> are ignored. The reusable registry, persistence, filtering, and debounce implementation lives in <code>crates/hologram-application-watch</code>; <code>src-tauri</code> only supplies desktop paths, fixed sidecar operations, and UI event delivery.</p>
+
+  <h2>Command boundary</h2>
+  <p>The webview can invoke these narrow application commands:</p>
+  <ul>
+    <li><code>service_start</code></li>
+    <li><code>service_stop</code></li>
+    <li><code>service_restart</code></li>
+    <li><code>service_status</code></li>
+    <li><code>modules_list</code></li>
+    <li><code>history_list</code></li>
+    <li><code>history_create</code></li>
+    <li><code>history_get</code></li>
+    <li><code>chat_send</code></li>
+    <li><code>objects_list</code></li>
+    <li><code>file_put</code></li>
+    <li><code>file_rename</code></li>
+    <li><code>object_get</code></li>
+    <li><code>holo_watch_list</code></li>
+    <li><code>holo_watch_add</code></li>
+    <li><code>holo_watch_remove</code></li>
+    <li><code>holo_catalog_list</code></li>
+    <li><code>holo_catalog_inspect</code></li>
+    <li><code>holo_catalog_import</code></li>
+    <li><code>holo_catalog_run</code></li>
+    <li><code>holo_catalog_session_list</code></li>
+    <li><code>holo_catalog_session_start</code></li>
+    <li><code>holo_catalog_session_stop</code></li>
+  </ul>
+  <div class="note"><strong>No arbitrary shell bridge</strong>Each command maps to one fixed sidecar operation or the shared application executor, keeping browser-facing authority narrow.</div>
+  <p><code>modules_list</code> reads Hologram's negotiated module manifest. The chat view creates and switches among durable conversation threads, then sends messages through the enabled chat module. The files view uses native open/save dialogs, uploads and renames files, lists content-addressed metadata, and downloads the stored bytes. The Applications view keeps host file/directory selection in the trusted Tauri adapter, invokes only fixed compile, import, list, inspect, verify, download, and direct-run operations, and gives the webview structured results rather than a general filesystem or shell API. Because the sidecar uses the normal Hologram configuration, the service-backed surfaces can target a local service or a future authenticated cloud endpoint; workstation path authorization remains local-only.</p>
+  <h2>Portable application windows</h2>
+  <p>Application View layers compile complete <code>ui/</code> directories into canonical portable bundles. The host-neutral provider validates the bundle during preparation, then Hologram Desktop attaches it as a lifecycle-owned native application window outside the dashboard. The dashboard only launches and stops the session; it does not embed guest content. Every attachment receives an opaque <code>hologram-view://&lt;token&gt;/…</code> origin and the protocol handler also binds requests to the originating WebView label. Assets remain immutable in memory; no <code>file://</code> URL, source/cache path, or localhost HTTP server is exposed.</p>
+  <p>Portable windows reject external top-level navigation and new-window requests. Their responses set a restrictive content security policy, disable external connections and form targets, reject ambiguous or encoded paths, and infer delivery MIME types only from canonical logical asset paths. Dynamic application-window labels are deliberately absent from the main window's Tauri capability assignment, so bundled content cannot invoke its commands. The provider destroys the window and removes its assets during reverse shutdown or rollback.</p>
+  <p>View code can call its admitted application through one same-origin endpoint: <code>POST /_hologram/intent</code> with <code>{`{"version":1,"name":"application.invoke","payload":"text"}`}</code>. Hologram binds the request to the attachment's application κ and prepared primary, serializes invocations, and returns bounded UTF-8 <code>outputs</code>. The protocol rejects unknown fields, names, versions, origins, paths, media types, and oversized messages; it does not expose arbitrary Tauri commands or ambient host APIs.</p>
+  <p>The concrete Tauri window host sits behind a display-independent lifecycle seam. Replacing one attachment closes the prior window only after its new immutable assets are staged; failed creation restores the prior assets and window. Failed detach restores the attachment for retry, while successful repeated detach is idempotent. CI exercises those exact lifecycle operations without requiring a graphical session.</p>
+  <h3>Composed Wasm + View example</h3>
+  <p><code>examples/wasm-view/</code> contains a two-layer application whose portable frontend sends text to an ASCII-uppercase Wasm primary. Compile it, import the resulting archive in Desktop, and choose <strong>Open application</strong>:</p>
+  <pre><code>hologram compile examples/wasm-view/hologram.json \
+  --output target/wasm-view.holo</code></pre>
+  <p>The View opens in its own native window and the same prepared primary serves repeated bounded messages. Closing that window, choosing <strong>Stop application</strong>, or quitting Desktop waits for in-flight messages and stops providers in reverse order. Integration tests compile this same manifest and prove persistent attachment, direct and View invocation, explicit stop, idempotent detach, and shutdown through the display-independent window-host seam.</p>
+  <div class="note"><strong>Explicit lifetime</strong>A View is non-exit-bearing and does not redefine one-shot completion. <code>HoloExecutor::start_session</code> creates the longer-lived lifetime explicitly; CLI <code>run</code> retains fresh start/invoke/stop behavior. The portable surface contract is host-neutral, so another authenticated browser or server host can provide a separate View surface later without changing the <code>.holo</code> format.</div>
+</DocsLayout>

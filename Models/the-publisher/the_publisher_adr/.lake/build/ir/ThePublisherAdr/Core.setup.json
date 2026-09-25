@@ -1,0 +1,7 @@
+{"plugins": [],
+ "package": "the_publisher_adr",
+ "options": {},
+ "name": "ThePublisherAdr.Core",
+ "isModule": false,
+ "importArts": {},
+ "dynlibs": []}

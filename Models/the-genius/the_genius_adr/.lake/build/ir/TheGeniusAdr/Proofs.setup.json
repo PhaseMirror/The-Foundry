@@ -1,0 +1,9 @@
+{"plugins": [],
+ "package": "the_genius_adr",
+ "options": {},
+ "name": "TheGeniusAdr.Proofs",
+ "isModule": false,
+ "importArts":
+ {"TheGeniusAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/lib/lean/TheGeniusAdr/Core.olean"]]},
+ "dynlibs": []}

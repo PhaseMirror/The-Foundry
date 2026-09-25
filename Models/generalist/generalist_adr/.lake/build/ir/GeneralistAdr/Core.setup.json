@@ -1,0 +1,7 @@
+{"plugins": [],
+ "package": "generalist_adr",
+ "options": {},
+ "name": "GeneralistAdr.Core",
+ "isModule": false,
+ "importArts": {},
+ "dynlibs": []}

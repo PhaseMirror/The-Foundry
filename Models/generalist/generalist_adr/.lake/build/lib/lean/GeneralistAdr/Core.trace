@@ -1,0 +1,31 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["c251c8d28fe1caf2.olean"],
+  "m": false,
+  "i": "e8c4b964d06bcaff.ilean",
+  "c": "5557d4dd7533ad36.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean /home/citizen/.elan/toolchains/leanprover--lean4---v4.33.0-rc1/bin/lean /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/GeneralistAdr/Core.lean -o /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean/GeneralistAdr/Core.olean -i /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/lib/lean/GeneralistAdr/Core.ilean -c /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/ir/GeneralistAdr/Core.c --setup /home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/.lake/build/ir/GeneralistAdr/Core.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["generalist_adr/GeneralistAdr:extraDep",
+     [["@generalist_adr:extraDep", "00000000000006bb"]]],
+    ["imports", "00000000000006bb"]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.33.0, commit 62eed1db4d67327ec8120be05f1a1b0847d74561",
+   "8fa8fbe052c71a8e"],
+  ["/home/citizen/Multiplicity/Foundry/models/generalist/generalist_adr/GeneralistAdr/Core.lean",
+   "e4ccc3edbe90d6a3"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: GeneralistAdr.Core", "c5a51b08a20052d3"],
+  ["Package.id?: (some generalist_adr)", "8765b532eac31442"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "a06b18b45ab4adec"}

@@ -1,0 +1,42 @@
+{
+    "app-id": "io.hologram.OS",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "47",
+    "sdk": "org.gnome.Sdk",
+    "command": "hologram-os",
+    "finish-args": [
+        "--share=network",
+        "--share=ipc",
+        "--socket=fallback-x11",
+        "--socket=wayland",
+        "--device=dri"
+    ],
+    "modules": [
+        {
+            "name": "hologram-os",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -D hologram-os /app/bin/hologram-os",
+                "install -D hologram-runner.py /app/bin/hologram-runner.py",
+                "install -D io.hologram.OS.desktop /app/share/applications/io.hologram.OS.desktop"
+            ],
+            "sources": [
+                {
+                    "type": "script",
+                    "dest-filename": "hologram-os",
+                    "commands": [
+                        "python3 /app/bin/hologram-runner.py"
+                    ]
+                },
+                {
+                    "type": "file",
+                    "path": "hologram-runner.py"
+                },
+                {
+                    "type": "file",
+                    "path": "io.hologram.OS.desktop"
+                }
+            ]
+        }
+    ]
+}

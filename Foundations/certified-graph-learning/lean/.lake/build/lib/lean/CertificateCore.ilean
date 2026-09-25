@@ -1,0 +1,1 @@
+{"decls":{},"directImports":[["CertificateCore.Vector",false,false,false],["CertificateCore.Matrix",false,false,false],["CertificateCore.GraphLaplacian",false,false,false],["CertificateCore.SpectralContraction",false,false,false],["CertificateCore.FFI",false,false,false]],"module":"CertificateCore","references":{},"version":5}

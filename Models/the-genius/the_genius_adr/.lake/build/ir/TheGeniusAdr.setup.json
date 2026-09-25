@@ -1,0 +1,13 @@
+{"plugins": [],
+ "package": "the_genius_adr",
+ "options": {},
+ "name": "TheGeniusAdr",
+ "isModule": false,
+ "importArts":
+ {"TheGeniusAdr.Proofs":
+  [["/home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/lib/lean/TheGeniusAdr/Proofs.olean"]],
+  "TheGeniusAdr.FFI":
+  [["/home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/lib/lean/TheGeniusAdr/FFI.olean"]],
+  "TheGeniusAdr.Core":
+  [["/home/citizen/Multiplicity/Foundry/models/the-genius/the_genius_adr/.lake/build/lib/lean/TheGeniusAdr/Core.olean"]]},
+ "dynlibs": []}
