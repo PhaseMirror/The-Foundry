@@ -40,4 +40,8 @@
 | [ADR-0133](ADR-0133-Terminal_Execution_Is_Allowlisted_and_Reports_a_Real_Exit_Code.md) | Terminal Execution Is Allowlisted and Reports a Real Exit Code | Accepted | - |
 | [ADR-0134](ADR-0134-The_ADR_Routes_Are_the_Only_Write_Path_Validated_Against_the_Persisted_Registry.md) | The ADR Routes Are the Only Write Path, Validated Against the Persisted Registry | Accepted | - |
 | [ADR-0135](ADR-0135-packages_foundry_web_Is_Tracked_and_Runs_the_Acceptance_Gate_in_CI.md) | packages/foundry-web Is Tracked and Runs the Acceptance Gate in CI | Accepted | - |
-| [ADR-0136](ADR-0136-Citizen_Gardens_Model_Specific.md) | Citizen Gardens Civic Infrastructure Model — Production Specification | Accepted | - |
+| [ADR-0136](ADR-0136.md) | Research Routes Fail Closed on an Unbound Provider; No Synthesized Answers | Accepted | - |
+| [ADR-0137](ADR-0137.md) | The Synthesis Response Contract Is Requested and Verified | Accepted | - |
+| [ADR-0138](ADR-0138.md) | Research Governance Context Is Read From the Engine Registry, Not the Hardcoded Set | Accepted | - |
+| [ADR-Citizen_Gardens_Model_Specific](ADR-Citizen_Gardens_Model_Specific.md) | Citizen Gardens Civic Infrastructure Model — Production Specification | Accepted | - |
+| [ADR-0168](ADR-0168-PM_FORGE_001_Twelve_Card_Workbench.md) | PM-FORGE-001 — Twelve-Card Forge Workbench | Proposed | - |

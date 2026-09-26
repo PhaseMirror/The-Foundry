@@ -1194,6 +1194,204 @@
           "description": "`just vv` as the complete acceptance boundary; no reduced release path"
         }
       ]
+    },
+    {
+      "id": "ADR-0168",
+      "title": "PM-FORGE-001 \u2014 Twelve-Card Forge Workbench",
+      "status": "Proposed",
+      "context": "The Forge is a proposed twelve-step workflow within the Foundry where ideas are minted through PrismPM. The operating incentive of the PrismPM kiln is process law, not idea generation. Phase Mirror is five steps that name a contradiction. OSCAL is a filing cabinet with a lock. The civic agent is a finite transducer, not an LLM. Genius v2 is unbound and refused as L0. Certified is C-24, a separate credential event; equity never mints it.",
+      "decision": "The Forge is a workbench view. It is not a legal person, not a compiler, not a receipt, not an ensemble. Twelve cards. Four bands. Each card binds an existing artifact. No card trains weights. No card votes. No card halts silicon. Refinement means a re-walk of Band B on the same addressed packet. Identical packet, identical signature. That is the only seated substitute for 'model training.' Genius v2 remains unbound.",
+      "consequences": [
+        "Gives the workshop a named place to walk an idea without inventing a thirteenth machine",
+        "Makes the Genius-v2 refuse visible at the door",
+        "Keeps five-step and five-link on separate bands",
+        "Twelve cards can be misread as a replacement loop",
+        "Operators will try to skip Band B",
+        "The view will be sold as minting",
+        "G remains 0 until the six Day Zero conditions are evidenced"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "artifacts/ForgeCard.lean",
+          "kind": "SourceFile",
+          "description": "Forge card formalization"
+        },
+        {
+          "uri": "artifacts/forge_card.py",
+          "kind": "SourceFile",
+          "description": "Forge card Python implementation"
+        },
+        {
+          "uri": "PM-HE-001",
+          "kind": "ADR",
+          "description": "Five-step Phase Mirror loop"
+        },
+        {
+          "uri": "PM-PWEH-001",
+          "kind": "ADR",
+          "description": "Stop-if-unnamed-owner"
+        },
+        {
+          "uri": "OSCAL-PM-001",
+          "kind": "ADR",
+          "description": "Five-link traceability"
+        },
+        {
+          "uri": "PrismPM-WF-001",
+          "kind": "ADR",
+          "description": "Claim ladder"
+        },
+        {
+          "uri": "VL-001",
+          "kind": "ADR",
+          "description": "Five stations"
+        },
+        {
+          "uri": "PM-AGENT-001",
+          "kind": "ADR",
+          "description": "Transducer"
+        },
+        {
+          "uri": "PM-EDGE-001",
+          "kind": "ADR",
+          "description": "Genius-v2 refuse"
+        },
+        {
+          "uri": "C-24 / F-16",
+          "kind": "ADR",
+          "description": "Certification / F-16 controls"
+        },
+        {
+          "uri": "L0-F, L0-Q, L0-L, L0-G",
+          "kind": "L0 Invariants",
+          "description": "Civic / Computational / Logical / Governance"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0136",
+      "title": "Research Routes Fail Closed on an Unbound Provider; No Synthesized Answers",
+      "status": "Accepted",
+      "context": "Both research routes were wired to lib/hologram-ai.ts, a thirty-line class that documented itself as a stub. Its generate method ignored its prompt and returned the literal string '[PhaseMirror / HologramAI]: Synthesis complete. Missing actual compute binding for agent phasemirror.', logging 'Vibe claim detected. Simulating response.'. Its generateJSON method ignored its prompt entirely and returned a hardcoded object whose overview read 'Overview mechanism missing. Replaced vibe claim.' and whose single key theme was named 'Missing Binding'. POST /api/research/chat therefore returned plausible prose and POST /api/research/synthesize returned a fixed object, neither produced by a model, and both indistinguishable to a client from real output. The synthesize route did not even ask for the JSON schema the sibling foundry-web-example package requested, so the hardcoded object was the only shape any caller could have received. The mechanism to restore was already declared: @google/genai is a production dependency, resolved to 2.23.0 in the lockfile, and .env.example documents GEMINI_API_KEY as the required key. Because the package is untracked, no version control history retains the deleted stub, so its exact behavior is recorded here.",
+      "decision": "lib/hologram-ai.ts is deleted rather than completed, because no wire protocol for the HOLOGRAM_ENDPOINT it named exists on tree and inventing one would be the same defect at a different layer. The mechanism is the declared one: lib/research-provider.ts binds @google/genai, restores the structured chat session with history that the stub had replaced with string concatenation, and restores the responseMimeType request the stub never made. When GEMINI_API_KEY is absent the client receives a typed research-provider-unbound error with HTTP 503 and no result field. No code path returns a stand-in answer, a placeholder string, or an empty object standing in for a model response. Every string these routes return is text a model produced.",
+      "consequences": [
+        "A client can no longer receive a fabricated synthesis, and an unbound deployment fails visibly instead of answering",
+        "Chat regains a real session with prior turns as history, rather than a prompt built by concatenating the system instruction onto the last message",
+        "lib/hologram-ai.ts has no remaining importer, so no route can reach the fabrication",
+        "The research routes remain unregistered conformance capabilities: this record states the mechanism, it does not establish the capability under ADR-0129"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/research-provider.ts",
+          "kind": "SourceFile",
+          "description": "Bound provider; throws ResearchProviderUnboundError rather than answering when the key is absent"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/research/chat/route.ts",
+          "kind": "SourceFile",
+          "description": "Restored structured chat session; returns 503 research-provider-unbound when unbound"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/research/synthesize/route.ts",
+          "kind": "SourceFile",
+          "description": "Restored responseMimeType request and schema prompt; returns 503 when unbound"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/research-provider.test.ts",
+          "kind": "SourceFile",
+          "description": "Asserts both entry points refuse when unbound, and that unparseable text is not defaulted"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/.env.example",
+          "kind": "SpecificationDoc",
+          "description": "Documents GEMINI_API_KEY as the key for Gemini AI API calls"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/package.json",
+          "kind": "SourceFile",
+          "description": "Declares @google/genai ^2.4.0 as a production dependency"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0137",
+      "title": "The Synthesis Response Contract Is Requested and Verified",
+      "status": "Accepted",
+      "context": "The example package put the synthesis schema inside a prompt string and then trusted the answer, falling back to an empty object when the provider returned nothing. This package had dropped the schema from the prompt entirely, so nothing described the required shape and nothing checked what came back. That combination is what let a hardcoded object pass as a synthesis. A schema that exists only in prose is not a contract: a response missing researchGaps is indistinguishable from a finding that no research gaps exist, and an absent response parsed as {} is indistinguishable from an empty synthesis.",
+      "decision": "SYNTHESIS_SCHEMA is the single source for the shape asked of the model and the shape verified on return. SYNTHESIS_SCHEMA_PROMPT states it to the model with responseMimeType application/json; assertSynthesisShape then refuses any answer that is missing a key, carries an empty overview, has no keyThemes, has a theme without a string-array papers field, or has a non-string-array methodologies, researchGaps, or futureDirections. parseSynthesisJson tolerates one formatting difference, a markdown fence, and nothing else: it never invents a key, never substitutes a default, and never returns an empty object for unparseable text. A shape failure is reported to the client as a 502 with the specific missing key.",
+      "consequences": [
+        "A synthesis cannot reach a client with a missing or empty field, so an absent gap analysis is no longer readable as a finding",
+        "The prompt and the validation share one declaration, so the requested shape and the checked shape cannot drift",
+        "An unparseable provider response is a visible 502 instead of a well-formed empty synthesis",
+        "Shape validation verifies structure only; it is not a detector for fabricated content, and this record does not claim it is one"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/research-provider.ts",
+          "kind": "SourceFile",
+          "description": "SYNTHESIS_SCHEMA, SYNTHESIS_SCHEMA_PROMPT, parseSynthesisJson, and assertSynthesisShape"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/research/synthesize/route.ts",
+          "kind": "SourceFile",
+          "description": "Requests the schema and maps a shape failure to HTTP 502"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/research-provider.test.ts",
+          "kind": "SourceFile",
+          "description": "Covers fenced and bare JSON, the refused empty-object fallback, and every missing or mistyped key"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0138",
+      "title": "Research Governance Context Is Read From the Engine Registry, Not the Hardcoded Set",
+      "status": "Accepted",
+      "context": "Both research routes built their governance context at module scope from ALL_FOUNDRY_ADRS in lib/adr-data.ts, a hand-maintained array of thirteen records. That array is the same set readEngineRegistry falls back to when the engine registry cannot be read, so the routes presented thirteen hardcoded records as the accepted Architecture Decision Records governing the system, at import time, whether or not the engine was reachable and whether or not those records matched the engine. A module-scope read also cannot report which source it used, so a client had no way to know the governance context it was given was authoritative.",
+      "decision": "The two research routes read governance context per request through readEngineRegistry, the one registry read defined by ADR-0131, and build it with buildGovernanceContext in lib/research-governance.ts. That function asserts a record only when the read came from the engine: a read whose source is fallback yields no governance context and a prompt that states the engine registry is unavailable, so no record id or decision from the hand-maintained array can reach a model. Only Accepted records are asserted, an engine read holding none is reported as holding none, and the source is returned to the client as registrySource so a caller can tell an engine-backed context from a degraded one. This record removes the routes' dependency on ALL_FOUNDRY_ADRS; it does not delete that array, which lib/engine-bridge.ts and lib/mock-data.ts still import and which ADR-0131 governs.",
+      "consequences": [
+        "Governance context in a research answer is traceable to a named source instead of being fixed at thirteen records chosen at import time",
+        "A fallback registry cannot reach a model prompt, which is the failure the routes existed to prevent; the gate is covered by a negative test that plants the removed source check",
+        "A client can distinguish an engine-backed answer from one produced without governance context",
+        "An unreadable registry degrades to explicitly absent context rather than to plausible-looking records",
+        "lib/adr-data.ts remains in use by lib/engine-bridge.ts and lib/mock-data.ts, so the second source ADR-0131 names is not yet closed"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/research-governance.ts",
+          "kind": "SourceFile",
+          "description": "buildGovernanceContext: asserts Accepted records from an engine read only, and names no record from a fallback read"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/research-governance.test.ts",
+          "kind": "SourceFile",
+          "description": "Negative test that a fallback read asserts nothing and leaks no record id or decision"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/research/chat/route.ts",
+          "kind": "SourceFile",
+          "description": "Reads governance context per request and returns registrySource"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/research/synthesize/route.ts",
+          "kind": "SourceFile",
+          "description": "Reads governance context per request and returns registrySource"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/engine-bridge.ts",
+          "kind": "SourceFile",
+          "description": "readEngineRegistry, the single registry read, and the ALL_FOUNDRY_ADRS fallback ADR-0131 targets"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/adr-data.ts",
+          "kind": "SourceFile",
+          "description": "ALL_FOUNDRY_ADRS: the thirteen hand-maintained records no longer used as research governance context"
+        }
+      ]
     }
   ]
 }
