@@ -1,0 +1,13 @@
+Onboarding Manifest for MHD Profile Auditor (PARTICIPANT-002)
+Effective Date: 2026-06-17T17:30:00Z
+System Key Reference: pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=
+
+Pursuant to the Sedona Spine Mandate, the MHD Profile Auditor is formally hooked into the legal-technical boundary.
+
+The Participant agrees to the terms and constraints set forth in:
+1. Business Associate Agreement (BAA) - Phase Mirror Core (LEG-BAA-2026-v1)
+   Content Hash: 2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae
+2. Data Processing Addendum (DPA) - GDPR Compliant (LEG-DPA-2026-v1)
+   Content Hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+Any operational execution under Ring-0, Ring-1, or Ring-2 is bound to these legal-technical covenants.

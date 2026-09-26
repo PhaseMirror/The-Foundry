@@ -1,0 +1,1032 @@
+Duplicate Test.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/Test.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/Test.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/Test.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Test.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/adr-governance/ADR/Test.lean
+----------------------------------------
+Duplicate Main.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-web-sdk/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/c-pirtm/lean-harness/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/formal/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/ataraxia/crates/c-pirtm/lean-harness/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/ataraxia/formal/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/finton/lean/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/legalese-scopist/lean/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/the-commander/crates/pro/c-pirtm/lean-harness/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/the_genius/lean/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/the_guardian/lean/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/proofs/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/ataraxia/ataraxia_adr/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/echobraid/echobraid_adr/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/finton/finton_adr/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/generalist/generalist_adr/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-examiner/the_examiner_adr/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-genius/the_genius_adr/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-guardian/the_guardian_adr/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-publisher/the_publisher_adr/Main.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/commander/coding_commander_adr/Main.lean
+----------------------------------------
+Duplicate adaptive.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/adaptive.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/adaptive.rs
+----------------------------------------
+Duplicate audit.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/audit.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/tmp/agios-staging-package-t25/src/audit.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/audit.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/harness/src/audit.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mesh/src/audit.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/math/audit.rs
+----------------------------------------
+Duplicate certify.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/certify.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/certify.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/math/certify.rs
+----------------------------------------
+Duplicate csc.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/csc.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/csc.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ace-zk/src/csc.rs
+----------------------------------------
+Duplicate csl.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/csl.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/csl.rs
+----------------------------------------
+Duplicate csl_gate.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/csl_gate.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/csl_gate.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/src/gate/csl_gate.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/pirtm/src/gate/csl_gate.rs
+----------------------------------------
+Duplicate gate.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/gate.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/gate.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity/rust/src/gate.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/math/gate.rs
+----------------------------------------
+Duplicate lambda_bridge.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/lambda_bridge.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/lambda_bridge.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/math/lambda_bridge.rs
+----------------------------------------
+Duplicate linker.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/linker.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/linker.rs
+----------------------------------------
+Duplicate orchestrator.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/orchestrator.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/orchestrator.rs
+----------------------------------------
+Duplicate petc.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/petc.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/petc.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/prms/src/petc.rs
+----------------------------------------
+Duplicate projection.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/projection.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/projection.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/math/projection.rs
+----------------------------------------
+Duplicate qari.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/qari.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/qari.rs
+----------------------------------------
+Duplicate recurrence.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/recurrence.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/recurrence.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/math/recurrence.rs
+----------------------------------------
+Duplicate serialization.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/serialization.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/serialization.rs
+----------------------------------------
+Duplicate spectral.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/spectral.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/spectral.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/drmm/src/spectral.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/math/spectral.rs
+----------------------------------------
+Duplicate telemetry.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/telemetry.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/telemetry.rs
+----------------------------------------
+Duplicate types.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/types.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/types.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/governance/src/phase_mirror/types.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ace-zk/src/types.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/onnx-compiler/src/hrm/types.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/sigmatics-core/src/types.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/commons/src/types.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mtpi/src/types.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/math/types.rs
+----------------------------------------
+Duplicate weights.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/weights.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/weights.rs
+----------------------------------------
+Duplicate bytecode.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/bytecode.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/src/bytecode.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/pirtm/src/bytecode.rs
+----------------------------------------
+Duplicate prime_recursive.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/prime_recursive.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/src/prime_recursive.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/pirtm/src/prime_recursive.rs
+----------------------------------------
+Duplicate src.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/src.lean
+----------------------------------------
+Duplicate TestMain.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/TestMain.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/TestMain.lean
+----------------------------------------
+Duplicate Dissonance.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/Dissonance.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/moc/Dissonance.lean
+----------------------------------------
+Duplicate CompactClosed.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/CompactClosed.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/formal/src/PIRTM/CompactClosed.lean
+----------------------------------------
+Duplicate Core.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atomic-calculator/ADR/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atomic-calculator/lean/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parm/HebrewLexicon/lean4-parm/Parm/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/SIGMATICS/src/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/alp/PolicyEngine/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/moc/Ramanujan/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/prime_tensors/Transition/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/universal_constant/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/atomic_calculator/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/multiplicity_substrate/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/position_aware/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/adr-governance/ADR/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/META_RELATIVITY/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/ataraxia/ataraxia_adr/AtaraxiaAdr/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/echobraid/echobraid_adr/EchobraidAdr/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/finton/finton_adr/FintonAdr/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/generalist/generalist_adr/GeneralistAdr/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-examiner/the_examiner_adr/TheExaminerAdr/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-genius/the_genius_adr/TheGeniusAdr/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-guardian/the_guardian_adr/TheGuardianAdr/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-publisher/the_publisher_adr/ThePublisherAdr/Core.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/commander/coding_commander_adr/CodingCommanderAdr/Core.lean
+----------------------------------------
+Duplicate Examples.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/Examples.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atomic-calculator/ADR/Examples.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Examples.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/adr-governance/ADR/Examples.lean
+----------------------------------------
+Duplicate Export.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/Export.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/adr-governance/ADR/Export.lean
+----------------------------------------
+Duplicate PhaseMirror.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/PhaseMirror.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/phase-mirror/PhaseMirror.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/alp/ADR/PhaseMirror.lean
+----------------------------------------
+Duplicate Proofs.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atomic-calculator/lean/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/proofs/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/alp/PolicyEngine/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/adr-governance/ADR/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/ataraxia/ataraxia_adr/AtaraxiaAdr/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/echobraid/echobraid_adr/EchobraidAdr/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/finton/finton_adr/FintonAdr/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/generalist/generalist_adr/GeneralistAdr/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-examiner/the_examiner_adr/TheExaminerAdr/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-genius/the_genius_adr/TheGeniusAdr/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-guardian/the_guardian_adr/TheGuardianAdr/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-publisher/the_publisher_adr/ThePublisherAdr/Proofs.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/commander/coding_commander_adr/CodingCommanderAdr/Proofs.lean
+----------------------------------------
+Duplicate Resonance.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/ADR/Resonance.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/Resonance.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/moc/Resonance.lean
+----------------------------------------
+Duplicate Model.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/src/Analytic/Model.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/alp/Constitution/Model.lean
+----------------------------------------
+Duplicate l0_invariants.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/tests/l0_invariants.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/tests/l0_invariants.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/phase_mirror/src/l0_invariants.rs
+----------------------------------------
+Duplicate linker_harness.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/tests/linker_harness.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/tests/linker_harness.rs
+----------------------------------------
+Duplicate serialization_tests.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/tests/serialization_tests.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/tests/serialization_tests.rs
+----------------------------------------
+Duplicate stability.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/tmp/agios-staging-package-t25/src/stability.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/chaos/chaos-core/src/stability.rs
+----------------------------------------
+Duplicate ast.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parser/src/ast.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ramanujan/src/ir/ast.rs
+----------------------------------------
+Duplicate tests.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/tests.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/sigmatics-core/src/tests.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/genesis-ode/src/tests.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parm/src/tests.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/prms/src/tests.rs
+----------------------------------------
+Duplicate witness.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/witness.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/governance/src/witness.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas_utqc/crates/tqc-vv/src/witness.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/witness.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/pirtm-candle/src/witness.rs
+----------------------------------------
+Duplicate gates.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/gates.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/src/gates.rs
+----------------------------------------
+Duplicate traits.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/core/src/math/traits.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/src/traits.rs
+----------------------------------------
+Duplicate schema.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mcp/src/schema.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/schema.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/schema.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ace-certify/tests/schema.rs
+----------------------------------------
+Duplicate integration.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mcp/tests/integration.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/drmm/tests/integration.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/tests/integration.rs
+----------------------------------------
+Duplicate merkle.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/governance/src/ledger/merkle.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/privacy-mev/src/utils/merkle.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/prover/src/merkle.rs
+----------------------------------------
+Duplicate report.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/governance/src/phase_mirror/report.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/report.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/echo-kernel/adr-kernel-rs/crates/kernel-core/src/report.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/kernel-core/src/report.rs
+----------------------------------------
+Duplicate policy.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/governance/src/phase_mirror/policy.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mirror-dissonance/src/policy.rs
+----------------------------------------
+Duplicate escalation.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/governance/src/witnesses/humoe/escalation.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mesh/src/identity/escalation.rs
+----------------------------------------
+Duplicate feedback.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/governance/src/witnesses/humoe/feedback.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/drmm/src/feedback.rs
+----------------------------------------
+Duplicate cnl.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-apps/src/cnl.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-apps/src/bin/cnl.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/alp/src/cnl.rs
+----------------------------------------
+Duplicate build.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/sigma/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/apex/apex-goldilocks-core/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/onnx-compiler/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/clients/src/bin/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/lean4/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atomic-calculator/rust/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/recursive-prover/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/src-tauri/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ace-scn-csc/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/riemann-zeta/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-compiler/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/orf/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/moc/build.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/kani-verification/build.rs
+----------------------------------------
+Duplicate logging.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/sigma/src/logging.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/the-genius/src/logging.rs
+----------------------------------------
+Duplicate kernel.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/sigma/src/kernel.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/apex/apex-goldilocks/crates/apex-pikernel/src/kernel.rs
+----------------------------------------
+Duplicate transcript.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity-crypto/rust/src/transcript.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/prover/src/transcript.rs
+----------------------------------------
+Duplicate ffi.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ace-zk/src/ffi.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity/rust/src/ffi.rs
+----------------------------------------
+Duplicate parity.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ace-zk/src/parity.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ace-governance/tests/parity.rs
+----------------------------------------
+Duplicate engine.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/alp/src/engine.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/prime-gap-dynamics/src/engine.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/src/multiplicity_lwe/engine.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/pirtm/src/multiplicity_lwe/engine.rs
+----------------------------------------
+Duplicate ledger.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/apex/apex-goldilocks/crates/apex-pikernel/src/ledger.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/sigmatics-core/src/ledger.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/commons/src/ledger.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/engine/src/ledger.rs
+----------------------------------------
+Duplicate honesty.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas_utqc/crates/tqc-conformance/src/honesty.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas_utqc/crates/tqc-conformance/tests/honesty.rs
+----------------------------------------
+Duplicate spectrum.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas_utqc/crates/tqc-core/src/spectrum.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/ramanujan/src/validator/spectrum.rs
+----------------------------------------
+Duplicate verifier.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas_utqc/crates/tqc-mtc/src/verifier.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/src/verifier.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parom/src/verifier.rs
+----------------------------------------
+Duplicate bridge.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-goldilocks/src/bridge.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/src/bridge.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parom/src/bridge.rs
+----------------------------------------
+Duplicate config.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-app/src/config.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/onnx-compiler/src/config.rs
+----------------------------------------
+Duplicate error.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-app/src/error.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/onnx-compiler/src/error.rs
+----------------------------------------
+Duplicate onnx.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-app/src/onnx.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/onnx-compiler/src/proto/onnx.rs
+----------------------------------------
+Duplicate state.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-app/src/server/state.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/user/state.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/state.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/engine/src/state.rs
+----------------------------------------
+Duplicate ollama.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-app/src/server/handlers/ollama.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-app/src/types/ollama.rs
+----------------------------------------
+Duplicate openai.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-app/src/server/handlers/openai.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/hologram-app/src/types/openai.rs
+----------------------------------------
+Duplicate optimizer.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/onnx-compiler/src/hrm/graph/optimizer.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/drmm/src/optimizer.rs
+----------------------------------------
+Duplicate arithmetic.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/onnx-compiler/src/hrm/graph/passes/arithmetic.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/goldilocks-pro/benches/arithmetic.rs
+----------------------------------------
+Duplicate matrix.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/onnx-compiler/src/hrm/ops/matrix.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas-embeddings/src/arithmetic/matrix.rs
+----------------------------------------
+Duplicate parser.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/sigmatics-core/src/parser.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/echo-kernel/adr-kernel-rs/crates/kernel-core/src/parser.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/kernel-core/src/parser.rs
+----------------------------------------
+Duplicate evaluator.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/sigmatics-core/src/evaluator.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/shell/src/evaluator.rs
+----------------------------------------
+Duplicate atlas_construction.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas-embeddings/benches/atlas_construction.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas-embeddings/tests/atlas_construction.rs
+----------------------------------------
+Duplicate primitives.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas-embeddings/src/foundations/primitives.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean-codegen/src/primitives.rs
+----------------------------------------
+Duplicate resonance.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/atlas-embeddings/src/foundations/resonance.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/goldilocks-pro/src/resonance.rs
+----------------------------------------
+Duplicate proof_attestation.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/src/proof_attestation.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parom/src/proof_attestation.rs
+----------------------------------------
+Duplicate runtime.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/src/runtime.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parom/src/runtime.rs
+----------------------------------------
+Duplicate fixed_point.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/src/bin/fixed_point.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/moonshine/src/fixed_point.rs
+----------------------------------------
+Duplicate retention_policy.yaml:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/templates/retention_policy.yaml
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/lisp/templates/retention_policy.yaml
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/templates/retention_policy.yaml
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity/templates/retention_policy.yaml
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/preprints/templates/retention_policy.yaml
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/templates/retention_policy.yaml
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/tests/templates/retention_policy.yaml
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/wasm_checker/templates/retention_policy.yaml
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/templates/retention_policy.yaml
+----------------------------------------
+Duplicate crate_.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/clients/src/bin/crate_.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/ontology/crate_.rs
+----------------------------------------
+Duplicate emit.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/src/emit.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean-codegen/src/emit.rs
+----------------------------------------
+Duplicate enforcement.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/src/enforcement.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/ontology/enforcement.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/enforcement.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean-codegen/src/enforcement.rs
+----------------------------------------
+Duplicate enums.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/src/enums.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/enums.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean-codegen/src/enums.rs
+----------------------------------------
+Duplicate individuals.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/src/individuals.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean-codegen/src/individuals.rs
+----------------------------------------
+Duplicate mapping.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/src/mapping.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean-codegen/src/mapping.rs
+----------------------------------------
+Duplicate pipeline.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/src/pipeline.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/pipeline.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean-codegen/src/pipeline.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/website/src/pipeline.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/prms/src/pipeline.rs
+----------------------------------------
+Duplicate witness_scaffolds.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/src/witness_scaffolds.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/witness_scaffolds.rs
+----------------------------------------
+Duplicate blanket_impls_exempt.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/codegen/tests/blanket_impls_exempt.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/rust/blanket_impls_exempt.rs
+----------------------------------------
+Duplicate ebnf.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/ontology/ebnf.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/serializer/ebnf.rs
+----------------------------------------
+Duplicate json_schema.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/ontology/json_schema.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/serializer/json_schema.rs
+----------------------------------------
+Duplicate jsonld.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/ontology/jsonld.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/serializer/jsonld.rs
+----------------------------------------
+Duplicate owl_xml.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/ontology/owl_xml.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/serializer/owl_xml.rs
+----------------------------------------
+Duplicate shacl.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/ontology/shacl.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/serializer/shacl.rs
+----------------------------------------
+Duplicate parametric_constraints.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/rust/parametric_constraints.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/tests/parametric_constraints.rs
+----------------------------------------
+Duplicate phantom_tag.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/rust/phantom_tag.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/tests/phantom_tag.rs
+----------------------------------------
+Duplicate nav.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/conformance/src/validators/website/nav.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/website/src/nav.rs
+----------------------------------------
+Duplicate smoke.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/examples/consumer-smoke/tests/smoke.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/uor-foundation-sdk/tests/smoke.rs
+----------------------------------------
+Duplicate boundary.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/boundary.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/boundary.rs
+----------------------------------------
+Duplicate cert.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/cert.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/cert.rs
+----------------------------------------
+Duplicate cohomology.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/cohomology.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/cohomology.rs
+----------------------------------------
+Duplicate conformance_.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/conformance_.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/conformance_.rs
+----------------------------------------
+Duplicate derivation.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/derivation.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/derivation.rs
+----------------------------------------
+Duplicate foundation.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/foundation.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/foundation.rs
+----------------------------------------
+Duplicate homology.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/homology.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/homology.rs
+----------------------------------------
+Duplicate interaction.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/interaction.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/interaction.rs
+----------------------------------------
+Duplicate observable.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/observable.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/observable.rs
+----------------------------------------
+Duplicate partition.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/partition.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/partition.rs
+----------------------------------------
+Duplicate proof.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/proof.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/proof.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/echo-kernel/adr-kernel-rs/crates/kernel-core/src/proof.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/kernel-core/src/proof.rs
+----------------------------------------
+Duplicate query.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/query.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/query.rs
+----------------------------------------
+Duplicate resolver.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/resolver.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/resolver.rs
+----------------------------------------
+Duplicate trace.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/bridge/trace.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/trace.rs
+----------------------------------------
+Duplicate carry.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/carry.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/carry.rs
+----------------------------------------
+Duplicate convergence.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/convergence.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/convergence.rs
+----------------------------------------
+Duplicate division.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/division.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/division.rs
+----------------------------------------
+Duplicate effect.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/effect.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/effect.rs
+----------------------------------------
+Duplicate failure.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/failure.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/failure.rs
+----------------------------------------
+Duplicate linear.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/linear.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/linear.rs
+----------------------------------------
+Duplicate monoidal.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/monoidal.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/monoidal.rs
+----------------------------------------
+Duplicate op.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/op.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/op.rs
+----------------------------------------
+Duplicate operad.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/operad.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/operad.rs
+----------------------------------------
+Duplicate parallel.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/parallel.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/parallel.rs
+----------------------------------------
+Duplicate predicate.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/predicate.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/predicate.rs
+----------------------------------------
+Duplicate recursion.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/recursion.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/recursion.rs
+----------------------------------------
+Duplicate reduction.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/reduction.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/reduction.rs
+----------------------------------------
+Duplicate region.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/region.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/region.rs
+----------------------------------------
+Duplicate stream.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/kernel/stream.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/stream.rs
+----------------------------------------
+Duplicate morphism.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/user/morphism.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/morphism.rs
+----------------------------------------
+Duplicate type_.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/foundation/src/user/type_.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/namespaces/type_.rs
+----------------------------------------
+Duplicate UOR.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/UOR.lean
+----------------------------------------
+Duplicate Enforcement.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Enforcement.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Enforcement.lean
+----------------------------------------
+Duplicate Enums.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Enums.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Enums.lean
+----------------------------------------
+Duplicate Individuals.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals.lean
+----------------------------------------
+Duplicate Prelude.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Prelude.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Prelude.lean
+----------------------------------------
+Duplicate Primitives.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Primitives.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Primitives.lean
+----------------------------------------
+Duplicate Structures.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Structures.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Structures.lean
+----------------------------------------
+Duplicate Cohomology.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Cohomology.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Cohomology.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/f1_square/Square/Cohomology.lean
+----------------------------------------
+Duplicate Conformance_.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Conformance_.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Conformance_.lean
+----------------------------------------
+Duplicate Convergence.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Convergence.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Convergence.lean
+----------------------------------------
+Duplicate Division.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Division.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Division.lean
+----------------------------------------
+Duplicate Foundation.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Foundation.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Foundation.lean
+----------------------------------------
+Duplicate Homology.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Homology.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Homology.lean
+----------------------------------------
+Duplicate Morphism.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Morphism.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Morphism.lean
+----------------------------------------
+Duplicate Observable.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Observable.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Observable.lean
+----------------------------------------
+Duplicate Op.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Op.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Op.lean
+----------------------------------------
+Duplicate Predicate.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Predicate.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Predicate.lean
+----------------------------------------
+Duplicate Proof.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Proof.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Proof.lean
+----------------------------------------
+Duplicate Reduction.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Reduction.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Reduction.lean
+----------------------------------------
+Duplicate Resolver.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Resolver.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Resolver.lean
+----------------------------------------
+Duplicate Schema.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Schema.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Schema.lean
+----------------------------------------
+Duplicate State.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/State.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/State.lean
+----------------------------------------
+Duplicate Trace.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Trace.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Trace.lean
+----------------------------------------
+Duplicate Type_.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/lean4/UOR/Individuals/Type_.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/UOR/Individuals/Type_.lean
+----------------------------------------
+Duplicate model.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/spec/src/model.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atlas/uor-framework/website/src/model.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/model.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/pirtm-candle/src/model.rs
+----------------------------------------
+Duplicate Invariants.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/atomic-calculator/Proofs/Invariants.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/formal/MetaRelativityFormalized/Invariants.lean
+----------------------------------------
+Duplicate nfa.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/automata/src/nfa.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/automata_model/src/nfa.rs
+----------------------------------------
+Duplicate regex.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/automata/src/regex.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/automata_model/src/regex.rs
+----------------------------------------
+Duplicate acceptance.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/automata/src/acceptance.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/automata_model/src/acceptance.rs
+----------------------------------------
+Duplicate Lipschitz.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/c-pirtm/lean-harness/Math/Lipschitz.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/ataraxia/crates/c-pirtm/lean-harness/Math/Lipschitz.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/the-commander/crates/pro/c-pirtm/lean-harness/Math/Lipschitz.lean
+----------------------------------------
+Duplicate integration_test.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/c-pirtm/tests/integration_test.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity/rust/tests/integration_test.rs
+----------------------------------------
+Duplicate Stability.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/chaos/chaOS-proof/ChaosProof/Stability.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity/lean/Stability.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/Stability.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/prime_tensors/Stability.lean
+----------------------------------------
+Duplicate Basic.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/chaos/chaOS-proof/ChaosProof/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/knot-in-time/proofs/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/knot-in-time/proofs/KnotInTimeProof/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/formal/MetaRelativityFormalized/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/ataraxia/formal/AtaraxiaFormal/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/legalese-scopist/lean/ScopistProof/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/the_genius/lean/GeniusProof/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parm/HebrewLexicon/lean4-parm/Parm/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/proofs/Proofs/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/alp/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/formal-test/FormalTest/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/KNOT_IN_TIME/Basic.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/finton/finton_adr/FintonAdr/Basic.lean
+----------------------------------------
+Duplicate identity.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/commons/src/identity.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/echo-kernel/src/identity.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mtpi/src/identity.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/prime-mirror-verification/src/identity.rs
+----------------------------------------
+Duplicate contractivity.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/digital-twin/src/contractivity.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/echo-kernel/src/contractivity.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity/rust/multiplicity-ensembles/tests/contractivity.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/src/contractivity.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirtm-candle/pirtm-candle/src/contractivity.rs
+----------------------------------------
+Duplicate benchmark.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/drmm/examples/benchmark.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parom/src/parom/benchmark.rs
+----------------------------------------
+Duplicate operators.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/drmm/src/operators.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/src/operators.rs
+----------------------------------------
+Duplicate primes.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/drmm/src/primes.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/the-genius/src/primes.rs
+----------------------------------------
+Duplicate moc.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/drmm/src/moc.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/fermat-certifier/src/moc.rs
+----------------------------------------
+Duplicate braid.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/echo-kernel/src/braid.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/moc/tests/kani/braid.rs
+----------------------------------------
+Duplicate stratify.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/echo-kernel/adr-kernel-rs/crates/kernel-core/src/stratify.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/kernel-core/src/stratify.rs
+----------------------------------------
+Duplicate BRA.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/genesis-ode/lean/BRA.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/GENESIS_ODE/BRA.lean
+----------------------------------------
+Duplicate Geometry.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/genesis-ode/lean/Geometry.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/GENESIS_ODE/Geometry.lean
+----------------------------------------
+Duplicate Impedance.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/genesis-ode/lean/Impedance.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/GENESIS_ODE/Impedance.lean
+----------------------------------------
+Duplicate certification.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/goldilocks-pro/src/certification.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/src/certification.rs
+----------------------------------------
+Duplicate Goldilocks.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/goldilocks-pro/lean-proofs/Goldilocks.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/Goldilocks.lean
+----------------------------------------
+Duplicate shamir.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/key-vault/src/shamir.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/privacy-mev/src/utils/shamir.rs
+----------------------------------------
+Duplicate KnotInTime.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/knot-in-time/proofs/KnotInTime.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/knot-in-time/proofs/KnotInTimeProof/KnotInTime.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/KNOT_IN_TIME/KnotInTime.lean
+----------------------------------------
+Duplicate KnotInTimeProof.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/knot-in-time/proofs/KnotInTimeProof.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/knot-in-time/proofs/KnotInTimeProof/KnotInTimeProof.lean
+----------------------------------------
+Duplicate xi_system.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/knot-in-time/src/xi_system.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity/rust/multiplicity-core/src/xi_system.rs
+----------------------------------------
+Duplicate base.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/l2-adapters/src/base.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mesh/src/transport/base.rs
+----------------------------------------
+Duplicate manager.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/mesh/src/lifecycle/manager.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/rollback/src/manager.rs
+----------------------------------------
+Duplicate Operators.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/formal/MetaRelativityFormalized/Operators.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/multiplicity/lean/Operators.lean
+----------------------------------------
+Duplicate triple_lock.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/meta-relativity/src/triple_lock.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/parm/src/triple_lock.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/prms/src/triple_lock.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/xi-formal/src/triple_lock.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/moc/src/triple_lock.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/roc/src/triple_lock.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/affine-core/src/triple_lock.rs
+----------------------------------------
+Duplicate DRMM.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/ataraxia/crates/drmm/lean-proofs/DRMM.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/the-commander/crates/pro/drmm/lean-proofs/DRMM.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/prime_tensors/DRMM.lean
+----------------------------------------
+Duplicate Moonshine.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/ataraxia/crates/moonshine/proofs/Moonshine.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/models/the-commander/crates/pro/moonshine/proofs/Moonshine.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/moonshine/proofs/Moonshine.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/moc/Moonshine.lean
+----------------------------------------
+Duplicate algebra.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/pirp/src/algebra.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/zrsd/src/algebra.rs
+----------------------------------------
+Duplicate rate_limiter.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/src/gate/rate_limiter.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/pirtm/src/gate/rate_limiter.rs
+----------------------------------------
+Duplicate prep_conform.rs:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/src/bin/prep_conform.rs
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/crates/z-mos/pirtm/pirtm/src/bin/prep_conform.rs
+----------------------------------------
+Duplicate Bridge.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/bridge/src/Bridge.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/f1_square/Bridge.lean
+----------------------------------------
+Duplicate CertificationGate.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/CertificationGate.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/dynamics/CertificationGate.lean
+----------------------------------------
+Duplicate SpectralCert.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/SpectralCert.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/dynamics/SpectralCert.lean
+----------------------------------------
+Duplicate Governance.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/Governance.lean
+----------------------------------------
+Duplicate MOC.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/MOC.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/moc/MOC.lean
+----------------------------------------
+Duplicate PARM.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/PARM.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/formal/src/PIRTM/PARM.lean
+----------------------------------------
+Duplicate PIRTM.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/PIRTM.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/moc/PIRTM.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/mtpi/PIRTM.lean
+----------------------------------------
+Duplicate ADR.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/ADR.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/adr-governance/ADR.lean
+----------------------------------------
+Duplicate Drift.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/Drift.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/prime_tensors/Drift.lean
+----------------------------------------
+Duplicate MatrixEngine.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/MatrixEngine.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/MATRIX_ENGINE/MatrixEngine.lean
+----------------------------------------
+Duplicate MultiplicityOperator.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/MultiplicityOperator.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/operators/MultiplicityOperator.lean
+----------------------------------------
+Duplicate Spectral.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/f1_square/Square/Spectral.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/roc_engine/Spectral.lean
+----------------------------------------
+Duplicate SigmaKernel.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/kernels/SigmaKernel.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/sigma_kernel/SigmaKernel.lean
+----------------------------------------
+Duplicate Langlands.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/moc/Langlands.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/prime_tensors/Langlands.lean
+----------------------------------------
+Duplicate Theorems.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/moc/Ramanujan/Theorems.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/position_aware/Theorems.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/META_RELATIVITY/Theorems.lean
+----------------------------------------
+Duplicate MetaRelativity.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/mtpi/MetaRelativity.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/dynamics/MetaRelativity.lean
+----------------------------------------
+Duplicate Multiplicity.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/multiplicity/Multiplicity.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/formal/src/PIRTM/Multiplicity.lean
+----------------------------------------
+Duplicate SedonaSpine.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/atomic_calculator/SedonaSpine.lean
+----------------------------------------
+Duplicate Circuits.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/atomic_calculator/Circuits.lean
+----------------------------------------
+Duplicate Contracts.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/atomic_calculator/Contracts.lean
+----------------------------------------
+Duplicate Lyapunov.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/Core/roc_engine/Lyapunov.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/dynamics/Lyapunov.lean
+----------------------------------------
+Duplicate Quantum.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/dynamics/Quantum.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/gated/QUANTUM/Quantum.lean
+----------------------------------------
+Duplicate tests.lean:
+----------------------------------------
+Duplicate KernelTelemetry.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/projects/ACE–SCN-CSC/src/KernelTelemetry.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/projects/ACE_SCN_CSC/src/ACE_SCN_CSC/KernelTelemetry.lean
+----------------------------------------
+Duplicate AtlasSCNBridge.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/projects/ACE–SCN-CSC/src/AtlasSCNBridge.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/projects/ACE_SCN_CSC/src/ACE_SCN_CSC/AtlasSCNBridge.lean
+----------------------------------------
+Duplicate SCNConditioning.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/projects/ACE–SCN-CSC/src/SCNConditioning.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/lean/projects/ACE_SCN_CSC/src/ACE_SCN_CSC/SCNConditioning.lean
+----------------------------------------
+Duplicate FFI.lean:
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/ataraxia/ataraxia_adr/AtaraxiaAdr/FFI.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/echobraid/echobraid_adr/EchobraidAdr/FFI.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/finton/finton_adr/FintonAdr/FFI.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/generalist/generalist_adr/GeneralistAdr/FFI.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-examiner/the_examiner_adr/TheExaminerAdr/FFI.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-genius/the_genius_adr/TheGeniusAdr/FFI.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-guardian/the_guardian_adr/TheGuardianAdr/FFI.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/the-publisher/the_publisher_adr/ThePublisherAdr/FFI.lean
+  /home/multiplicity/Multiplicity/PhaseMirror/Prime/models/commander/coding_commander_adr/CodingCommanderAdr/FFI.lean
+----------------------------------------

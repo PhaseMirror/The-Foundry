@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "description": "ContractivityReceipt — the mandatory output artifact for every governed TinyLlama generation step.",
+  "fields": {
+    "status": {
+      "type": "string",
+      "enum": ["OK", "WARN", "BLOCK"],
+      "description": "Exit status of SedonaSpineEvaluator::evaluate_stop_rules."
+    },
+    "witness_id": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 witness hash binding text + lambda_trace."
+    },
+    "lambda_trace": {
+      "type": "object",
+      "description": "PIRTM spectral telemetry emitted by pirtm-candle LambdaMOp wrapper.",
+      "properties": {
+        "lambda_p": {
+          "type": "number",
+          "description": "Spectral radius upper bound (0 < lambda_p < 1)."
+        },
+        "L_p": {
+          "type": "number",
+          "description": "Lipschitz constant (0 < L_p < 1)."
+        },
+        "zero_spacings": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 1,
+          "description": "Full zero-spacing spectral array (NOT a scalar)."
+        },
+        "signature": {
+          "type": "string",
+          "description": "Ed25519 signature over (witness_id || lambda_trace)."
+        },
+        "signer_pubkey": {
+          "type": "string",
+          "pattern": "^ed25519:",
+          "description": "Public key of the signing twin-prime atom."
+        },
+        "proof_hash": {
+          "type": "string",
+          "description": "Lean proof hash binding the witness to Substrates/lean/PIRTM/Core.lean."
+        }
+      },
+      "required": ["lambda_p", "L_p", "zero_spacings", "signature", "signer_pubkey", "proof_hash"]
+    }
+  },
+  "stop_rules": {
+    "scalar_collapse": "lambda_p * L_p < 1.0",
+    "witness_preservation": "zero_spacings.length >= 1",
+    "signature_validity": "signature matches signer_pubkey over canonical JSON"
+  },
+  "example": {
+    "status": "OK",
+    "witness_id": "sha256:d3248739275ac73661d9cec6f661db7a05952c7aaf050e1457f9ccad88917f04",
+    "lambda_trace": {
+      "lambda_p": 0.95,
+      "L_p": 0.90,
+      "zero_spacings": [1.0, 2.0, 3.0],
+      "signature": "SIGNED_HASH",
+      "signer_pubkey": "ed25519:twin-prime-042",
+      "proof_hash": "LEAN_PROOF_HASH_108_CORE"
+    }
+  }
+}

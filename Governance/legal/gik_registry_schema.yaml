@@ -1,0 +1,62 @@
+# GIK Prime-Indexed Token Registry
+# Dialect: pirtm-dialect-v1
+# Purpose: Deterministic mapping of semantic concepts to prime-decomposable structures for the Generative Invariant Kernel
+
+metadata:
+  version: "1.0.0"
+  namespace: "phase_mirror::gik::registry"
+  checksum_protocol: "PWEH-256"
+  description: "Prime-weighted execution hashing schema for generative invariant kernel."
+
+# The fundamental axiomatic primes of the system
+axioms:
+  - id: P2
+    symbol: "Ω_autonomy"
+    description: "The fundamental unit of operational autonomy."
+    constraint: "Must map to an explicit mechanism."
+  
+  - id: P3
+    symbol: "Ω_governance"
+    description: "The fundamental unit of governance and constraint."
+    constraint: "Must precede and wrap any execution of P2."
+
+  - id: P5
+    symbol: "Ω_attestation"
+    description: "The requirement for a Lambda-Archivum witness hash."
+
+  - id: P7
+    symbol: "Ω_metric"
+    description: "The requirement for quantitative observability."
+    constraint: "Must define Owners, Metrics, and Horizons."
+
+# Composite Tokens (Irreducibles)
+tokens:
+  - name: "Tension_Autonomy_Gov"
+    composite_weight: 6  # P2 * P3
+    description: "Represents a mapped tension between Autonomy and Governance."
+    resolution_lever: "Mechanism: Binding Forum"
+    
+  - name: "Verified_Execution_State"
+    composite_weight: 30 # P2 * P3 * P5
+    description: "An autonomous action constrained by governance and successfully attested."
+    drift_allowance: 0.0 # Strict zero-drift enforcement
+
+  - name: "Observable_Mechanism"
+    composite_weight: 105 # P3 * P5 * P7
+    description: "A governed, attested process with explicit metrics."
+    drift_allowance: 0.01
+
+# The Triple-Lock Validation Rules
+validation_rules:
+  lock_1_guardian:
+    enforces: "modulo checks against base axioms"
+    expression: "(state_weight % 3 == 0) and (state_weight % 5 == 0)"
+    fail_state: "SIG_GOV_KILL"
+  
+  lock_2_examiner:
+    enforces: "δ(t) < ε(t) semantic drift bound tracking"
+    threshold: "ε(t) = 0.01"
+  
+  lock_3_publisher:
+    enforces: "PWEH hash matching before yielding the artifact"
+    hashing_function: "lambda_archivum_witness"

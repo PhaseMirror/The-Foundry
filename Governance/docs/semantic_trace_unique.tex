@@ -1,0 +1,84 @@
+\subsection{Unique Semantic Trace (Isometric Embedding)}
+
+We now formalise the central structural property of the semantic arithmetic: the prime decomposition is unique, and consequently the embedding of integers into the Fock space is injective.
+
+Let $\mathcal{P}$ be the set of primes. For each integer $n > 1$, define the \emph{semantic trace} as the sorted list of its prime factors:
+
+\[
+\Xi(n) := \operatorname{sort}\bigl( \operatorname{factors}(n) \bigr),
+\]
+
+where $\operatorname{factors}(n)$ is the multiset of prime factors of $n$ (with multiplicity), and $\operatorname{sort}$ is the usual total order on $\mathbb{N}$. For $n = 1$, we define $\Xi(1) = []$ (the empty list).
+
+This trace is the canonical representative of the equivalence class of all prime factorisations under permutation. It is exactly the atomic fingerprint of the semantic node $|n\rangle$ in the Fock space.
+
+\begin{theorem}[Unique Semantic Trace]
+\label{thm:semantic_trace_unique}
+For any integers $a, b > 1$,
+\[
+\Xi(a) = \Xi(b) \quad\Longleftrightarrow\quad a = b.
+\]
+Equivalently, the map
+\[
+\phi : \mathbb{N}_{>1} \longrightarrow \mathcal{H}, \qquad
+\phi(n) := \bigotimes_{p \in \mathcal{P}} \frac{(a_p^\dagger)^{v_p(n)}}{\sqrt{v_p(n)!}}\,|0\rangle,
+\]
+is injective. Thus $\phi$ is an isometric embedding of the multiplicative monoid $(\mathbb{N}_{>1}, \cdot)$ into the bosonic Fock space $\mathcal{F}(\ell^2(\mathcal{P}))$.
+
+\end{theorem}
+
+\begin{proof}
+The implication $a = b \Rightarrow \Xi(a) = \Xi(b)$ is immediate from the definition.
+
+For the converse, assume $\Xi(a) = \Xi(b)$. By definition of $\Xi$, the sorted lists of prime factors are equal. Sorting is a function that loses no information about the multiset; therefore the multisets of prime factors of $a$ and $b$ are identical.
+
+It remains to show that the multiset of prime factors uniquely determines the integer. This is precisely the Fundamental Theorem of Arithmetic: the product of the primes in the multiset (with multiplicities) yields the original number. Since $\Xi(a)$ and $\Xi(b)$ are equal as lists, their products are equal:
+
+\[
+a = \prod_{p \in \Xi(a)} p = \prod_{p \in \Xi(b)} p = b.
+\]
+
+The first and last equalities follow from the fact that $\operatorname{factors}(n)$ multiplies to $n$, and sorting does not change the product. Hence $a = b$, proving injectivity.
+
+The embedding $\phi$ is defined by sending $n$ to the occupation-number state with $v_p(n)$ particles in mode $p$. The uniqueness of the prime factorisation ensures that different integers correspond to different occupation-number configurations, so $\phi$ is injective. The inner product
+
+\[
+\langle \phi(m) | \phi(n) \rangle =
+\begin{cases}
+1, & m = n,\\
+0, & m \neq n,
+\end{cases}
+\]
+
+shows that $\phi$ is an isometry onto its image. Therefore $\mathbb{N}_{>1}$ embeds as an orthonormal basis of a subspace of $\mathcal{F}(\ell^2(\mathcal{P}))$.
+
+\end{proof}
+
+\begin{remark}
+The theorem has been formally verified in the Lean 4 proof assistant, using the `F1.Analysis.RAddNF` module and the auxiliary lemmas `range_map_perm` and `product_unique_perm`. The proof is axiomatically independent of the heavy `mathlib` library, ensuring a minimal, portable formalisation.
+\end{remark}
+
+\begin{corollary}[Semantic Kernel Positive-Definiteness]
+\label{cor:kernel_psd}
+The kernel
+\[
+K_\Lambda(N,M) := \sum_{p} \Lambda_m(p) \cdot \min(v_p(N), v_p(M)) \cdot \ln p
+\]
+is positive-definite for any strictly positive weights $\Lambda_m(p) > 0$.
+
+\end{corollary}
+
+\begin{proof}
+The kernel is the pullback of the inner product on the Fock space via the isometric embedding $\phi$:
+
+\[
+K_\Lambda(N,M) = \langle \phi(N) | \hat{M}_\Lambda | \phi(M) \rangle,
+\]
+
+where $\hat{M}_\Lambda = \sum_p \Lambda_m(p) \ln p \, a_p^\dagger a_p$ is a positive operator. Since $\phi$ is injective, the Gram matrix of the states $\{\phi(N)\}$ is strictly positive-definite. Thus $K_\Lambda$ is a positive-definite kernel.
+
+\end{proof}
+
+\begin{remark}
+This result is the formal justification for using $\ln\gcd(N,M)$ (and its $\Lambda_m$-weighted generalisation) as a similarity measure in semantic tasks. The injectivity of $\phi$ guarantees that no two distinct integers are conflated, providing a collision‑resistant semantic basis.
+\end{remark}
