@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.97.1
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: |
+          cargo install wasm-pack --version 0.13.1 --locked
+
+      - name: Build WebAssembly package
+        run: wasm-pack build --target web -- --locked
+
+      - name: Prepare deployment folder
+        run: |
+          mkdir dist
+          cp index.html index.css geometric_prime_router_webapp.html dist/
+          cp coi-serviceworker.js r4_worker.js dist/ || true
+          cp -r assets dist/ || true
+          cp -r pkg dist/
+          rm -f dist/pkg/.gitignore
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
+          clean: true

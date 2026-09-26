@@ -30,3 +30,5 @@ pub use quorum::*;
 pub use coupling::*;
 pub mod witness;
 pub mod crdt;
+pub mod capital_authorization;
+pub use capital_authorization::*;
