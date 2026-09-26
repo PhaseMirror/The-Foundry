@@ -1,18 +1,18 @@
-# ADR-PML-001: Documented Lean theorems missing in the `general` subsystem (71 gaps)
+# ADR-PML-001: alp_sorry_manifest.json permits sorrys that are absent from the current lean tree (stale boundary)
 
 ## Status
-Proposed
+Resolved
 
 ## Axis (Phase Mirror tension class)
-urgency vs capacity
+intent vs operating incentives
 
 ## Owner (multi-agent lever)
-`the-examiner`
+`the-guardian`
 
 ## Dissonance Score
-- Impact = severity (4) x blast radius (71) = **40**
-- Tractability = **1.0**
-- **Score = 40.0**  (cluster rank 1 of 17)
+- Impact = severity (3) x blast radius (13) = **30**
+- Tractability = **5.0**
+- **Score = 150.0**  (cluster rank 1 of 3)
 
 ## Context (stated intent vs implementation)
 The documented intent below is not reflected by the current mathematical Lean 4
@@ -20,23 +20,13 @@ implementation. This is a measured gap produced by the Phase Mirror operational
 loop.
 
 ### Stated intent (documents)
-  - docs/PIRTM_SPEC.md:181 — asserts `successor_contractivity_correct` exists / is verified
-  - docs/adr/ADR-064-MatrixEngine-Production-Implementation.md:69 — asserts `evaluate` exists / is verified
-  - docs/adr/ADR-064-MatrixEngine-Production-Implementation.md:73 — asserts `matrix_engine_preserves_contraction` exists / is verified
-  - docs/adr/ADR-064-MatrixEngine-Production-Implementation.md:81 — asserts `grade_preserved_under_composition` exists / is verified
-  - docs/adr/ADR-065-ACE-Runtime-Production-Hardening.md:80 — asserts `ace_preserves_invariants` exists / is verified
-  - docs/adr/ADR-065-ACE-Runtime-Production-Hardening.md:88 — asserts `budget_exhaustion_detected` exists / is verified
-  - docs/adr/ADR-069-Recursive-Proof-Aggregation-Production-Pipeline.md:80 — asserts `is_valid_proof` exists / is verified
-  - docs/adr/ADR-069-Recursive-Proof-Aggregation-Production-Pipeline.md:84 — asserts `verify_apo` exists / is verified
+  - alp_sorry_manifest.json permits 13 sorry(s) not present in lean
 
 ### Implementation reality (lean/)
-  - `successor_contractivity_correct` not found among 7997 lean declarations
-  - `evaluate` not found among 7997 lean declarations
-  - `matrix_engine_preserves_contraction` not found among 7997 lean declarations
-  - `grade_preserved_under_composition` not found among 7997 lean declarations
+  - stale permitted sorrys: Add, Div, Mul, Neg, OfNat, Sub ...
 
 ### Manifested boundary
-Leaked (unmanifested): YES — gap is NOT manifested in `alp_sorry_manifest.json` (silent leak risk)
+Leaked (unmanifested): no
 
 ## Decision (the lever)
 Resolve the dissonance by manifesting the gap and closing it with a verified
@@ -59,12 +49,33 @@ stub, per `alp_sorry_manifest.json`) backs it.
 - Dissonance score for this axis trends to 0 on subsequent loop runs.
 
 ## Actionable Levers
-1. Manifest the missing theorem(s) `successor_contractivity_correct`, `evaluate`, `matrix_engine_preserves_contraction`, `grade_preserved_under_composition`, `ace_preserves_invariants`, `budget_exhaustion_detected`, `is_valid_proof`, `verify_apo`, `aggregation_preserves_validity`, `aggregation_is_sound`, `xi_type_sound`, `graph_energy`, +56 more as gated `sorry` stubs under `lean/Core/` and register each in `alp_sorry_manifest.json` (run the loop with `--scaffold-proofs`).
-2. Add paired Rust/Kani stubs + governance tests in `crates/` per ADR-054 / ADR-045 hybrid boundary policy, so the gap is owned, not silent.
-3. File proof-engineering tickets sized by effort; close `sorry`s in priority order from the ranked loop index until this cluster's score trends to 0.
+1. Update the purity ADR (e.g. ADR-Prime-Move-Deployment-Readiness.md) to segregate the verified UAC math cores from the transitional `ALP` agentic contracts.
+2. Run `scripts/honesty_audit.sh`; enforce that every `sorry` is in the manifest and every manifest entry resolves to a real declaration (no stale permits).
+3. Downgrade absolute '100% verified / zero sorry' wording to scoped, accurate claims until the proof budget is spent.
 4. Re-run `scripts/phase_mirror_loop.py` and confirm this tension's score decreases.
 
 ## Links
 - Loop index: `docs/adr/ADR-Plan-Phase-Mirror-Dissonance-Loop.md`
 - Sorry boundary: `alp_sorry_manifest.json`
 - Goal: `Phase_Mirror_Loop_Goal.md`
+
+## Resolution (2026-08-25)
+**Status: RESOLVED — verified by loop re-run (tension absent, score 0).**
+
+1. Purged the 6 legacy typeclass permits (`OfNat`, `Div`, `Add`, `Sub`,
+   `Mul`, `Neg`) from `permitted_sorrys` — no corresponding declarations
+   exist anywhere under `lean/`.
+2. Removed the stale `Core/MultiplicityCore.lean` ledger entry: the file is
+   absent from the tree and its cited declarations
+   (`Nat.prime_mul_left_inj`, `interaction_product_injective`) do not exist;
+   the surviving `Multiplicity/MultiplicityCore.lean` carries no debt.
+3. Added explicit `name` fields to the two Quarternion axiom entries and
+   normalized every entry's file path to its real location; renamed the two
+   Atlas entries to their actual declaration (`atlas_positivity`, lines
+   196/199).
+4. Scanner fidelity fixes in    `scripts/phase_mirror_loop.py::scan_lean`
+   (required so manifest `"type": "axiom"` entries resolve):
+   `axiom` declarations are now indexed (the manifest schema tracks them),
+   and attribute decorators (`@[proof]` etc.) no longer hide declarations.
+
+Result: manifest drift 13 -> 0; every permit resolves to a real declaration.

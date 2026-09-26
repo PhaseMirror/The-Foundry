@@ -1,18 +1,18 @@
-# ADR-PML-004: Documented Lean theorems missing in the `moc` subsystem (24 gaps)
+# ADR-PML-004: alp_sorry_manifest.json permits sorrys that are absent from the current lean tree (stale boundary)
 
 ## Status
-Proposed
+Resolved
 
 ## Axis (Phase Mirror tension class)
-urgency vs capacity
+intent vs operating incentives
 
 ## Owner (multi-agent lever)
-`the-examiner`
+`the-guardian`
 
 ## Dissonance Score
-- Impact = severity (4) x blast radius (24) = **40**
-- Tractability = **1.0**
-- **Score = 40.0**  (cluster rank 4 of 17)
+- Impact = severity (3) x blast radius (1) = **3**
+- Tractability = **5.0**
+- **Score = 15.0**  (cluster rank 1 of 1)
 
 ## Context (stated intent vs implementation)
 The documented intent below is not reflected by the current mathematical Lean 4
@@ -20,23 +20,13 @@ implementation. This is a measured gap produced by the Phase Mirror operational
 loop.
 
 ### Stated intent (documents)
-  - docs/MOC.md:30 — asserts `arta_gluing_consistency` exists / is verified
-  - docs/MOC.md:61 — asserts `operator_contractive` exists / is verified
-  - docs/adr/ADR-066-PIRTM-MOC-Compiler-Production-Readiness.md:103 — asserts `type_check_sound` exists / is verified
-  - docs/adr/ADR-066-PIRTM-MOC-Compiler-Production-Readiness.md:108 — asserts `WellTyped` exists / is verified
-  - docs/adr/ADR-068-MOC-CRMF-Contraction-Certificate-Production-Ratification.md:77 — asserts `issue_certificate` exists / is verified
-  - docs/adr/ADR-068-MOC-CRMF-Contraction-Certificate-Production-Ratification.md:89 — asserts `certificate_issuance_sound` exists / is verified
-  - docs/adr/ADR-068-MOC-CRMF-Contraction-Certificate-Production-Ratification.md:96 — asserts `prime_gated_certificate` exists / is verified
-  - docs/adr/ADR-068-MOC-CRMF-Contraction-Certificate-Production-Ratification.md:117 — asserts `activate_resonance` exists / is verified
+  - alp_sorry_manifest.json permits 1 sorry(s) not present in lean
 
 ### Implementation reality (lean/)
-  - `arta_gluing_consistency` not found among 7997 lean declarations
-  - `operator_contractive` not found among 7997 lean declarations
-  - `type_check_sound` not found among 7997 lean declarations
-  - `WellTyped` not found among 7997 lean declarations
+  - stale permitted sorrys: atlas_positivity
 
 ### Manifested boundary
-Leaked (unmanifested): YES — gap is NOT manifested in `alp_sorry_manifest.json` (silent leak risk)
+Leaked (unmanifested): no
 
 ## Decision (the lever)
 Resolve the dissonance by manifesting the gap and closing it with a verified
@@ -59,12 +49,23 @@ stub, per `alp_sorry_manifest.json`) backs it.
 - Dissonance score for this axis trends to 0 on subsequent loop runs.
 
 ## Actionable Levers
-1. Manifest the missing theorem(s) `arta_gluing_consistency`, `operator_contractive`, `type_check_sound`, `issue_certificate`, `certificate_issuance_sound`, `prime_gated_certificate`, `activate_resonance`, `resonance_preserves_contraction`, `commutation_f`, `commute`, `commutation_respects_prime_grading`, `resonance_functional`, +7 more as gated `sorry` stubs under `lean/Core/` and register each in `alp_sorry_manifest.json` (run the loop with `--scaffold-proofs`).
-2. Add paired Rust/Kani stubs + governance tests in `crates/` per ADR-054 / ADR-045 hybrid boundary policy, so the gap is owned, not silent.
-3. File proof-engineering tickets sized by effort; close `sorry`s in priority order from the ranked loop index until this cluster's score trends to 0.
+1. Update the purity ADR (e.g. ADR-Prime-Move-Deployment-Readiness.md) to segregate the verified UAC math cores from the transitional `ALP` agentic contracts.
+2. Run `scripts/honesty_audit.sh`; enforce that every `sorry` is in the manifest and every manifest entry resolves to a real declaration (no stale permits).
+3. Downgrade absolute '100% verified / zero sorry' wording to scoped, accurate claims until the proof budget is spent.
 4. Re-run `scripts/phase_mirror_loop.py` and confirm this tension's score decreases.
 
 ## Links
 - Loop index: `docs/adr/ADR-Plan-Phase-Mirror-Dissonance-Loop.md`
 - Sorry boundary: `alp_sorry_manifest.json`
 - Goal: `Phase_Mirror_Loop_Goal.md`
+
+## Resolution (2026-08-25)
+**Status: RESOLVED — verified by loop re-run (tension absent, score 0).**
+
+Transient drift flagged while reconciling ADR-PML-001: the Atlas ledger
+entries were renamed to their real declaration (`atlas_positivity`) but the
+declaration itself was invisible to the scanner because it carries an
+attribute decorator (`@[proof] theorem atlas_positivity`). Fixed in
+`scripts/phase_mirror_loop.py::scan_lean` by allowing attribute decorators
+(repo convention per AGENTS.md) before declaration keywords. Manifest and
+tree are back in agreement: 0 stale permits.

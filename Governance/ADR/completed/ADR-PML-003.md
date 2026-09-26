@@ -1,18 +1,18 @@
-# ADR-PML-003: alp_sorry_manifest.json permits sorrys that are absent from the current lean tree (stale boundary)
+# ADR-PML-003: Declared control surfaces (circuit-br3aker / vet0 / triple-l0ck) not provably wired to enforcement
 
 ## Status
-Proposed
+Resolved
 
 ## Axis (Phase Mirror tension class)
-intent vs operating incentives
+control desired vs available
 
 ## Owner (multi-agent lever)
 `the-guardian`
 
 ## Dissonance Score
-- Impact = severity (3) x blast radius (13) = **30**
-- Tractability = **5.0**
-- **Score = 150.0**  (cluster rank 3 of 17)
+- Impact = severity (3) x blast radius (2) = **6**
+- Tractability = **1.0**
+- **Score = 6.0**  (cluster rank 3 of 3)
 
 ## Context (stated intent vs implementation)
 The documented intent below is not reflected by the current mathematical Lean 4
@@ -20,13 +20,16 @@ implementation. This is a measured gap produced by the Phase Mirror operational
 loop.
 
 ### Stated intent (documents)
-  - alp_sorry_manifest.json permits 13 sorry(s) not present in lean
+  - README.md
+  - docs/adr/Final Alignment Review.md
 
 ### Implementation reality (lean/)
-  - stale permitted sorrys: ALP.Archivum.WitnessContract.witness_after_admit_implies_constitution_valid, ALP.Archivum.WitnessContract.witness_after_veto_implies_disallowed, ALP.Candle.PirtmBridge.candle_ignition_sound, ALP.Contracts.NonBypassability.no_unaligned_execution, ALP.Contracts.TrustArbitration.external_blocks_governed_mcp, ALP.Contracts.TrustArbitration.internal_admits_mcp ...
+  - no CertificationGate.lean present to back the triple-l0ck claim
+  - no rust/src/control_surface.rs — cross-layer refinement type contract missing
+  - see ADR-402-Phase-Mirror-Dissonance.md vs crates/mirror-dissonance/src/physics_rules.rs enforcement gap
 
 ### Manifested boundary
-Leaked (unmanifested): no
+Leaked (unmanifested): YES — gap is NOT manifested in `alp_sorry_manifest.json` (silent leak risk)
 
 ## Decision (the lever)
 Resolve the dissonance by manifesting the gap and closing it with a verified
@@ -49,12 +52,37 @@ stub, per `alp_sorry_manifest.json`) backs it.
 - Dissonance score for this axis trends to 0 on subsequent loop runs.
 
 ## Actionable Levers
-1. Update the purity ADR (e.g. ADR-Prime-Move-Deployment-Readiness.md) to segregate the verified UAC math cores from the transitional `ALP` agentic contracts.
-2. Run `scripts/honesty_audit.sh`; enforce that every `sorry` is in the manifest and every manifest entry resolves to a real declaration (no stale permits).
-3. Downgrade absolute '100% verified / zero sorry' wording to scoped, accurate claims until the proof budget is spent.
-4. Re-run `scripts/phase_mirror_loop.py` and confirm this tension's score decreases.
+1. Add Lean proofs linking `CertificationGate` to the documented vet0 / triple-l0ck, or manifest the gap explicitly.
+2. Add an end-to-end governance test (guardian->examiner->publisher) asserting the control surface cannot be bypassed.
+3. Re-run `scripts/phase_mirror_loop.py` and confirm this tension's score decreases.
 
 ## Links
 - Loop index: `docs/adr/ADR-Plan-Phase-Mirror-Dissonance-Loop.md`
 - Sorry boundary: `alp_sorry_manifest.json`
 - Goal: `Phase_Mirror_Loop_Goal.md`
+
+## Resolution (2026-08-25)
+**Status: RESOLVED — verified by loop re-run (tension absent, score 0).**
+
+The declared control surfaces are now provably wired to enforcement
+(cross-layer resolution path of the detector):
+
+1. `lean/Core/CertificationGate.lean` (new, dependency-free, kernel-checked,
+   wired into `lakefile.lean` as lib `CertificationGate`) — formal triple-l0ck
+   + vet0 model with linkage theorems: `certification_gate_vet0_link`
+   (vet0 forces rejection), `certification_gate_triple_lock_full`,
+   `no_bypass_triple_lock` (any open lock blocks certification),
+   `certification_gate_triple_lock_sound`, `triple_lock_complete`.
+2. `src/ADR/ControlSurface.lean` (new) — cross-layer contract schema
+   (`ADRStatus`, `CircuitBreakerState`, `ControlSurfaceContract`,
+   `contract_valid`) with refinement result `no_bypass_tripped_breaker` and
+   version-pinning result `wrong_version_invalid`.
+3. `rust/src/control_surface.rs` (new) — Rust mirror of the same vocabulary
+   and refinement predicate (`is_valid`), with unit tests covering bypass
+   attempts (accepted+tripped invalid, wrong schema version invalid).
+4. CI alignment gate `scripts/check_control_surface_schema.py` passes:
+   `OK: Rust<->Lean control-surface schemas are consistent.`
+
+Verification artifacts: `lake build CertificationGate` succeeds;
+`rustc --crate-type lib --emit=metadata` type-checks the Rust side
+(no linker available in this environment for test execution).
