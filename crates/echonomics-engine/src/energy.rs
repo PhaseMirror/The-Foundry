@@ -32,7 +32,12 @@ pub const fn is_ground_state(a_v_pair: u64, a_v_nuc: u64, b_v_pair: u64, b_v_nuc
 
 /// Binary energy-min selector used to fold toward a minimum.
 #[inline]
-pub const fn min_energy_pair(a_v_pair: u64, a_v_nuc: u64, b_v_pair: u64, b_v_nuc: u64) -> (u64, u64) {
+pub const fn min_energy_pair(
+    a_v_pair: u64,
+    a_v_nuc: u64,
+    b_v_pair: u64,
+    b_v_nuc: u64,
+) -> (u64, u64) {
     if calculate_total_energy(a_v_pair, a_v_nuc) <= calculate_total_energy(b_v_pair, b_v_nuc) {
         (a_v_pair, a_v_nuc)
     } else {
@@ -68,14 +73,18 @@ pub struct EnergyLedgerState {
 /// state minimizes `E = V_pair - V_nuc` within a frame.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LedgerFrame {
-    pub headcount: u64,          // fixed N
+    pub headcount: u64,           // fixed N
     pub degenerate_set_size: u64, // fixed D
-    pub period: u64,             // fixed P
+    pub period: u64,              // fixed P
 }
 
 impl LedgerFrame {
     pub const fn new(headcount: u64, degenerate_set_size: u64, period: u64) -> Self {
-        Self { headcount, degenerate_set_size, period }
+        Self {
+            headcount,
+            degenerate_set_size,
+            period,
+        }
     }
 }
 
@@ -91,7 +100,11 @@ pub struct Occupancy {
 
 impl Occupancy {
     pub const fn new(v_pair: u64, v_nuc: u64, multiplicity: u64) -> Self {
-        Self { v_pair, v_nuc, multiplicity }
+        Self {
+            v_pair,
+            v_nuc,
+            multiplicity,
+        }
     }
 
     pub fn energy(&self) -> i64 {
@@ -276,7 +289,10 @@ mod kani_proofs {
         kani::assume(vp_b <= i64::MAX as u64);
         kani::assume(vn_b <= i64::MAX as u64);
         kani::assume(calculate_total_energy(vp_a, vn_a) <= calculate_total_energy(vp_b, vn_b));
-        kani::assert(is_ground_state(vp_a, vn_a, vp_b, vn_b), "Lower energy must be a ground state");
+        kani::assert(
+            is_ground_state(vp_a, vn_a, vp_b, vn_b),
+            "Lower energy must be a ground state",
+        );
     }
 
     // Energy reflexivity: every state is its own ground state.
@@ -286,7 +302,10 @@ mod kani_proofs {
         let vn: u64 = kani::any();
         kani::assume(vp <= i64::MAX as u64);
         kani::assume(vn <= i64::MAX as u64);
-        kani::assert(is_ground_state(vp, vn, vp, vn), "Reflexivity of ground state");
+        kani::assert(
+            is_ground_state(vp, vn, vp, vn),
+            "Reflexivity of ground state",
+        );
     }
 
     // Energy antisymmetry: mutual ground states have equal energy.
@@ -382,8 +401,14 @@ mod kani_proofs {
         let a = Occupancy::new(vp_a, vn_a, m_a);
         let b = Occupancy::new(vp_b, vn_b, m_b);
         // energy equality forces a mutually ground-state independent of M
-        kani::assert(is_ground_state(a.v_pair, a.v_nuc, b.v_pair, b.v_nuc), "a GS over b (M-blind)");
-        kani::assert(is_ground_state(b.v_pair, b.v_nuc, a.v_pair, a.v_nuc), "b GS over a (M-blind)");
+        kani::assert(
+            is_ground_state(a.v_pair, a.v_nuc, b.v_pair, b.v_nuc),
+            "a GS over b (M-blind)",
+        );
+        kani::assert(
+            is_ground_state(b.v_pair, b.v_nuc, a.v_pair, a.v_nuc),
+            "b GS over a (M-blind)",
+        );
     }
 
     // Decision 3: the ground-state selector chooses the lower-energy ledger
@@ -425,6 +450,9 @@ mod kani_proofs {
         kani::assume(vn <= i64::MAX as u64);
         let occ1 = Occupancy::new(vp, vn, m1);
         let occ2 = Occupancy::new(vp, vn, m2);
-        kani::assert(occ1.energy() == occ2.energy(), "energy ignores multiplicity M");
+        kani::assert(
+            occ1.energy() == occ2.energy(),
+            "energy ignores multiplicity M",
+        );
     }
 }

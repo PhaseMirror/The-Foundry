@@ -6,20 +6,18 @@
 //! - Truncated explicit formula $\psi_{\text{spectral}}(x, N) = x - \sum_{k=1}^N 2 \text{Re}\left(\frac{x^{\rho_k}}{\rho_k}\right) - \ln(2\pi) - \frac{1}{2}\ln(1 - x^{-2})$ (§ADR-0065)
 //! - Dual multiplicity operator $M$ binding prime valuation $v_p(n)$ and zero multiplicity $m_\rho$ (§ADR-0065)
 
-use serde::{Deserialize, Serialize};
-
 /// Known low-lying non-trivial Riemann zeros $\gamma_k$ on the critical line $\rho_k = 1/2 + i \gamma_k$ (§ADR-0065).
 pub const RIEMANN_ZEROS_GAMMA: &[f64] = &[
     14.134725141734693,
     21.022039638771555,
-    25.010857580145688,
+    25.010_857_580_145_69,
     30.424876125859513,
-    32.935061587739189,
+    32.935_061_587_739_19,
     37.586178158825677,
-    40.918719012147495,
-    43.327073280914999,
-    48.005150881167159,
-    49.773832477672302,
+    40.918_719_012_147_5,
+    43.327_073_280_915,
+    48.005_150_881_167_16,
+    49.773_832_477_672_3,
 ];
 
 /// Evaluates prime valuation $v_p(n)$ for integer $n$ and prime $p$ (§ADR-0065).
@@ -28,7 +26,7 @@ pub fn prime_valuation(mut n: u64, p: u64) -> u32 {
         return 0;
     }
     let mut count = 0;
-    while n % p == 0 {
+    while n.is_multiple_of(p) {
         count += 1;
         n /= p;
     }
@@ -177,6 +175,9 @@ mod kani_proofs {
         kani::assume(gamma >= 10.0 && gamma <= 50.0);
 
         let term = evaluate_spectral_zero_term(x, gamma);
-        kani::assert(term.is_finite(), "Zero term must be finite for valid x and gamma");
+        kani::assert(
+            term.is_finite(),
+            "Zero term must be finite for valid x and gamma",
+        );
     }
 }

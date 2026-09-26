@@ -102,8 +102,14 @@ mod tests {
 
     #[test]
     fn test_embodied_energy_sign_and_bound() {
-        let healthy = EmbodiedState { capacity: 80, stress: 30 };
-        let burnt = EmbodiedState { capacity: 10, stress: 95 };
+        let healthy = EmbodiedState {
+            capacity: 80,
+            stress: 30,
+        };
+        let burnt = EmbodiedState {
+            capacity: 10,
+            stress: 95,
+        };
 
         assert_eq!(healthy.embodied_energy(), 50);
         assert_eq!(burnt.embodied_energy(), -85);
@@ -133,9 +139,18 @@ mod tests {
     #[test]
     fn test_fractional_engagement() {
         assert!(is_fractional_engagement_valid(3, 4));
-        assert!(is_fractional_engagement_valid(1, 1), "full-time is the upper bound");
-        assert!(!is_fractional_engagement_valid(4, 3), "never over-committed");
-        assert!(!is_fractional_engagement_valid(1, 0), "zero denominator is invalid");
+        assert!(
+            is_fractional_engagement_valid(1, 1),
+            "full-time is the upper bound"
+        );
+        assert!(
+            !is_fractional_engagement_valid(4, 3),
+            "never over-committed"
+        );
+        assert!(
+            !is_fractional_engagement_valid(1, 0),
+            "zero denominator is invalid"
+        );
     }
 }
 
@@ -152,7 +167,10 @@ mod kani_proofs {
         kani::assume(capacity >= 0 && capacity <= 100);
         kani::assume(stress >= 0 && stress <= 100);
         let st = EmbodiedState { capacity, stress };
-        kani::assert(st.embodied_energy() == capacity - stress, "E = C_avail - S_load");
+        kani::assert(
+            st.embodied_energy() == capacity - stress,
+            "E = C_avail - S_load",
+        );
         kani::assert(st.is_energy_normalized(), "ledger inputs are normalized");
     }
 
@@ -166,8 +184,14 @@ mod kani_proofs {
         kani::assume(stress >= 0 && stress <= 100);
         let st = EmbodiedState { capacity, stress };
         if st.is_burnout_risk() {
-            kani::assert(st.requires_intervention(), "burnout risk requires intervention");
-            kani::assert(st.embodied_energy() < BURNOUT_THRESHOLD, "risk is low embodied energy");
+            kani::assert(
+                st.requires_intervention(),
+                "burnout risk requires intervention",
+            );
+            kani::assert(
+                st.embodied_energy() < BURNOUT_THRESHOLD,
+                "risk is low embodied energy",
+            );
         }
     }
 

@@ -1,0 +1,16 @@
+# Canonical Multiplicity-LWE parameter set (Gate K reference)
+# Any change requires a new Gate K ADR.
+
+version = "1.0"
+
+prime_set = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71]
+scales = [0, 1, 2, 3]
+
+q = 257
+alpha = 2
+lambda_m = 0.0001784
+gamma = 0.9
+
+[noise]
+type = "binomial"
+k = 3

@@ -28,7 +28,11 @@ pub const fn is_well_formed(total_members: usize, votes_for: usize, votes_agains
 
 /// Quorum reached: total votes cast meet or exceed the threshold.
 #[inline]
-pub const fn is_quorum_reached(votes_for: usize, votes_against: usize, quorum_threshold: usize) -> bool {
+pub const fn is_quorum_reached(
+    votes_for: usize,
+    votes_against: usize,
+    quorum_threshold: usize,
+) -> bool {
     votes_for + votes_against >= quorum_threshold
 }
 
@@ -239,7 +243,10 @@ mod kani_proofs {
         kani::assume(f + a < q);
 
         let d = evaluate_constitutional_gate(total, q, f, a);
-        kani::assert(d != ConstitutionalDecision::Pass, "Sub-quorum proposal must fail closed");
+        kani::assert(
+            d != ConstitutionalDecision::Pass,
+            "Sub-quorum proposal must fail closed",
+        );
     }
 
     // A tie never passes: votes_for == votes_against makes a strict majority
@@ -265,10 +272,7 @@ mod kani_proofs {
         kani::assume(a <= usize::MAX / 2);
         let d = evaluate_constitutional_gate(f + a + 1, q, f, a);
         kani::assume(d == ConstitutionalDecision::Pass);
-        kani::assert(
-            f + a >= q,
-            "A passing proposal must have reached quorum",
-        );
+        kani::assert(f + a >= q, "A passing proposal must have reached quorum");
     }
 
     // A passed proposal always has a strict majority.
@@ -299,6 +303,9 @@ mod kani_proofs {
         // total membership strictly smaller than f + a
         let total = f + a - 1;
         let d = evaluate_constitutional_gate(total, q, f, a);
-        kani::assert(d == ConstitutionalDecision::RejInvalid, "Over-voted state must be invalid");
+        kani::assert(
+            d == ConstitutionalDecision::RejInvalid,
+            "Over-voted state must be invalid",
+        );
     }
 }

@@ -7,11 +7,11 @@
 //! - C ABI Export Functions (§3 ADR-0030): `p2c_witness_permute_new`, `p2c_witness_split_new`, `p2c_witness_contract_new`, `p2c_commitment_compute`, `p2c_witness_free`
 //! - Safe Rust Witness Store & MCP Tool Provider (§4 ADR-0030)
 
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::os::raw::{c_int, c_void};
 use std::sync::{Arc, Mutex};
-use serde::{Deserialize, Serialize};
-use sha2::{Sha256, Digest};
 
 /// Witness Types (§3 ADR-0030).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -168,18 +168,21 @@ pub extern "C" fn p2c_witness_split_new(
     if idx < 0 {
         return std::ptr::null_mut();
     }
-    into_raw_witness(Witness::Split { idx: idx as usize, parts: Vec::new() })
+    into_raw_witness(Witness::Split {
+        idx: idx as usize,
+        parts: Vec::new(),
+    })
 }
 
 #[no_mangle]
-pub extern "C" fn p2c_witness_contract_new(
-    left: c_int,
-    right: c_int,
-) -> *mut CWitness {
+pub extern "C" fn p2c_witness_contract_new(left: c_int, right: c_int) -> *mut CWitness {
     if left < 0 || right < 0 {
         return std::ptr::null_mut();
     }
-    into_raw_witness(Witness::Contract { left: left as usize, right: right as usize })
+    into_raw_witness(Witness::Contract {
+        left: left as usize,
+        right: right as usize,
+    })
 }
 
 #[no_mangle]
@@ -249,7 +252,10 @@ mod tests {
         let id1 = store.insert(Witness::Contract { left: 1, right: 2 });
         let id2 = store.insert(Witness::Permute(vec![0, 1]));
 
-        assert_eq!(store.get(id1), Some(Witness::Contract { left: 1, right: 2 }));
+        assert_eq!(
+            store.get(id1),
+            Some(Witness::Contract { left: 1, right: 2 })
+        );
         assert_eq!(store.get(id2), Some(Witness::Permute(vec![0, 1])));
         assert_eq!(store.get(99), None);
     }
@@ -266,7 +272,10 @@ mod kani_proofs {
         let perm = [p0, p1];
 
         if is_valid_permutation(&perm) {
-            kani::assert((p0 == 0 && p1 == 1) || (p0 == 1 && p1 == 0), "2-element permutation must be [0,1] or [1,0]");
+            kani::assert(
+                (p0 == 0 && p1 == 1) || (p0 == 1 && p1 == 0),
+                "2-element permutation must be [0,1] or [1,0]",
+            );
         }
     }
 

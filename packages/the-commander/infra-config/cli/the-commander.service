@@ -1,0 +1,12 @@
+[Unit]
+Description=the‑commander CLI daemon
+After=network.target mcp.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/pscmd daemon --config /etc/the-commander/config.toml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

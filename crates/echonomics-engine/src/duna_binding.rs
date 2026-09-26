@@ -71,28 +71,52 @@ mod tests {
 
     #[test]
     fn test_deployment_binding_fail_closed() {
-        let bound = DeploymentBinding { agreement_hash: 42, deployed_hash: 42 };
-        let tampered = DeploymentBinding { agreement_hash: 42, deployed_hash: 7 };
+        let bound = DeploymentBinding {
+            agreement_hash: 42,
+            deployed_hash: 42,
+        };
+        let tampered = DeploymentBinding {
+            agreement_hash: 42,
+            deployed_hash: 7,
+        };
 
         assert!(bound.is_deployment_bound());
         assert!(bound.is_deployment_accepted());
-        assert!(!tampered.is_deployment_accepted(), "mismatched hash is rejected");
+        assert!(
+            !tampered.is_deployment_accepted(),
+            "mismatched hash is rejected"
+        );
     }
 
     #[test]
     fn test_statutory_floor() {
         assert_eq!(E_TRIAD_FLOOR, -7);
-        assert!(is_above_statutory_floor(-7), "at the floor is valid (inclusive)");
-        assert!(!is_above_statutory_floor(-8), "below the floor violates Article III");
+        assert!(
+            is_above_statutory_floor(-7),
+            "at the floor is valid (inclusive)"
+        );
+        assert!(
+            !is_above_statutory_floor(-8),
+            "below the floor violates Article III"
+        );
         assert!(is_above_statutory_floor(3));
     }
 
     #[test]
     fn test_weekly_proof() {
         assert!(is_weekly_proof_valid(&[-5, 0, 3]));
-        assert!(is_weekly_proof_valid(&[-7, -5, 0]), "at the boundary remains valid");
-        assert!(!is_weekly_proof_valid(&[-8]), "a single violation fails the proof closed");
-        assert!(!is_weekly_proof_valid(&[0, -8, 3]), "violation anywhere fails the trace");
+        assert!(
+            is_weekly_proof_valid(&[-7, -5, 0]),
+            "at the boundary remains valid"
+        );
+        assert!(
+            !is_weekly_proof_valid(&[-8]),
+            "a single violation fails the proof closed"
+        );
+        assert!(
+            !is_weekly_proof_valid(&[0, -8, 3]),
+            "violation anywhere fails the trace"
+        );
         assert!(is_weekly_proof_valid(&[]), "empty trace is vacuously valid");
     }
 }
@@ -106,7 +130,10 @@ mod kani_proofs {
     fn verify_deployment_accepted_iff_bound() {
         let agreement_hash: u64 = kani::any();
         let deployed_hash: u64 = kani::any();
-        let b = DeploymentBinding { agreement_hash, deployed_hash };
+        let b = DeploymentBinding {
+            agreement_hash,
+            deployed_hash,
+        };
         kani::assert(
             b.is_deployment_accepted() == (deployed_hash == agreement_hash),
             "accepted ⇔ exact hash match",
@@ -118,7 +145,10 @@ mod kani_proofs {
     fn verify_mismatched_hash_rejected() {
         let agreement_hash: u64 = kani::any();
         let deployed_hash: u64 = kani::any();
-        let b = DeploymentBinding { agreement_hash, deployed_hash };
+        let b = DeploymentBinding {
+            agreement_hash,
+            deployed_hash,
+        };
         if deployed_hash != agreement_hash {
             kani::assert(!b.is_deployment_accepted(), "mismatch ⇒ rejected");
         }
@@ -132,7 +162,10 @@ mod kani_proofs {
         let c: i64 = kani::any();
         let trace = [a, b, c];
         if a < E_TRIAD_FLOOR || b < E_TRIAD_FLOOR || c < E_TRIAD_FLOOR {
-            kani::assert(!is_weekly_proof_valid(&trace), "any violation fails the weekly proof");
+            kani::assert(
+                !is_weekly_proof_valid(&trace),
+                "any violation fails the weekly proof",
+            );
         }
     }
 }

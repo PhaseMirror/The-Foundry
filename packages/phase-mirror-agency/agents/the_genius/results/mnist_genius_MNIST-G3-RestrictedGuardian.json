@@ -1,0 +1,240 @@
+{
+  "timestamp": "2026-05-26T17:52:13Z",
+  "config": {
+    "name": "MNIST-G3-RestrictedGuardian",
+    "primes": [
+      2,
+      3,
+      5
+    ],
+    "hidden_dim": 64,
+    "lambda_zeta": 0.1,
+    "a": 2.0,
+    "safety_threshold": 1.0,
+    "use_lm": true,
+    "max_batches": 20
+  },
+  "final_loss": 2.1549904346466064,
+  "telemetry_summary": [
+    {
+      "batch": 0,
+      "loss": 2.3229761123657227,
+      "pirtm_norm": 1.7934566736221313,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.7934566736221313,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 1,
+      "loss": 2.596344232559204,
+      "pirtm_norm": 1.2047959566116333,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.4991263151168823,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 2,
+      "loss": 6.722050666809082,
+      "pirtm_norm": 1.5632070302963257,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.52048655351003,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 3,
+      "loss": 6.479292392730713,
+      "pirtm_norm": 1.8947232961654663,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.6140457391738892,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 4,
+      "loss": 4.438268184661865,
+      "pirtm_norm": 2.1623318195343018,
+      "ctrl_status": {
+        "correlation": 0.26385539949772446,
+        "avg_norm": 1.7237029552459717,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 5,
+      "loss": 3.1731274127960205,
+      "pirtm_norm": 2.4260356426239014,
+      "ctrl_status": {
+        "correlation": -0.028828509168385516,
+        "avg_norm": 1.8502187490463258,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 6,
+      "loss": 2.8677573204040527,
+      "pirtm_norm": 2.538404941558838,
+      "ctrl_status": {
+        "correlation": -0.9671749122125479,
+        "avg_norm": 2.1169405460357664,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 7,
+      "loss": 2.046668291091919,
+      "pirtm_norm": 2.5199496746063232,
+      "ctrl_status": {
+        "correlation": -0.9774272495278309,
+        "avg_norm": 2.308289074897766,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 8,
+      "loss": 2.053910970687866,
+      "pirtm_norm": 2.5122904777526855,
+      "ctrl_status": {
+        "correlation": -0.911016263333283,
+        "avg_norm": 2.43180251121521,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 9,
+      "loss": 1.7014597654342651,
+      "pirtm_norm": 2.7936015129089355,
+      "ctrl_status": {
+        "correlation": -0.7155780509478227,
+        "avg_norm": 2.558056449890137,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 10,
+      "loss": 1.769276738166809,
+      "pirtm_norm": 2.382246732711792,
+      "ctrl_status": {
+        "correlation": -0.1695611760828734,
+        "avg_norm": 2.5492986679077148,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 11,
+      "loss": 1.8125098943710327,
+      "pirtm_norm": 2.0924787521362305,
+      "ctrl_status": {
+        "correlation": -0.0425025953889961,
+        "avg_norm": 2.4601134300231933,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 12,
+      "loss": 1.586753487586975,
+      "pirtm_norm": 2.6676554679870605,
+      "ctrl_status": {
+        "correlation": -0.34047974428032857,
+        "avg_norm": 2.4896545886993406,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 13,
+      "loss": 1.8781192302703857,
+      "pirtm_norm": 2.5095605850219727,
+      "ctrl_status": {
+        "correlation": -0.5641209749120228,
+        "avg_norm": 2.489108610153198,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 14,
+      "loss": 1.8704473972320557,
+      "pirtm_norm": 2.394423246383667,
+      "ctrl_status": {
+        "correlation": -0.5138577787385807,
+        "avg_norm": 2.4092729568481444,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 15,
+      "loss": 1.9835519790649414,
+      "pirtm_norm": 2.172200918197632,
+      "ctrl_status": {
+        "correlation": -0.645755697356736,
+        "avg_norm": 2.3672637939453125,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 16,
+      "loss": 1.858340859413147,
+      "pirtm_norm": 2.3162643909454346,
+      "ctrl_status": {
+        "correlation": -0.8780205002885942,
+        "avg_norm": 2.4120209217071533,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 17,
+      "loss": 1.699293851852417,
+      "pirtm_norm": 2.26656174659729,
+      "ctrl_status": {
+        "correlation": -0.10229593500033686,
+        "avg_norm": 2.331802177429199,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 18,
+      "loss": 1.9515018463134766,
+      "pirtm_norm": 1.8403345346450806,
+      "ctrl_status": {
+        "correlation": -0.4733917344979712,
+        "avg_norm": 2.1979569673538206,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 19,
+      "loss": 2.1549904346466064,
+      "pirtm_norm": 1.690157175064087,
+      "ctrl_status": {
+        "correlation": -0.7981840362290926,
+        "avg_norm": 2.057103753089905,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    }
+  ]
+}

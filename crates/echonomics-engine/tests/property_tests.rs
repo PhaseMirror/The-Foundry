@@ -1,4 +1,4 @@
-use echonomics_engine::{HundianState, PauliKey, GateResult, SpinTag, PeriodStatus};
+use echonomics_engine::{GateResult, HundianState, PauliKey, PeriodStatus, SpinTag};
 
 #[test]
 fn test_property_based_pauli_capacity_and_multiplicity_bounds() {
@@ -20,8 +20,13 @@ fn test_property_based_pauli_capacity_and_multiplicity_bounds() {
         let person = format!("person-{}", i);
         let slot = format!("slot-{}", i);
         let res = state.propose_fill(&person, "facilitation", &slot, "P0", None);
-        assert_eq!(res, GateResult::OkSingle { sigma: SpinTag::Alpha });
-        
+        assert_eq!(
+            res,
+            GateResult::OkSingle {
+                sigma: SpinTag::Alpha
+            }
+        );
+
         let (unpaired, spin, m) = state.calculate_multiplicity("P0");
         assert_eq!(unpaired, i);
         assert_eq!(spin, i as f64 / 2.0);
@@ -30,7 +35,12 @@ fn test_property_based_pauli_capacity_and_multiplicity_bounds() {
 
     // Property 2: When all slots in D are half-filled (U = 0), pairing on slot-1 is allowed
     let pair_res = state.propose_fill("pair-person-1", "facilitation", "slot-1", "P0", None);
-    assert_eq!(pair_res, GateResult::OkPair { sigma: SpinTag::Beta });
+    assert_eq!(
+        pair_res,
+        GateResult::OkPair {
+            sigma: SpinTag::Beta
+        }
+    );
 
     // Property 3: Submitting a 3rd occupant on slot-1 is ALWAYS rejected by Pauli Exclusion
     let third_res = state.propose_fill("third-person", "facilitation", "slot-1", "P0", None);

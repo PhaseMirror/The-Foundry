@@ -1,0 +1,240 @@
+{
+  "timestamp": "2026-05-26T17:51:26Z",
+  "config": {
+    "name": "MNIST-G1-Baseline",
+    "primes": [
+      2,
+      3,
+      5
+    ],
+    "hidden_dim": 64,
+    "lambda_zeta": 0.1,
+    "a": 2.0,
+    "safety_threshold": 5.0,
+    "use_lm": true,
+    "max_batches": 20
+  },
+  "final_loss": 1.8928486108779907,
+  "telemetry_summary": [
+    {
+      "batch": 0,
+      "loss": 2.3176674842834473,
+      "pirtm_norm": 1.234464168548584,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.234464168548584,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 1,
+      "loss": 3.3388874530792236,
+      "pirtm_norm": 4.113354682922363,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 2.6739094257354736,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 2,
+      "loss": 3.9609146118164062,
+      "pirtm_norm": 4.076950550079346,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 3.141589800516764,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 3,
+      "loss": 2.304302215576172,
+      "pirtm_norm": 4.075268268585205,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 3.3750094175338745,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 4,
+      "loss": 1.9987796545028687,
+      "pirtm_norm": 4.141084671020508,
+      "ctrl_status": {
+        "correlation": 0.30439421488700436,
+        "avg_norm": 3.528224468231201,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 5,
+      "loss": 1.8466787338256836,
+      "pirtm_norm": 4.403361797332764,
+      "ctrl_status": {
+        "correlation": -0.5838485471932711,
+        "avg_norm": 4.162003993988037,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 6,
+      "loss": 1.8400732278823853,
+      "pirtm_norm": 4.279499530792236,
+      "ctrl_status": {
+        "correlation": -0.6110728375832088,
+        "avg_norm": 4.195232963562011,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 7,
+      "loss": 1.9255256652832031,
+      "pirtm_norm": 4.043239593505859,
+      "ctrl_status": {
+        "correlation": -0.6183738581185793,
+        "avg_norm": 4.188490772247315,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 8,
+      "loss": 1.9294010400772095,
+      "pirtm_norm": 4.174032211303711,
+      "ctrl_status": {
+        "correlation": -0.7295777074082412,
+        "avg_norm": 4.208243560791016,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 9,
+      "loss": 1.9449012279510498,
+      "pirtm_norm": 3.985264778137207,
+      "ctrl_status": {
+        "correlation": -0.8918269215975735,
+        "avg_norm": 4.177079582214356,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 10,
+      "loss": 1.8610936403274536,
+      "pirtm_norm": 4.301112174987793,
+      "ctrl_status": {
+        "correlation": -0.8856942003181227,
+        "avg_norm": 4.156629657745361,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 11,
+      "loss": 1.8704153299331665,
+      "pirtm_norm": 4.190265655517578,
+      "ctrl_status": {
+        "correlation": -0.8499873453840825,
+        "avg_norm": 4.13878288269043,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 12,
+      "loss": 1.8547149896621704,
+      "pirtm_norm": 4.093937873840332,
+      "ctrl_status": {
+        "correlation": -0.5721354995798676,
+        "avg_norm": 4.148922538757324,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 13,
+      "loss": 1.9426287412643433,
+      "pirtm_norm": 4.028280735015869,
+      "ctrl_status": {
+        "correlation": -0.778972636635144,
+        "avg_norm": 4.119772243499756,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 14,
+      "loss": 1.897720217704773,
+      "pirtm_norm": 3.9013307094573975,
+      "ctrl_status": {
+        "correlation": -0.5735030993452608,
+        "avg_norm": 4.102985429763794,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 15,
+      "loss": 1.8364564180374146,
+      "pirtm_norm": 4.12546443939209,
+      "ctrl_status": {
+        "correlation": -0.53676770430652,
+        "avg_norm": 4.067855882644653,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 16,
+      "loss": 1.9539381265640259,
+      "pirtm_norm": 3.82334566116333,
+      "ctrl_status": {
+        "correlation": -0.764153862662279,
+        "avg_norm": 3.994471883773804,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 17,
+      "loss": 1.909610390663147,
+      "pirtm_norm": 3.583043098449707,
+      "ctrl_status": {
+        "correlation": -0.40896504012181745,
+        "avg_norm": 3.892292928695679,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 18,
+      "loss": 1.8069114685058594,
+      "pirtm_norm": 3.7573673725128174,
+      "ctrl_status": {
+        "correlation": -0.30136705146318954,
+        "avg_norm": 3.838110256195068,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 19,
+      "loss": 1.8928486108779907,
+      "pirtm_norm": 3.9120068550109863,
+      "ctrl_status": {
+        "correlation": -0.3052128786033209,
+        "avg_norm": 3.840245485305786,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    }
+  ]
+}

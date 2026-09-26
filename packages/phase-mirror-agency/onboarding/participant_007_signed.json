@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-007-ONBOARD",
+  "name": "Vacuum Vessel Pressure Supervisor Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "907ed94247784b6aafd0e1133fbc9d2c8353cdb52968562524996c98bfb70290",
+  "effectiveDate": "2026-06-18T10:00:00Z",
+  "signatories": [
+    {
+      "identity": "Vacuum_Vessel_Pressure_Supervisor",
+      "role": "Participant",
+      "publicKey": "pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=",
+      "signature": "aJFLq2qUDuPcmRdLjFqEyXIafpPzkcEat2pFh8SbrFM6uAiVf3XIDJnj+xyQFzz2IHsY3kI83KtluJvhWezMDg=="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "ISO27001",
+    "auditStatus": "Approved",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Onboarded and validated under framework ISO27001. Signed via Ed25519 system onboarding utility."
+  }
+}

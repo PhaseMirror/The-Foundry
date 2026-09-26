@@ -104,9 +104,18 @@ mod tests {
 
     #[test]
     fn test_pauli_capacity_max_two_and_spin_tags() {
-        let slot1 = OccupancySlot { occupants: 1, is_degenerate: true };
-        let slot2 = OccupancySlot { occupants: 2, is_degenerate: true };
-        let slot3 = OccupancySlot { occupants: 3, is_degenerate: false };
+        let slot1 = OccupancySlot {
+            occupants: 1,
+            is_degenerate: true,
+        };
+        let slot2 = OccupancySlot {
+            occupants: 2,
+            is_degenerate: true,
+        };
+        let slot3 = OccupancySlot {
+            occupants: 3,
+            is_degenerate: false,
+        };
 
         assert!(slot1.is_slot_capacity_valid());
         assert!(slot2.is_slot_capacity_valid());
@@ -114,14 +123,27 @@ mod tests {
 
         assert_eq!(slot1.spin_tag(), Some(SpinTag::Alpha));
         assert_eq!(slot2.spin_tag(), Some(SpinTag::Beta));
-        assert_eq!(OccupancySlot { occupants: 0, is_degenerate: true }.spin_tag(), None);
+        assert_eq!(
+            OccupancySlot {
+                occupants: 0,
+                is_degenerate: true
+            }
+            .spin_tag(),
+            None
+        );
         assert_eq!(slot3.spin_tag(), None);
     }
 
     #[test]
     fn test_term_order_gate_u_zero() {
-        let open = TermOrderGate { empty_slots_in_d: 2, occupied_degenerate: 1 };
-        let full = TermOrderGate { empty_slots_in_d: 0, occupied_degenerate: 1 };
+        let open = TermOrderGate {
+            empty_slots_in_d: 2,
+            occupied_degenerate: 1,
+        };
+        let full = TermOrderGate {
+            empty_slots_in_d: 0,
+            occupied_degenerate: 1,
+        };
         assert!(!open.is_pairing_legal());
         assert!(full.is_pairing_legal());
     }
@@ -134,12 +156,24 @@ mod tests {
 
     #[test]
     fn test_social_physics_term_order_and_separated_ledgers() {
-        let sp = SocialPhysicsEngine { v_pair: 5, v_nuc: 10, empty_slots: 0 };
+        let sp = SocialPhysicsEngine {
+            v_pair: 5,
+            v_nuc: 10,
+            empty_slots: 0,
+        };
         assert!(sp.is_pairing_legal());
         assert_eq!(sp.total_energy(), -5);
 
-        let sep = SocialPhysicsEngine { v_pair: 10, v_nuc: 3, empty_slots: 0 };
-        let unsep = SocialPhysicsEngine { v_pair: 7, v_nuc: 7, empty_slots: 0 };
+        let sep = SocialPhysicsEngine {
+            v_pair: 10,
+            v_nuc: 3,
+            empty_slots: 0,
+        };
+        let unsep = SocialPhysicsEngine {
+            v_pair: 7,
+            v_nuc: 7,
+            empty_slots: 0,
+        };
         assert!(sep.are_ledgers_separated());
         assert!(!unsep.are_ledgers_separated());
         assert_eq!(sep.total_energy(), 7);
@@ -158,11 +192,20 @@ mod kani_proofs {
     fn verify_pauli_capacity_max_two() {
         let occupants: u64 = kani::any();
         kani::assume(occupants <= 3);
-        let slot = OccupancySlot { occupants, is_degenerate: true };
+        let slot = OccupancySlot {
+            occupants,
+            is_degenerate: true,
+        };
         if occupants <= PAULI_CAPACITY {
-            kani::assert(slot.is_slot_capacity_valid(), "occupants <= 2 must be capacity-valid");
+            kani::assert(
+                slot.is_slot_capacity_valid(),
+                "occupants <= 2 must be capacity-valid",
+            );
         } else {
-            kani::assert(!slot.is_slot_capacity_valid(), "occupants > 2 must violate Pauli exclusion");
+            kani::assert(
+                !slot.is_slot_capacity_valid(),
+                "occupants > 2 must violate Pauli exclusion",
+            );
         }
     }
 
@@ -172,12 +215,24 @@ mod kani_proofs {
     fn verify_spin_tag_determinism() {
         let occupants: u64 = kani::any();
         kani::assume(occupants <= 3);
-        let slot = OccupancySlot { occupants, is_degenerate: true };
+        let slot = OccupancySlot {
+            occupants,
+            is_degenerate: true,
+        };
         match occupants {
             0 => kani::assert(slot.spin_tag().is_none(), "empty slot has no spin tag"),
-            1 => kani::assert(slot.spin_tag() == Some(SpinTag::Alpha), "first occupant is Alpha"),
-            2 => kani::assert(slot.spin_tag() == Some(SpinTag::Beta), "second occupant is Beta"),
-            _ => kani::assert(slot.spin_tag().is_none(), "third occupant has no spin tag (exclusion)"),
+            1 => kani::assert(
+                slot.spin_tag() == Some(SpinTag::Alpha),
+                "first occupant is Alpha",
+            ),
+            2 => kani::assert(
+                slot.spin_tag() == Some(SpinTag::Beta),
+                "second occupant is Beta",
+            ),
+            _ => kani::assert(
+                slot.spin_tag().is_none(),
+                "third occupant has no spin tag (exclusion)",
+            ),
         }
     }
 
@@ -185,10 +240,17 @@ mod kani_proofs {
     #[kani::proof]
     fn verify_term_order_pairing_gate() {
         let empty_slots: u64 = kani::any();
-        let sp = SocialPhysicsEngine { v_pair: 0, v_nuc: 0, empty_slots };
+        let sp = SocialPhysicsEngine {
+            v_pair: 0,
+            v_nuc: 0,
+            empty_slots,
+        };
 
         if empty_slots > 0 {
-            kani::assert(!sp.is_pairing_legal(), "Pairing must be rejected if empty slots exist");
+            kani::assert(
+                !sp.is_pairing_legal(),
+                "Pairing must be rejected if empty slots exist",
+            );
         }
     }
 
@@ -198,11 +260,21 @@ mod kani_proofs {
     fn verify_separated_ledgers() {
         let v_pair: u64 = kani::any();
         let v_nuc: u64 = kani::any();
-        let sp = SocialPhysicsEngine { v_pair, v_nuc, empty_slots: 0 };
+        let sp = SocialPhysicsEngine {
+            v_pair,
+            v_nuc,
+            empty_slots: 0,
+        };
         if v_pair != v_nuc {
-            kani::assert(sp.are_ledgers_separated(), "distinct ledgers must be separated");
+            kani::assert(
+                sp.are_ledgers_separated(),
+                "distinct ledgers must be separated",
+            );
         } else {
-            kani::assert(!sp.are_ledgers_separated(), "equal ledgers must not be separated");
+            kani::assert(
+                !sp.are_ledgers_separated(),
+                "equal ledgers must not be separated",
+            );
         }
     }
 
@@ -218,8 +290,19 @@ mod kani_proofs {
         kani::assume(v_nuc_high < (i64::MAX as u64) / 2);
         kani::assume(v_nuc_low <= v_nuc_high);
 
-        let low = SocialPhysicsEngine { v_pair, v_nuc: v_nuc_low, empty_slots: 0 };
-        let high = SocialPhysicsEngine { v_pair, v_nuc: v_nuc_high, empty_slots: 0 };
-        kani::assert(high.total_energy() <= low.total_energy(), "more attraction must lower energy");
+        let low = SocialPhysicsEngine {
+            v_pair,
+            v_nuc: v_nuc_low,
+            empty_slots: 0,
+        };
+        let high = SocialPhysicsEngine {
+            v_pair,
+            v_nuc: v_nuc_high,
+            empty_slots: 0,
+        };
+        kani::assert(
+            high.total_energy() <= low.total_energy(),
+            "more attraction must lower energy",
+        );
     }
 }

@@ -1,0 +1,9 @@
+// policy.pest
+alpha = { 'a'..'z' | 'A'..'Z' }
+digit = { '0'..'9' }
+ident = { alpha ~ (alpha | digit)* }
+number = { digit+ ~ ("." ~ digit+)? }
+
+expr = { ident ~ "=" ~ number }
+policy = { SOI ~ expr+ ~ EOI }
+WHITESPACE = _{ " " | "\t" | "\n" | "\r" }

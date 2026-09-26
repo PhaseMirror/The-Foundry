@@ -1,0 +1,9 @@
+[package]
+name = "rust-proofs-4193763886177380111" 
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[dev-dependencies]
+kani = "0.48.0"

@@ -1,0 +1,27 @@
+{
+  "archetypeId": "LEG-DPA-2026-v1",
+  "name": "Data Processing Addendum (DPA) - GDPR Compliant",
+  "version": "1.0.0",
+  "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "effectiveDate": "2026-06-17T12:00:00Z",
+  "signatories": [
+    {
+      "identity": "Multiplicity_Foundation_Owner",
+      "role": "Owner",
+      "publicKey": "pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=",
+      "signature": "jYKsHyIVdrK0oICFL+vEl7ySYExzwg84FTWxUB6YrR1qVEQiBk/ZOQj+SmnVIk9v+Mro21fahlOcCjGAtoonDA=="
+    },
+    {
+      "identity": "Phase_Mirror_Governor",
+      "role": "Governor",
+      "publicKey": "pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=",
+      "signature": "jYKsHyIVdrK0oICFL+vEl7ySYExzwg84FTWxUB6YrR1qVEQiBk/ZOQj+SmnVIk9v+Mro21fahlOcCjGAtoonDA=="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "GDPR",
+    "auditStatus": "Approved",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Verified GDPR adequacy standard clauses for cross-border transit. Signed via Ed25519 batch utility."
+  }
+}

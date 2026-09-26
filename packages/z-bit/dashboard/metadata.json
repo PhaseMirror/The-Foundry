@@ -1,0 +1,6 @@
+{
+  "name": "Prism-BTC Mining Telemetry Dashboard",
+  "description": "Real-time dark sleek telemetry dashboard for the prism-btc formal verification-gated mining pipeline with Lean 4 PilotGate proof inspection, substrate dispatcher metrics, thermal monitoring, and live WORM audit trail.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

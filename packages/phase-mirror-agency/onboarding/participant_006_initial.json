@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-006-ONBOARD",
+  "name": "Divertor Thermography Monitor Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "ea7fb003b2c3e38c8c88bde94b51f59667cf3de69fa758cb97616c7f6a332e6b",
+  "effectiveDate": "2026-06-18T10:00:00Z",
+  "signatories": [
+    {
+      "identity": "Divertor_Thermography_Monitor",
+      "role": "Participant",
+      "publicKey": "ZEd2NTUxOV9QYXJ0aWNpcGFudF9QdWJsaWNfS2V5X1ZhbHVlPT0=",
+      "signature": "ZEd2NTUxOV9QYXJ0aWNpcGFudF9TaWduYXR1cmVfVmFsdWVfV2l0aF9FZEQ1NTE5X0tleV9QcmVzZW50X0hlcmU="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "CCPA",
+    "auditStatus": "Pending",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Pending formal signature linkage under Sedona Spine framework CCPA."
+  }
+}

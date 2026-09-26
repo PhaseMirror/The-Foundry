@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LegalArchetypeSchema",
+  "description": "Defines the structural format and signature layout for legal governance addenda (BAA, DPA, Privacy Policy) committed to the Archivum Ledger.",
+  "type": "object",
+  "required": [
+    "archetypeId",
+    "name",
+    "version",
+    "contentHash",
+    "signatories",
+    "effectiveDate",
+    "auditMetadata"
+  ],
+  "properties": {
+    "archetypeId": {
+      "type": "string",
+      "description": "Unique identifier for the legal archetype (e.g., LEG-BAA-2026-v1)."
+    },
+    "name": {
+      "type": "string",
+      "description": "Descriptive name of the legal addendum."
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of the legal template."
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "Cryptographic SHA-256 hash of the raw legal agreement document."
+    },
+    "effectiveDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp representing the effective date of the agreement."
+    },
+    "expirationDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional ISO 8601 timestamp for the agreement expiration."
+    },
+    "signatories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "identity",
+          "role",
+          "publicKey",
+          "signature"
+        ],
+        "properties": {
+          "identity": {
+            "type": "string",
+            "description": "The informational identity of the signatory."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "Participant",
+              "Owner",
+              "Governor",
+              "Auditor"
+            ],
+            "description": "The compliance role of the signatory in the governance framework."
+          },
+          "publicKey": {
+            "type": "string",
+            "pattern": "^[A-Za-f0-9+/=]{44}$",
+            "description": "Base64-encoded Ed25519 public key of the signatory."
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[A-Za-f0-9+/=]{88}$",
+            "description": "Base64-encoded Ed25519 signature over the contentHash."
+          }
+        }
+      }
+    },
+    "auditMetadata": {
+      "type": "object",
+      "required": [
+        "complianceFramework",
+        "auditStatus",
+        "reviewer"
+      ],
+      "properties": {
+        "complianceFramework": {
+          "type": "string",
+          "enum": [
+            "HIPAA",
+            "GDPR",
+            "SOC2",
+            "ISO27001",
+            "CCPA",
+            "MTPI-Constitutional"
+          ],
+          "description": "The standard framework that this agreement satisfies."
+        },
+        "auditStatus": {
+          "type": "string",
+          "enum": [
+            "Pending",
+            "Approved",
+            "Revoked",
+            "Expired"
+          ],
+          "description": "The current status of the legal review."
+        },
+        "reviewer": {
+          "type": "string",
+          "description": "The identity or key of the compliance officer who approved the schema."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional notes or compliance details."
+        }
+      }
+    }
+  }
+}

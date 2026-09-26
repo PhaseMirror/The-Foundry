@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "event_mode": "drift",
+  "outcome": "WARN",
+  "l0_status": "PASS",
+  "violations": [
+    {
+      "rule_id": "MD-002",
+      "severity": "WARN",
+      "evidence": {
+        "file": "./cli/mirror-dissonance-cli/test.sh",
+        "line_range": [
+          0,
+          0
+        ],
+        "message": "[DEGRADED POLICY] Unpinned binary 'curl | bash' detected."
+      }
+    }
+  ],
+  "witness": {
+    "id": "wit-1781778523",
+    "hash": "sha256:placeholder",
+    "timestamp": "2026-06-18T10:28:43.360251846+00:00"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "agency_version": "v1.1",
+  "timestamp": "2026-06-11T21:30:00Z",
+  "authority": "Lean Core (Substrates/PRMS/FormalProofs/)",
+  "mandate": "Sedona Spine (GEMINI.md)",
+  "locks": {
+    "adr_suite": {
+      "ADR-001": "38c08d32161908b545aa7fda89baae44badca1fb0009028aadb8d029a4432f2e",
+      "ADR-002": "54227e9b5d4eb9d02d7744dd5411d732d5a96b8188fbfc01005909442bf0f65a",
+      "ADR-003": "3f4d3f7be08c792561f96f3e22913d1de86576ad7ac5900228f6c60377ce21c3",
+      "ADR-004": "893908f109c3c6e509dceab0abaa7a64033af2e6c0f1bf53677f6b46f11eff58",
+      "ADR-005": "7ccab91772cd3ca3b4a79c8ce6d595313f8e1a52ddafc9e0701abe8efd7b7ef7",
+      "ADR-006": "2787b6f7c70f339260bcd72100fbde283292b83c81a22cb90c1ef688f9f4c86f",
+      "ADR-007": "ae66875747e326e221d0eda60a5a9240fc02deb5369ca276dfc8b5896acd6530",
+      "ADR-008": "90e0c058c4263721d0685766223dfba308706fb4b089e5df1baa85442e39f3034",
+      "ADR-009": "f6e0c058c4263721d0685766223dfba308706fb4b089e5df1baa85442e39f3035",
+      "ADR-010": "1ec69962c81839424b16b11b2fc4f77d19f445286aff3bb247b380d3c09f5310"
+    },
+    "ensemble_contracts": {
+      "ataraxia": "699517a17afe6764e2ca1c6033bfc41b169e9e13758f229b29ac25124002ddf5",
+      "echobraid": "71cb9051f366c0a00e5744b7c4575dd00640d3933320e193d787e966156cd9cd",
+      "finton": "2487c5494d867bd272a4ba73141e1c611ccd8043ae8a6b4ba044d36c6344fbbd",
+      "generalist": "a861365f001d65d324f5d23d88964b7777381862223a7c4ab3b522f8383bb16f",
+      "scopist": "c345158548ddc52a9863afd4db632ddd4299ebe4f0b698fd108c17cf1a2fe29f",
+      "the-examiner": "24e7231b7f1629643b8a65e72258150043d6d8ebd6c15d04594b7c07ad6e59a3",
+      "the-genius": "5fb4ecbb6b2496ad83ff646e77c673c0d7c0ae23d2e6dc229e2f7ba0e9c60331",
+      "the-guardian": "16e2de93aa1d3432a81994ed2b9ecdc8882b47961763d90fcdac43c690765fcf",
+      "the-publisher": "419cd79b313e4c0201e7253a7e90a079ef624ea597d5a9644a13a824ddd18db2",
+      "coding-commander": "b23c3252634d247b78813189d1d8547a4c033bac8648fe9a8cb321b06fcf1b67"
+    },
+    "governance": {
+      "risk_signatures": "baa7bf0628da86c1c1fa7266f7a73928785e848f2725ba2a77bb5a9418791eb3",
+      "kill_switch": "e330caeeda5a27e068f5acde576ee2b2d7672bd0150f792191e7ff13815e92a2",
+      "spec": "c40bbdcf961ae3538581aed4c2ccd5b8641102ca2dbaba4c25ecc8bd9d951973",
+      "sla": "37789baebfea9c31d161d1b42bf4b8bbcc90dd0220a3613810552f3de38575bb",
+      "start_script": "1c6f6dd75489fd588f43b76223dfba308706fb4b089e5df1baa85442e39f3034"
+    }
+  },
+  "status": "LOCKED"
+}

@@ -1,0 +1,12 @@
+[Unit]
+Description=MCP Server for PhaseMirror
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mcp --config /etc/mcp/config.toml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

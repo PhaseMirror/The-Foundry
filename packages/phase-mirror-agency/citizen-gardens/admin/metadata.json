@@ -1,0 +1,5 @@
+{
+  "name": "Phase Mirror Developer Interface",
+  "description": "A browser-native, cloud-hosted development environment modeled on the GitHub Codespaces layout, tuned for Phase Mirror's Multiplicity Theory primitives.",
+  "requestFramePermissions": []
+}

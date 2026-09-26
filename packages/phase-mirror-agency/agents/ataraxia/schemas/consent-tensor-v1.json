@@ -1,0 +1,386 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phasemirror.io/schemas/consent-tensor/v1",
+  "title": "ConsentTensor",
+  "description": "Cryptographically bound, time-scoped, prime-indexed consent record for PHI inference authorization within the AHGI governance lattice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "consent_id",
+    "prime_index",
+    "subject_did",
+    "issuer_did",
+    "issued_at",
+    "expires_at",
+    "scope",
+    "dp_policy",
+    "revocation",
+    "coherence_binding",
+    "signature"
+  ],
+  "properties": {
+
+    "schema_version": {
+      "type": "string",
+      "const": "ahgi-consent-tensor/v1",
+      "description": "Schema version. Must match enforcing runtime version exactly."
+    },
+
+    "consent_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Globally unique consent record identifier."
+    },
+
+    "prime_index": {
+      "type": "integer",
+      "minimum": 2,
+      "description": "Prime number uniquely indexing this consent record in the PIRTM provenance chain. Must be a verified prime. Sequential primes assigned by the Consent Fabric registry. In the event of registry downtime, nodes draw from a pre-allocated offline pool."
+    },
+
+    "subject_did": {
+      "type": "string",
+      "pattern": "^did:[a-z]+:.+",
+      "description": "W3C DID of the data subject granting consent."
+    },
+
+    "issuer_did": {
+      "type": "string",
+      "pattern": "^did:[a-z]+:.+",
+      "description": "W3C DID of the entity issuing and attesting to this consent record. Must be a registered Consent Guardian agent."
+    },
+
+    "issued_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of consent issuance."
+    },
+
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of consent expiry. After this time, all inference gates must block. Null is not permitted \u2014 all consents are time-bounded."
+    },
+
+    "scope": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Explicit list of authorized inference operations. Each item is a scoped permission token.",
+      "items": {
+        "type": "object",
+        "required": ["resource_type", "operations", "agent_classes"],
+        "properties": {
+
+          "resource_type": {
+            "type": "string",
+            "enum": [
+              "phi.vitals",
+              "phi.labs",
+              "phi.imaging",
+              "phi.medications",
+              "phi.behavioral",
+              "phi.genomic",
+              "phi.narrative",
+              "phi.physiological_signal",
+              "educational.health_state",
+              "aggregate.cohort"
+            ],
+            "description": "FHIR-aligned resource type the consent covers."
+          },
+
+          "operations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": ["read", "infer", "aggregate", "federated_train", "share_external"]
+            },
+            "description": "Authorized operations on the resource type. Write is never permitted via consent tensor \u2014 it requires a separate clinical authorization chain (Clinical Authorization Tensor / CAT)."
+          },
+
+          "agent_classes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "clinical_safety_agent",
+                "consent_guardian",
+                "spectral_integrity_agent",
+                "educational_alignment_agent",
+                "equity_inclusion_agent",
+                "governance_judiciary_agent"
+              ]
+            },
+            "description": "Agent classes authorized to operate under this scope item. Unlisted agent classes are hard-blocked regardless of other permissions."
+          },
+
+          "field_restrictions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Optional FHIR path expressions restricting which fields within the resource type are accessible. Absence means all fields in the resource_type are permitted.",
+            "examples": ["Observation.valueQuantity", "MedicationRequest.dosageInstruction"]
+          },
+
+          "purpose_code": {
+            "type": "string",
+            "enum": [
+              "treatment",
+              "safety_monitoring",
+              "research_aggregate",
+              "educational_adaptation",
+              "quality_improvement",
+              "public_health"
+            ],
+            "description": "HL7 purpose of use code binding this scope item."
+          }
+        }
+      }
+    },
+
+    "dp_policy": {
+      "type": "object",
+      "required": ["mechanism", "epsilon", "delta"],
+      "description": "Differential privacy parameters binding aggregate operations under this consent.",
+      "properties": {
+        "mechanism": {
+          "type": "string",
+          "enum": ["laplace", "gaussian", "exponential", "none"],
+          "description": "DP mechanism applied when this consent is used in aggregate or federated operations. 'none' only valid for treatment purpose with single-subject scope."
+        },
+        "epsilon": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Privacy budget epsilon. Values above 1.0 require explicit clinical justification in dp_justification field."
+        },
+        "delta": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1e-3,
+          "description": "Failure probability delta for approximate DP. Must be 0 for Laplace mechanism."
+        },
+        "dp_justification": {
+          "type": "string",
+          "description": "Required when epsilon > 1.0. Human-readable justification reviewed by Governance Judiciary."
+        }
+      }
+    },
+
+    "revocation": {
+      "type": "object",
+      "required": ["registry_did", "revocation_list_index", "status"],
+      "description": "Revocation binding. Consent is live only when status=active and registry confirms non-revocation.",
+      "properties": {
+        "registry_did": {
+          "type": "string",
+          "pattern": "^did:[a-z]+:.+",
+          "description": "DID of the revocation registry. Must be a governance-registered registry endpoint."
+        },
+        "revocation_list_index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Bit index in the W3C StatusList2021 or equivalent revocation list."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "revoked", "suspended"],
+          "description": "Current status. Runtime must re-verify against registry on every TTL cycle, not trust this field alone."
+        },
+        "revoked_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Populated by registry on revocation. Null if active."
+        },
+        "revocation_reason": {
+          "type": "string",
+          "enum": [
+            "subject_withdrawal",
+            "expiry",
+            "scope_violation",
+            "judicial_order",
+            "system_anomaly"
+          ],
+          "description": "Reason code populated on revocation."
+        }
+      }
+    },
+
+    "coherence_binding": {
+      "type": "object",
+      "required": ["r_min_override", "suspend_on_drift", "drift_threshold"],
+      "description": "Mandatory binding of this consent to coherence gate parameters. Consent is suspended if R(t) falls below r_min_override.",
+      "properties": {
+        "r_min_override": {
+          "type": "number",
+          "description": "Consent-specific coherence floor. Overrides system default R_min for this subject's sessions."
+        },
+        "suspend_on_drift": {
+          "type": "boolean",
+          "description": "If true, consent is automatically suspended when spectral drift exceeds drift_threshold."
+        },
+        "drift_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Cosine similarity delta above which spectral drift triggers consent suspension."
+        }
+      }
+    },
+
+    "provenance": {
+      "type": "object",
+      "required": ["parent_prime_index", "lineage_hash", "archivum_anchor"],
+      "description": "PIRTM provenance link. Chains this consent to its predecessor in the prime-indexed lineage.",
+      "properties": {
+        "parent_prime_index": {
+          "type": "integer",
+          "minimum": 2,
+          "description": "Prime index of the immediately preceding consent record for this subject. 2 if this is the first consent."
+        },
+        "lineage_hash": {
+          "type": "string",
+          "description": "SHA-256 hash of the parent consent tensor as anchored in Archivum. Enables offline chain verification without registry access."
+        },
+        "archivum_anchor": {
+          "type": "object",
+          "required": ["archivum_record_id", "archivum_did", "anchor_timestamp", "namespace"],
+          "description": "Archivum registry anchor for this consent tensor's prime index.",
+          "properties": {
+            "archivum_record_id": {
+              "type": "string",
+              "description": "Archivum's canonical record ID for prime_index assignment attestation."
+            },
+            "archivum_did": {
+              "type": "string",
+              "pattern": "^did:[a-z]+:.+",
+              "description": "DID of the Archivum registry instance. Must match governance-registered Archivum DID."
+            },
+            "anchor_timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp of Archivum anchoring. Consent tensor is not valid before this timestamp."
+            },
+            "namespace": {
+              "type": "string",
+              "enum": ["ahgi.consent", "ahgi.clinical_auth", "ahgi.model_version", "ahgi.agent_action"],
+              "description": "Archivum prime namespace. Prevents prime collision across AHGI record classes."
+            }
+          }
+        }
+      }
+    },
+
+    "signature": {
+      "type": "object",
+      "required": ["type", "created", "verification_method", "proof_value"],
+      "description": "Linked Data Proof binding the consent tensor to the issuer DID.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["Ed25519Signature2020", "JsonWebSignature2020", "EcdsaSecp256k1Signature2019"],
+          "description": "Signature suite. Ed25519Signature2020 preferred."
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verification_method": {
+          "type": "string",
+          "description": "DID URL of the issuer's verification key, e.g. did:key:z6Mk...#keys-1"
+        },
+        "proof_value": {
+          "type": "string",
+          "description": "Base58-encoded or JWS-encoded signature over the canonical consent tensor (excluding this signature block)."
+        }
+      }
+    }
+  },
+
+  "examples": [
+    {
+      "schema_version": "ahgi-consent-tensor/v1",
+      "consent_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "prime_index": 1009,
+      "subject_did": "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuias8251kGqyx",
+      "issuer_did": "did:web:consent.phasemirror.io",
+      "issued_at": "2026-05-25T22:00:00Z",
+      "expires_at": "2027-05-25T22:00:00Z",
+      "scope": [
+        {
+          "resource_type": "phi.vitals",
+          "operations": ["read", "infer"],
+          "agent_classes": ["clinical_safety_agent"],
+          "purpose_code": "treatment"
+        }
+      ],
+      "dp_policy": {
+        "mechanism": "none",
+        "epsilon": 0,
+        "delta": 0
+      },
+      "revocation": {
+        "registry_did": "did:web:registry.phasemirror.io",
+        "revocation_list_index": 1009,
+        "status": "active",
+        "revoked_at": null
+      },
+      "coherence_binding": {
+        "r_min_override": 0.85,
+        "suspend_on_drift": true,
+        "drift_threshold": 0.15
+      },
+      "provenance": {
+        "parent_prime_index": 997,
+        "lineage_hash": "a3f1c2e4b5d6789012345678abcdef01234567890abcdef1234567890abcdef12",
+        "archivum_anchor": {
+          "archivum_record_id": "arc_1234567890",
+          "archivum_did": "did:web:archivum.phasemirror.io",
+          "anchor_timestamp": "2026-05-25T22:00:05Z",
+          "namespace": "ahgi.consent"
+        }
+      },
+      "signature": {
+        "type": "Ed25519Signature2020",
+        "created": "2026-05-25T22:00:00Z",
+        "verification_method": "did:web:consent.phasemirror.io#keys-1",
+        "proof_value": "z58DAdFfa9SkqZMVPxAQp...base58encodedproof"
+      }
+    }
+  ]
+}
+          "resource_type": "phi.vitals",
+          "operations": ["read", "infer"],
+          "agent_classes": ["clinical_safety_agent"],
+          "purpose_code": "treatment"
+        }
+      ],
+      "dp_policy": {
+        "mechanism": "none",
+        "epsilon": 0,
+        "delta": 0
+      },
+      "revocation": {
+        "registry_did": "did:web:registry.phasemirror.io",
+        "revocation_list_index": 1009,
+        "status": "active",
+        "revoked_at": null
+      },
+      "coherence_binding": {
+        "r_min_override": 0.85,
+        "suspend_on_drift": true,
+        "drift_threshold": 0.15
+      },
+      "provenance": {
+        "parent_prime_index": 997,
+        "lineage_hash": "a3f1c2e4b5d6789012345678abcdef01234567890abcdef1234567890abcdef12"
+      },
+      "signature": {
+        "type": "Ed25519Signature2020",
+        "created": "2026-05-25T22:00:00Z",
+        "verification_method": "did:web:consent.phasemirror.io#keys-1",
+        "proof_value": "z58DAdFfa9SkqZMVPxAQp...base58encodedproof"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+version: "1.0"
+policy_name: "Debt-Buyer Chain of Title Retention"
+sedona_references:
+  - principle: "Sedona Principle 2"
+    note: "Proportionality: Chain-of-title records are core unique ESI in debt-buying litigation."
+  - principle: "Sedona Principle 5"
+    note: "Duty to preserve assignment chains once litigation is anticipated."
+
+rules:
+  - id: "chain-of-title-core"
+    description: "Permanent retention for core assignment documents."
+    scope:
+      systems: ["document-management", "notary-registry"]
+      esi_types: ["AssignmentOfAccount", "ChainOfTitle"]
+    when:
+      litigation_hold_active: true
+      relevance_band: ["Core"]
+    action:
+      retain_for_days: "infinite"
+      delete_after: false
+    sedona:
+      principles: ["Principle 2", "Principle 5"]
+      rationale: "Assignment chains are the central factual issue in standing disputes; preservation is essential."
+
+  - id: "debtor-communication-routine"
+    description: "Standard 3-year retention for non-core debtor comms."
+    scope:
+      systems: ["exchange", "crm"]
+      esi_types: ["DebtorEmail", "CustomerServiceChat"]
+    when:
+      litigation_hold_active: false
+      relevance_band: ["Marginal"]
+    action:
+      retain_for_days: 1095 # 3 years
+      delete_after: true
+    sedona:
+      principles: ["Principle 2"]
+      rationale: "Routine business records with lower likely benefit in standing disputes."

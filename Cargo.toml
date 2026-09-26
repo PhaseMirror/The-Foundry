@@ -1,5 +1,21 @@
 [workspace]
 
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/citizengardens/uor-foundry"
+homepage = "https://citizengardens.org"
+authors = ["Phase Mirror Formal Methods Engineering <ryvngldr@gmail.com>"]
+keywords = ["formal-methods", "verification", "multiplicity", "uor", "phase-mirror"]
+categories = ["formal-verification", "mathematics", "cryptography"]
+
+[workspace.lints.rust]
+unused_crate_dependencies = "warn"
+missing_docs = "warn"
+clippy = { level = "warn", check-cfg = ['cfg(kani)'] }
+
 [package]
 name = "founder-os-sovereign-mcp"
 version = "0.2.0"

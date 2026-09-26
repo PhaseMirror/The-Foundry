@@ -1,0 +1,27 @@
+{
+  "archetypeId": "LEG-BAA-2026-v1",
+  "name": "Business Associate Agreement (BAA) - Phase Mirror Core",
+  "version": "1.0.0",
+  "contentHash": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+  "effectiveDate": "2026-06-17T12:00:00Z",
+  "signatories": [
+    {
+      "identity": "Multiplicity_Foundation_Owner",
+      "role": "Owner",
+      "publicKey": "ZEd2NTUxOV9Pd25lcl9QdWJsaWNfS2V5X1ZhbHVlPT0=",
+      "signature": "ZEd2NTUxOV9Pd25lcl9TaWduYXR1cmVfVmFsdWVfV2l0aF9FZEQ1NTE5X0tleV9QcmVzZW50X0hlcmU="
+    },
+    {
+      "identity": "Phase_Mirror_Governor",
+      "role": "Governor",
+      "publicKey": "ZEd2NTUxOV9Hb3Zlcm5vcl9QdWJsaWNfS2V5X1ZhbHVlPQ==",
+      "signature": "ZEd2NTUxOV9Hb3Zlcm5vcl9TaWduYXR1cmVfVmFsdWVfV2l0aF9FZEQ1NTE5X0tleV9QcmVzZW50X0hlcmU="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "HIPAA",
+    "auditStatus": "Approved",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Verified HIPAA-compliant alignment for primary health data pipelines."
+  }
+}

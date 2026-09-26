@@ -135,53 +135,158 @@ mod tests {
         assert_eq!(MASKING_RED_COUNT, 2);
 
         // Boundary behavior.
-        assert!(WardState { energy_scaled: -8, tdi_scaled: 0, hrv_drift_scaled: 0, masking_last_n: 0 }
-            .is_energy_red());
-        assert!(!WardState { energy_scaled: -7, tdi_scaled: 0, hrv_drift_scaled: 0, masking_last_n: 0 }
-            .is_energy_red(), "exactly -0.7 is not red");
-        assert!(WardState { energy_scaled: 0, tdi_scaled: 19, hrv_drift_scaled: 0, masking_last_n: 0 }
-            .is_tdi_red());
-        assert!(!WardState { energy_scaled: 0, tdi_scaled: 18, hrv_drift_scaled: 0, masking_last_n: 0 }
-            .is_tdi_red());
-        assert!(WardState { energy_scaled: 0, tdi_scaled: 10, hrv_drift_scaled: 0, masking_last_n: 0 }
-            .is_tdi_amber());
-        assert!(WardState { energy_scaled: 0, tdi_scaled: 0, hrv_drift_scaled: -16, masking_last_n: 0 }
-            .is_hrv_red());
-        assert!(!WardState { energy_scaled: 0, tdi_scaled: 0, hrv_drift_scaled: -15, masking_last_n: 0 }
-            .is_hrv_red());
-        assert!(WardState { energy_scaled: 0, tdi_scaled: 0, hrv_drift_scaled: 0, masking_last_n: 2 }
-            .is_masking_red());
-        assert!(!WardState { energy_scaled: 0, tdi_scaled: 0, hrv_drift_scaled: 0, masking_last_n: 1 }
-            .is_masking_red(), "a single transient flag is amber, not red");
+        assert!(WardState {
+            energy_scaled: -8,
+            tdi_scaled: 0,
+            hrv_drift_scaled: 0,
+            masking_last_n: 0
+        }
+        .is_energy_red());
+        assert!(
+            !WardState {
+                energy_scaled: -7,
+                tdi_scaled: 0,
+                hrv_drift_scaled: 0,
+                masking_last_n: 0
+            }
+            .is_energy_red(),
+            "exactly -0.7 is not red"
+        );
+        assert!(WardState {
+            energy_scaled: 0,
+            tdi_scaled: 19,
+            hrv_drift_scaled: 0,
+            masking_last_n: 0
+        }
+        .is_tdi_red());
+        assert!(!WardState {
+            energy_scaled: 0,
+            tdi_scaled: 18,
+            hrv_drift_scaled: 0,
+            masking_last_n: 0
+        }
+        .is_tdi_red());
+        assert!(WardState {
+            energy_scaled: 0,
+            tdi_scaled: 10,
+            hrv_drift_scaled: 0,
+            masking_last_n: 0
+        }
+        .is_tdi_amber());
+        assert!(WardState {
+            energy_scaled: 0,
+            tdi_scaled: 0,
+            hrv_drift_scaled: -16,
+            masking_last_n: 0
+        }
+        .is_hrv_red());
+        assert!(!WardState {
+            energy_scaled: 0,
+            tdi_scaled: 0,
+            hrv_drift_scaled: -15,
+            masking_last_n: 0
+        }
+        .is_hrv_red());
+        assert!(WardState {
+            energy_scaled: 0,
+            tdi_scaled: 0,
+            hrv_drift_scaled: 0,
+            masking_last_n: 2
+        }
+        .is_masking_red());
+        assert!(
+            !WardState {
+                energy_scaled: 0,
+                tdi_scaled: 0,
+                hrv_drift_scaled: 0,
+                masking_last_n: 1
+            }
+            .is_masking_red(),
+            "a single transient flag is amber, not red"
+        );
     }
 
     #[test]
     fn test_composite_interlock() {
-        let red_energy = WardState { energy_scaled: -8, tdi_scaled: 0, hrv_drift_scaled: 0, masking_last_n: 0 };
-        let composite = WardState { energy_scaled: 0, tdi_scaled: 19, hrv_drift_scaled: -16, masking_last_n: 0 };
-        let tdi_alone = WardState { energy_scaled: 0, tdi_scaled: 19, hrv_drift_scaled: 0, masking_last_n: 0 };
-        let masked = WardState { energy_scaled: 0, tdi_scaled: 0, hrv_drift_scaled: 0, masking_last_n: 2 };
-        let green = WardState { energy_scaled: 3, tdi_scaled: 5, hrv_drift_scaled: 0, masking_last_n: 0 };
+        let red_energy = WardState {
+            energy_scaled: -8,
+            tdi_scaled: 0,
+            hrv_drift_scaled: 0,
+            masking_last_n: 0,
+        };
+        let composite = WardState {
+            energy_scaled: 0,
+            tdi_scaled: 19,
+            hrv_drift_scaled: -16,
+            masking_last_n: 0,
+        };
+        let tdi_alone = WardState {
+            energy_scaled: 0,
+            tdi_scaled: 19,
+            hrv_drift_scaled: 0,
+            masking_last_n: 0,
+        };
+        let masked = WardState {
+            energy_scaled: 0,
+            tdi_scaled: 0,
+            hrv_drift_scaled: 0,
+            masking_last_n: 2,
+        };
+        let green = WardState {
+            energy_scaled: 3,
+            tdi_scaled: 5,
+            hrv_drift_scaled: 0,
+            masking_last_n: 0,
+        };
 
-        assert!(red_energy.sig_gov_kill(), "extreme E collapse alone triggers");
+        assert!(
+            red_energy.sig_gov_kill(),
+            "extreme E collapse alone triggers"
+        );
         assert!(composite.sig_gov_kill(), "TDI AND HRV drift triggers");
-        assert!(!tdi_alone.sig_gov_kill(), "no false positive: TDI alone is not enough");
+        assert!(
+            !tdi_alone.sig_gov_kill(),
+            "no false positive: TDI alone is not enough"
+        );
         assert!(masked.sig_gov_kill(), "sustained masking triggers");
         assert!(!green.sig_gov_kill(), "fully green state never interlocks");
     }
 
     #[test]
     fn test_duty_cycle_chain() {
-        let entry1 = MonitorEntry { entry_hash: 42, prev_hash: 0 };
-        let entry2 = MonitorEntry { entry_hash: 99, prev_hash: 42 };
-        let entry2_tampered = MonitorEntry { entry_hash: 99, prev_hash: 7 };
-        let green = WardState { energy_scaled: 3, tdi_scaled: 5, hrv_drift_scaled: 0, masking_last_n: 0 };
+        let entry1 = MonitorEntry {
+            entry_hash: 42,
+            prev_hash: 0,
+        };
+        let entry2 = MonitorEntry {
+            entry_hash: 99,
+            prev_hash: 42,
+        };
+        let entry2_tampered = MonitorEntry {
+            entry_hash: 99,
+            prev_hash: 7,
+        };
+        let green = WardState {
+            energy_scaled: 3,
+            tdi_scaled: 5,
+            hrv_drift_scaled: 0,
+            masking_last_n: 0,
+        };
 
         assert!(is_chain_valid(&[entry1]), "genesis chain is valid");
         assert!(is_chain_valid(&[entry1, entry2]));
-        assert!(!is_chain_valid(&[entry1, entry2_tampered]), "broken link detected");
-        assert!(monitor_interlock(&[entry1, entry2_tampered], &green), "tampering forces interlock");
-        assert!(!monitor_interlock(&[entry1, entry2], &green), "intact chain + green state stays quiet");
+        assert!(
+            !is_chain_valid(&[entry1, entry2_tampered]),
+            "broken link detected"
+        );
+        assert!(
+            monitor_interlock(&[entry1, entry2_tampered], &green),
+            "tampering forces interlock"
+        );
+        assert!(
+            !monitor_interlock(&[entry1, entry2], &green),
+            "intact chain + green state stays quiet"
+        );
     }
 }
 
@@ -196,7 +301,12 @@ mod kani_proofs {
         let tdi_scaled: u64 = kani::any();
         let hrv_drift_scaled: i64 = kani::any();
         let masking_last_n: u64 = kani::any();
-        let st = WardState { energy_scaled, tdi_scaled, hrv_drift_scaled, masking_last_n };
+        let st = WardState {
+            energy_scaled,
+            tdi_scaled,
+            hrv_drift_scaled,
+            masking_last_n,
+        };
         if st.is_energy_red() {
             kani::assert(st.sig_gov_kill(), "E < -0.7 alone triggers SIG_GOV_KILL");
         }
@@ -214,7 +324,12 @@ mod kani_proofs {
         kani::assume(hrv_drift_scaled >= HRV_AMBER_BOUND);
         kani::assume(masking_last_n < MASKING_RED_COUNT);
 
-        let st = WardState { energy_scaled, tdi_scaled, hrv_drift_scaled, masking_last_n };
+        let st = WardState {
+            energy_scaled,
+            tdi_scaled,
+            hrv_drift_scaled,
+            masking_last_n,
+        };
         kani::assert(
             !st.sig_gov_kill() || st.is_tdi_red(),
             "TDI alone never triggers: if interlocks, TDI red must pair with another red metric",
@@ -228,12 +343,19 @@ mod kani_proofs {
         let tdi_scaled: u64 = kani::any();
         let hrv_drift_scaled: i64 = kani::any();
         let masking_last_n: u64 = kani::any();
-        let st = WardState { energy_scaled, tdi_scaled, hrv_drift_scaled, masking_last_n };
+        let st = WardState {
+            energy_scaled,
+            tdi_scaled,
+            hrv_drift_scaled,
+            masking_last_n,
+        };
 
-        let expected = st.is_energy_red()
-            || (st.is_tdi_red() && st.is_hrv_red())
-            || st.is_masking_red();
-        kani::assert(st.sig_gov_kill() == expected, "SIG_GOV_KILL is the composite disjunction");
+        let expected =
+            st.is_energy_red() || (st.is_tdi_red() && st.is_hrv_red()) || st.is_masking_red();
+        kani::assert(
+            st.sig_gov_kill() == expected,
+            "SIG_GOV_KILL is the composite disjunction",
+        );
     }
 
     /// ADR-0029: duty cycle — a broken chain link always forces the
@@ -249,10 +371,21 @@ mod kani_proofs {
         let masking_last_n: u64 = kani::any();
 
         let entries = [
-            MonitorEntry { entry_hash: e1_hash, prev_hash: 0 },
-            MonitorEntry { entry_hash: e2_hash, prev_hash },
+            MonitorEntry {
+                entry_hash: e1_hash,
+                prev_hash: 0,
+            },
+            MonitorEntry {
+                entry_hash: e2_hash,
+                prev_hash,
+            },
         ];
-        let st = WardState { energy_scaled, tdi_scaled, hrv_drift_scaled, masking_last_n };
+        let st = WardState {
+            energy_scaled,
+            tdi_scaled,
+            hrv_drift_scaled,
+            masking_last_n,
+        };
         if prev_hash != e1_hash {
             kani::assert(
                 monitor_interlock(&entries, &st),
@@ -276,10 +409,21 @@ mod kani_proofs {
         kani::assume(masking_last_n < MASKING_RED_COUNT);
 
         let entries = [
-            MonitorEntry { entry_hash: e1_hash, prev_hash: 0 },
-            MonitorEntry { entry_hash: e2_hash, prev_hash: e1_hash },
+            MonitorEntry {
+                entry_hash: e1_hash,
+                prev_hash: 0,
+            },
+            MonitorEntry {
+                entry_hash: e2_hash,
+                prev_hash: e1_hash,
+            },
         ];
-        let st = WardState { energy_scaled, tdi_scaled, hrv_drift_scaled, masking_last_n };
+        let st = WardState {
+            energy_scaled,
+            tdi_scaled,
+            hrv_drift_scaled,
+            masking_last_n,
+        };
         kani::assert(
             !monitor_interlock(&entries, &st),
             "intact chain and green state produce no interlock",

@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #05070B;
+  --color-panel: rgba(12, 16, 24, 0.72);
+  --color-primary-text: #E6F1FF;
+  --color-secondary-text: #8FA3BF;
+  --color-accent-cyan: #4DE2E6;
+  --color-accent-violet: #7C5CFF;
+  --color-critical-red: #FF5D73;
+  --color-success-green: #4DDB8A;
+
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+:root {
+  --background: #05070B;
+  --foreground: #E6F1FF;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom styles for glass effect */
+.glass {
+  background: var(--color-panel);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(77, 226, 230, 0.1);
+}
+
+.grid-overlay {
+  background-image: linear-gradient(rgba(77, 226, 230, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77, 226, 230, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* KaTeX overrides */
+.katex-display {
+  margin: 1em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

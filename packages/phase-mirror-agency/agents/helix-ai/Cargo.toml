@@ -1,0 +1,9 @@
+[package]
+name = "knot-in-time"
+version = "1.0.0-alpha"
+edition = "2024"
+
+[dependencies]
+ndarray = "0.16"
+num-complex = "0.4"
+nalgebra = "0.33"

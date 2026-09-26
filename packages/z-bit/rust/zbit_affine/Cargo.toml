@@ -1,0 +1,12 @@
+[package]
+name = "zbit_affine"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0"
+libloading = "0.8"
+libc = "0.2"
+
+[build-dependencies]
+anyhow = "1.0"
