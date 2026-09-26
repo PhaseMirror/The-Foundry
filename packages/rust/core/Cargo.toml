@@ -40,8 +40,21 @@ goldilocks = { path = "../goldilocks" }
 
 [features]
 default = []
+# Quarantined test targets for the removed `pirtm_rs` linker/session API.
+# See the banner in tests/{serialization_tests,linker_harness,l0_invariants}.rs.
+# Off by default: these files reference a deleted API and would otherwise
+# abort `cargo test` for the entire package. Tracked as D-17.
+legacy-removed-api = []
 zk-groth16 = ["ark-groth16", "ark-ec", "ark-ff", "ark-serialize", "ark-bn254", "ark-std", "num-bigint"]
 
 [dev-dependencies]
 tempfile = "3"
 
+# Standalone workspace boundary.
+#
+# This crate lives under the monorepo root `Cargo.toml`, which declares
+# `[workspace]` without listing this package as a member. Cargo then reports
+# "current package believes it's in a workspace when it's not" and refuses to
+# build. An empty `[workspace]` table opts the crate out, matching sibling
+# `pirtm-engine`.
+[workspace]
