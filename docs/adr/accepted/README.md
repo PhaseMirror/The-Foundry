@@ -32,12 +32,12 @@
 | [ADR-0113](ADR-0113.md) | Universal Closure Calculator — Unified Kernel Surface | Accepted | - |
 | [ADR-0119](ADR-0119.md) | R4 RnD Foundry — Computational Substrate of the PhaseMirror/Foundry Monorepo | Accepted | - |
 | [ADR-0120](ADR-0120.md) | Sovereign Transaction Protocol v0.2 | Accepted | - |
-| [ADR-0128](ADR-0128.md) | Template Lock Integrity Precedes Capability Registration | Accepted | - |
-| [ADR-0129](ADR-0129.md) | The Conformance Register Is the Sole Gate for the Web Surface | Accepted | - |
-| [ADR-0130](ADR-0130.md) | Suite Partition by Enforcement Boundary | Accepted | - |
-| [ADR-0131](ADR-0131.md) | Engine Registry Reads Are Fail-Closed; No In-Process Second Source | Accepted | - |
-| [ADR-0132](ADR-0132.md) | Registry Invariant Parity Is Layered, and Split-Source Rules Are Refused | Accepted | - |
-| [ADR-0133](ADR-0133.md) | Terminal Execution Is Allowlisted and Reports a Real Exit Code | Accepted | - |
-| [ADR-0134](ADR-0134.md) | The ADR Routes Are the Only Write Path, Validated Against the Persisted Registry | Accepted | - |
-| [ADR-0135](ADR-0135.md) | packages/foundry-web Is Tracked and Runs the Acceptance Gate in CI | Accepted | - |
-| [ADR-Citizen_Gardens_Model_Specific](ADR-Citizen_Gardens_Model_Specific.md) | Citizen Gardens Civic Infrastructure Model — Production Specification | Accepted | - |
+| [ADR-0128](ADR-0128-Template_Lock_Integrity_Precedes_Capability_Registration.md) | Template Lock Integrity Precedes Capability Registration | Accepted | - |
+| [ADR-0129](ADR-0129-The_Conformance_Register_Is_the_Sole_Gate_for_the_Web_Surface.md) | The Conformance Register Is the Sole Gate for the Web Surface | Accepted | - |
+| [ADR-0130](ADR-0130-Suite_Partition_by_Enforcement_Boundary.md) | Suite Partition by Enforcement Boundary | Accepted | - |
+| [ADR-0131](ADR-0131-Engine_Registry_Reads_Are_Fail_Closed_No_In_Process_Second_Source.md) | Engine Registry Reads Are Fail-Closed; No In-Process Second Source | Accepted | - |
+| [ADR-0132](ADR-0132-Registry_Invariant_Parity_Is_Layered_and_Split_Source_Rules_Are_Refused.md) | Registry Invariant Parity Is Layered, and Split-Source Rules Are Refused | Accepted | - |
+| [ADR-0133](ADR-0133-Terminal_Execution_Is_Allowlisted_and_Reports_a_Real_Exit_Code.md) | Terminal Execution Is Allowlisted and Reports a Real Exit Code | Accepted | - |
+| [ADR-0134](ADR-0134-The_ADR_Routes_Are_the_Only_Write_Path_Validated_Against_the_Persisted_Registry.md) | The ADR Routes Are the Only Write Path, Validated Against the Persisted Registry | Accepted | - |
+| [ADR-0135](ADR-0135-packages_foundry_web_Is_Tracked_and_Runs_the_Acceptance_Gate_in_CI.md) | packages/foundry-web Is Tracked and Runs the Acceptance Gate in CI | Accepted | - |
+| [ADR-0136](ADR-0136-Citizen_Gardens_Model_Specific.md) | Citizen Gardens Civic Infrastructure Model — Production Specification | Accepted | - |

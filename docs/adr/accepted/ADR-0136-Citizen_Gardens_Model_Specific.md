@@ -1,4 +1,4 @@
-# ADR-Citizen_Gardens_Model_Specific: Citizen Gardens Civic Infrastructure Model — Production Specification
+# ADR-0136: Citizen Gardens Model Specific
 
 **Status:** Accepted
 
