@@ -1,0 +1,12 @@
+ace
+backend
+benchmarks
+bindings
+channels
+core
+dialect
+examples
+llvm
+mlir
+spectral
+transpiler

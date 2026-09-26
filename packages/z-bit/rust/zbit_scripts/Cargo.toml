@@ -1,0 +1,8 @@
+[package]
+name = "zbit_scripts"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+zbit_core = { path = "../zbit_core" }
+clap = { version = "4", features = ["derive"] }

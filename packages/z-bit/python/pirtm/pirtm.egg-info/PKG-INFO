@@ -1,0 +1,511 @@
+Metadata-Version: 2.4
+Name: pirtm
+Version: 0.4.1
+Summary: Prime-Indexed Recursive Tensor Mathematics (PIRTM)
+Author-email: Multiplicity Foundation <research@multiplicity.org>
+Keywords: prime,tensor,contractivity,PIRTM,governance
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Dynamic: license-file
+Dynamic: requires-python
+
+# PIRTM — Prime-Indexed Recursive Tensor Mathematics
+
+**A verified contractive recurrence runtime with a compile-time MLIR dialect.**
+
+Canonical PIRTM implementation authority: https://github.com/MultiplicityFoundation/PIRTM
+This `Tooling/pirtm` tree is a live implementation surface and runtime host, but canonical semantic and implementation authority remains in the standalone PIRTM repository.
+
+PIRTM is the L0 (core-foundations) layer of the Tooling workspace.  Every
+session in the system must be *proven contractive* before it executes.
+Contractivity is verified in two temporal phases:
+
+- **Transpile-time** (`contractivity-check`) — per-module, checked when
+  `.pirtm.bc` bytecode is produced.
+- **Link-time** (`spectral-small-gain`) — network-wide, checked when
+  modules are linked into a session graph.
+
+PIRTM is developed with a math-first discipline.  The recurrence relation,
+modulus constraints, operator norms, and spectral bounds are the primary
+artifacts; implementations exist to realize those artifacts faithfully.
+Tests are treated as executable certificates that each operation respects its
+mathematical contract under valid inputs, invalid inputs, and composition.
+
+**Current status**: Phase 4 (LLVM + Standalone Runtime), 6 of 7 compilation
+gates passed (Day 90 performance benchmark in progress).  Gate K
+(Multiplicity-LWE runtime hardening) is complete — K-01 through K-05 all
+carry passing production-grade evidence suites (108 tests across Gate K
+alone).
+
+---
+
+## Directory structure
+
+```
+pirtm/
+├── __init__.py              Package root (version 0.4.1-phase2-mlir)
+├── backend/                 TensorBackend protocol + NumPy reference impl
+├── bindings/                Python ↔ native bindings layer
+├── channels/                Communication primitives (shim.py)
+├── core/                    Recurrence loop, projection, gain, certify
+│   ├── controller.py        PIRTMController — central enforcement loop
+│   ├── multiplicity_core.py MultiplicityCoreEngine + ProtectedEngine (Gate K-02)
+│   └── ...                  recurrence, projection, gain, certify, executor
+├── dialect/                 pirtm_types.py — Miller-Rabin + squarefree checks
+├── examples/                Four JSON descriptor test cases
+├── gate/                    Gate K runtime enforcement layer
+│   ├── csl_gate.py          CSLGate — contractivity-safe latch (Gate K-04)
+│   ├── rate_limiter.py      RateLimiter — (R,N) rollback budget (Gate K-05)
+│   ├── audit.py             Deterministic audit event emission
+│   └── convergence_sim.py   Adversarial convergence simulation
+├── integrations/            GAP (Computer Algebra System) integration
+├── mlir/                    Verification pass, LLVM codegen, dialect reference
+├── multiplicity_lwe/        Multiplicity-LWE parameter & engine module (Gate K-01)
+│   ├── params.py            TOML schema validator + version manager
+│   ├── prime_utils.py       Miller-Rabin prime validation
+│   ├── engine.py            ToyAEngine canonical reference
+│   └── api.py               Public LWE API surface
+├── spectral/                Operator identification & complex resonance (AAA)
+├── src/runtime/             C++ standalone runtime (CMake, Phase 4)
+├── tests/                   Test suite (56 files)
+├── tools/                   pirtm_inspect, grep_gates utilities
+│   └── static_checks/       check_gate_k_checklist.py, forbidden_imports.py,
+│                             render_gate_k_status.py
+├── transpiler/              MLIR emitter, bytecode, linker, CLI
+└── type_inference/          Type inference helpers
+```
+
+### docs/
+
+```
+docs/
+├── adr/                     Architecture Decision Records (ADR-004 … ADR-009)
+├── formats/                 Binary format specifications (.pirtm.bc, IANA)
+├── migration/               prime-to-mod-rename guide
+├── PIRTM_LIBERATION_ROADMAP.md
+├── PHASE_{1..4}_EXPANDED.md
+└── IMPLEMENTATION-DAYS-0-16-COMPLETE.md
+```
+
+---
+
+## Quick start
+
+```bash
+# From the workspace root
+python -m venv .venv && source .venv/bin/activate
+pip install -e .
+
+# Run the PIRTM test suite
+pytest pirtm/tests/ -v
+
+# Inspect a compiled bytecode file
+python -m pirtm.tools.pirtm_inspect pirtm/tests/fixtures/basic.pirtm.bc
+
+# Transpile a descriptor to MLIR
+pirtm transpile --input pirtm/examples/basic_contractive_system.json \
+                --output mlir --epsilon 0.05
+```
+
+Recommended workflow:
+
+1. Write down the invariant, recurrence, or proof obligation you are changing.
+2. Add or update the corresponding certification tests.
+3. Only then modify the implementation.
+4. Do not treat a green CLI run as sufficient evidence; the relevant proof and gate tests must pass.
+
+---
+
+## CLI
+
+| Command | Description |
+|---------|-------------|
+| `pirtm transpile --input <file> --output mlir` | Emit `.pirtm.bc` with contractivity proof |
+| `pirtm transpile --input <file> --output numpy` | NumPy reference execution |
+| `pirtm inspect <file.pirtm.bc>` | Print module report |
+| `pirtm inspect --meta <file.pirtm.bc>` | Print contractivity metadata |
+| `pirtm inspect --verify <file.pirtm.bc>` | Verify contractivity status |
+| `pirtm audit <trace.jsonl>` | Print a human-readable audit trace summary |
+| `pirtm certify --candidate <file> --reference <file> ...` | Run clone-check, deterministic audit trace handling, and badge issuance |
+| `pirtm iag --spec <spec.json>` | Generate invariant test and binding artifacts plus a registry entry |
+| `pirtm acf-review --fixture <name>` | Emit reviewer-facing ADR-029 ACF summary JSON for a named fixture |
+
+Every `pirtm inspect` report includes the mandatory audit-chain line:
+
+```
+Audit Chain: NOT EMBEDDED — retrieve via pirtm audit <trace.log>
+```
+
+### Certification workflow with invariant generation
+
+Use the base certification flow when you only need governance checks and badge issuance:
+
+```bash
+pirtm certify \
+  --candidate path/to/candidate.py \
+  --reference path/to/reference.py \
+  --registry badges.json \
+  --module xi_operator \
+  --prime 17 \
+  --issuer governance
+```
+
+Use the integrated ADR-027.3 flow when certification should also generate invariant artifacts:
+
+```bash
+pirtm certify \
+  --candidate path/to/candidate.py \
+  --reference path/to/reference.py \
+  --registry badges.json \
+  --module xi_operator \
+  --prime 17 \
+  --issuer governance \
+  --generate-invariant invariant.json \
+  --iag-registry suite.md \
+  --iag-output-root ./generated
+```
+
+This integrated flow has the following contract:
+
+- clone-check must pass before badge issuance or invariant generation proceeds,
+- the audit trace records a deterministic `generate_invariant` event from `pirtm_iag`,
+- generated test and binding paths are planned deterministically from the invariant spec and output root,
+- badge metadata carries `assembly_record_path` and `assembly_record_hash` so the provenance reference is tamper-evident,
+- rerunning the same certification command does not duplicate the badge registry entry or the invariant registry row,
+- `--strict` validates an existing audit trace against the deterministic expected output for both certification and invariant-generation events, and fails with a first-difference report on mismatch.
+
+Reviewer workflow for certify-integrated runs:
+
+1. Open the badge registry entry and read `metadata.meta_ensemble.assembly_record_path` and `metadata.meta_ensemble.assembly_record_hash`.
+2. Open the audit trace named by the badge entry and locate the `generate_invariant` event.
+3. Confirm the event contains the same assembly-record path and hash.
+4. Open the assembly record at that path and verify its SHA-256 matches the badge and audit metadata.
+
+Reviewer note for ACF-derived artifacts:
+
+- `HeuristicConstraintProposal` entries document which aspectual conflict families were explored for coverage. They are search artifacts, not proof-carrying results.
+- `CertifiedUnavoidableConstraint` entries are the reviewable ACF outputs. These are the only ACF artifacts that carry the claim that every optimal feasible selection must intersect the reported set.
+
+For review, treat heuristic candidates as evidence of what was checked and certified constraints as evidence of what was mathematically established.
+
+Example reviewer-facing ACF summary JSON from `serialize_auxiliary_hypergraph_summary(...)`:
+
+```json
+{
+  "auxiliary_hypergraph": {
+    "hyperedges": [
+      ["'u'", "'v'"],
+      ["'t'", "'u'", "'w'"],
+      ["'t'", "'v'", "'w'"],
+      ["'u'", "'v'", "'w'"]
+    ],
+    "vertices": ["'b'", "'c'", "'t'", "'u'", "'v'", "'w'"]
+  },
+  "fractional_matching_lower_bound": {
+    "denominator": 2,
+    "numerator": 3,
+    "rational": "3/2"
+  },
+  "integral_matching_number": 1
+}
+```
+
+For a longer reviewer-oriented explanation, see `pirtm/docs/ACF_REVIEWER_GUIDE.md`.
+
+---
+
+## Architecture
+
+### Core recurrence (pirtm/core/)
+
+The fundamental recurrence relation:
+
+```
+X_{t+1} = P( Ξ_t X_t  +  Λ_t T(X_t)  +  G_t )
+```
+
+| Symbol | Role |
+|--------|------|
+| `P`    | Projection (clip to `[-1, 1]`) |
+| `Ξ_t` | Linear operator (identity or general) |
+| `Λ_t` | Aggregation operator |
+| `T`   | Nonlinear transformation (default: sigmoid) |
+| `G_t` | External growth / guidance term |
+
+Implementation work should preserve this recurrence as the source-level truth.
+If an optimization, transpiler transform, or backend specialization changes the
+behavioral meaning of the recurrence, it is a correctness bug unless proven
+equivalent and covered by tests.
+
+Key modules:
+
+| Module | Entry points |
+|--------|-------------|
+| `core/recurrence.py` | `step()`, `iterate()` |
+| `core/certify.py` | `ContractivityCertificate`, `certify_state()`, `verify_trajectory()` |
+| `core/projection.py` | `project()` |
+| `core/gain.py` | `compute_spectral_radius()` |
+| `core/executor.py` | `PirtmExecutor`, `ExecutionResult` |
+| `core/controller.py` | `PIRTMController` — wires `MultiplicityCoreEngine`, `CSLGate`, `RateLimiter` into a single enforcement loop |
+| `core/multiplicity_core.py` | `MultiplicityCoreEngine`, `ProtectedEngine`, `make_multiplicity_engine` |
+
+### Backend abstraction (pirtm/backend/)
+
+All core modules route through a `TensorBackend` protocol.  The NumPy
+implementation (`numpy_backend.py`) is the default reference.  MLIR, LLVM,
+and GPU backends can be registered without touching business logic.
+
+```python
+from pirtm.backend import get_backend, set_default_backend
+
+backend = get_backend("numpy")   # default
+set_default_backend("mlir")      # switch globally
+```
+
+### Dialect type system (pirtm/dialect/)
+
+PIRTM introduces four MLIR types.  All `mod=` constraints are verified at
+construction time:
+
+| Type | Constraint | Enforced by |
+|------|-----------|-------------|
+| `!pirtm.cert(mod=p)` | `p` must be prime | Miller-Rabin |
+| `!pirtm.epsilon(mod=p, value=ε)` | `p` prime, `0 < ε < 1` | Miller-Rabin |
+| `!pirtm.op_norm_t(mod=p, norm=n)` | `p` prime, `n ≥ 0` | Miller-Rabin |
+| `!pirtm.session_graph(mod=N, coupling=…)` | `N` squarefree | Trial division to √N |
+
+Error messages include the factored form, e.g.:
+
+```
+mod=7921 is not prime (89^2)
+mod=49 is not prime (7^2)
+```
+
+### Gate K runtime (pirtm/gate/, pirtm/multiplicity_lwe/)
+
+Gate K implements the Multiplicity-LWE runtime enforcement layer.  It is
+composed of five production-grade slices, each with a passing evidence suite:
+
+| Slice | Component | Evidence command |
+|-------|-----------|------------------|
+| K-01 | `multiplicity_lwe/` — LWE parameter validation and prime checks | `pytest -q pirtm/tests/test_multiplicity_lwe_params.py pirtm/tests/test_multiplicity_lwe_api.py` |
+| K-02 | `core/multiplicity_core.py` — canonical engine, empirical contraction harness | `pytest -q pirtm/tests/test_k02_multiplicity_core.py` |
+| K-03 | `ProtectedEngine` boundary contract + static import checker | `pytest -q pirtm/tests/test_k03_boundary_contract.py` |
+| K-04 | `gate/csl_gate.py` — `CSLGate` + audit event emission (53-case matrix) | `pytest -q pirtm/tests/test_k04_csl_gate.py` |
+| K-05 | `gate/rate_limiter.py` — `RateLimiter` with convergence theorem | `pytest -q pirtm/tests/test_k05_rate_limiter.py` |
+
+The `PIRTMController` in `core/controller.py` integrates all five slices into
+a single enforcement loop.  An end-to-end integration smoke test is in
+`pirtm/tests/test_gate_k_integration_smoke.py`.
+
+The Gate K execution checklist and auto-derived status artifact live in
+`docs/adr/gates/gate k/`:
+
+```
+docs/adr/gates/gate k/
+├── GATE-K-EXECUTION-CHECKLIST.md   Authoritative evidence checklist
+├── GATE-K-STATUS.md                Auto-derived status (run render_gate_k_status.py)
+├── GATE-K-RISK-REGISTER.md         Production risk register
+└── K-0{1..5}-*.md                  Per-slice ADRs
+```
+
+Regenerating the status artifact:
+
+```bash
+python pirtm/tools/static_checks/render_gate_k_status.py
+```
+
+### Transpiler (pirtm/transpiler/)
+
+| Module | Role |
+|--------|------|
+| `mlir_emitter_canonical.py` | Canonical MLIR emission with `mod=` syntax |
+| `pirtm_bytecode.py` | `.pirtm.bc` serialization — carries `prime_index`, `ε`, `op_norm_T`, `proof_hash` in a non-allocating `!pirtm_proof` section |
+| `pirtm_link.py` | Three-pass linker: name-resolution → commitment-crosscheck → matrix-construction → `spectral-small-gain` |
+| `pirtm_perf.py` | Sparse-accelerated spectral radius (19× over dense NumPy on 512-dim) |
+| `pirtm_predict.py` | Predictive margin warnings |
+| `pirtm_reorder.py` | Margin-driven module reordering |
+| `cli.py` | `pirtm` command-line entry point |
+
+The linker rejects duplicate `identity_commitment` values with:
+
+```
+error: duplicate identity_commitment
+```
+
+### Spectral analysis (pirtm/spectral/)
+
+| Module | Purpose |
+|--------|---------|
+| `laplacian.py` | Prime-Cayley Laplacian construction |
+| `aaa.py` | AAA rational approximation |
+| `continuation.py` | Complex resonance detection via analytic continuation |
+| `fingerprint.py` | Operator identification via 5-point spectral shape test |
+
+### C++ standalone runtime (pirtm/src/runtime/)
+
+Phase 4 provides a CMake-built native library (`libpirtm_runtime`) that
+exposes the recurrence loop as compiled machine code.  Python bindings are in
+`pirtm/bindings/`.  The runtime targets ≥10× NumPy throughput on 512-dim
+tensors (Day 90 gate).
+
+---
+
+## L0 invariants
+
+These constraints are non-negotiable.  Code that violates any of them will be
+rejected.
+
+| # | Invariant |
+|---|-----------|
+| 1 | `pirtm.module` carries exactly one `prime_index`, one `epsilon`, one `op_norm_T`.  No `epsilon_map`.  No multi-prime modules. |
+| 2 | `contractivity-check` runs at transpile time.  `spectral-small-gain` runs at link time.  No pass runs out of this order. |
+| 3 | `!pirtm.cert` is always prime-typed.  There is no composite cert. |
+| 4 | `pirtm.session_graph.gain_matrix` is never a transpile-time attribute — it must be `#pirtm.unresolved_coupling` until link time. |
+| 5 | Composite `mod=` values must be squarefree (μ(mod) ≠ 0).  Atomic types require Miller-Rabin prime. |
+| 6 | Human names in `coupling.json` do not survive into IR.  `pirtm.session_graph` is indexed by `prime_index` only. |
+| 7 | `pirtm inspect` output must always include `Audit Chain: NOT EMBEDDED — retrieve via pirtm audit <trace.log>`. |
+
+---
+
+## Sequencing gates
+
+Work proceeds in gate order.  A later gate must not begin before an earlier
+one has a passing test.
+
+| Gate | Day window | Requirement | Status |
+|------|-----------|-------------|--------|
+| 1 | 0–3 | `mlir-opt --verify-diagnostics pirtm-types-basic.mlir` passes all four lines | ✅ PASS |
+| 2 | 3–7 | Coprime merge passes; non-coprime emits specified diagnostic | ✅ PASS |
+| 3 | 7–14 | All `examples/` round-trip via `mlir_emitter.py --output mlir` | ✅ PASS |
+| 4 | 14 | `pirtm inspect basic.pirtm.bc \| grep "contractivity_check: PASS"` | ✅ PASS |
+| 5 | 14–16 | Commitment-collision test passes | ✅ PASS |
+| 6 | 30 | `r=0.7` link passes; `r=1.1` link fails with spectral radius printed | ✅ PASS |
+| 7 | 90 | `pirtm.step` ≥10× NumPy on 512-dim tensor | 🔄 In progress |
+
+### Gate K (Multiplicity-LWE runtime hardening)
+
+| Slice | Requirement | Tests | Status |
+|-------|-------------|-------|--------|
+| K-01 | `multiplicity_lwe/` imports cleanly; params validator passes | 9 | ✅ PASS |
+| K-02 | `MultiplicityCoreEngine` is canonical; empirical contraction ≤ γ | 9 | ✅ PASS |
+| K-03 | Boundary contract enforced; static import check passes | 6 | ✅ PASS |
+| K-04 | `CSLGate` covers all failure modes; audit events deterministic | 53 | ✅ PASS |
+| K-05 | `RateLimiter` enforces (R,N) budgets; adversarial convergence passes | 39 | ✅ PASS |
+| K-∫ | End-to-end controller smoke test | 1 | ✅ PASS |
+
+---
+
+## Examples
+
+```
+pirtm/examples/
+├── basic_contractive_system.json    prime_index=7919, ε=0.05, op_norm_T=0.9
+├── composite_modulus_system.json    squarefree modulus example
+├── multimodule_network.json         two coprime modules (7919 & 8191)
+└── tightly_coupled_system.json      high-coupling stress test
+```
+
+Run all examples through the round-trip validator:
+
+```bash
+pytest pirtm/tests/test_day_7_14_round_trip.py -v
+```
+
+---
+
+## Tests
+
+PIRTM tests are certification artifacts.  They are meant to witness that the
+runtime, verifier, transpiler, and linker satisfy their mathematical contracts:
+prime typing, squarefree composite handling, contractive recurrence behavior,
+stable diagnostics, link-time spectral bounds, and bytecode inspection rules.
+
+```
+pirtm/tests/
+├── fixtures/                       .pirtm.bc files + fixture generator
+├── pirtm-types-basic.mlir           Day 0-3 MLIR diagnostic test
+├── mlir_diagnostic_verifier.py      Python-based MLIR diagnostic simulator
+│
+│   — Core compilation gates —
+├── test_dialect_types.py            Type-layer unit tests
+├── test_day_3_7_coprime_merge.py    Coprime merge + grep gates
+├── test_day_7_14_round_trip.py      Transpiler round-trip
+├── test_day_14_contractivity.py     Bytecode + inspection
+├── test_commitment_collision.py     Duplicate identity_commitment (Day 14-16)
+├── test_spectral_gates.py           Network stability: r=0.7 / r=1.1
+├── test_phase4_integration.py       End-to-end Phase 4
+├── test_predictive_warnings.py      Margin prediction
+├── test_module_reordering.py        Margin-driven reordering
+│
+│   — Gate K (Multiplicity-LWE runtime) —
+├── test_multiplicity_lwe_params.py  K-01: parameter validation and prime checks
+├── test_multiplicity_lwe_api.py     K-01: LWE API surface
+├── test_k02_multiplicity_core.py    K-02: MultiplicityCoreEngine + contraction harness
+├── test_k03_boundary_contract.py    K-03: ProtectedEngine boundary contract
+├── test_k04_csl_gate.py             K-04: CSLGate 53-case failure-mode matrix
+├── test_k05_rate_limiter.py         K-05: RateLimiter + adversarial convergence
+├── test_gate_k_integration_smoke.py End-to-end Gate K controller smoke test
+│
+│   — Tooling —
+├── test_render_gate_k_status.py     Status renderer derivation regression (28 tests)
+├── test_standalone_packaging.py     Packaging boundary regression
+└── ...                              (56 test files total)
+```
+
+Run the full PIRTM test suite:
+
+```bash
+pytest pirtm/tests/ -v
+```
+
+When adding a feature, the minimum certification set should cover:
+
+- the governing equation or invariant,
+- boundary and degenerate cases,
+- rejection behavior with deterministic diagnostics,
+- composition with neighboring stages in the pipeline,
+- regression coverage for any bug or counterexample that motivated the change.
+
+---
+
+## ADRs
+
+ADR-004 is the canonical source of truth for all type-system and
+contractivity-semantics decisions.  Tooling ADRs implement it and may not
+redefine its semantics.  Canonical PIRTM ADRs live in the standalone PIRTM
+repository at `https://github.com/MultiplicityFoundation/PIRTM/tree/main/docs/adr`.
+
+Gate-level decision records live locally in `docs/adr/gates/gate k/`:
+
+| Document | Purpose | Status |
+|----------|---------|--------|
+| `K-01-MULTIPLICITY-LWE-MODULE.md` | LWE parameter module design | ✅ Implemented |
+| `K-02-MULTIPLICITY-CORE-ENGINE.md` | Canonical core engine design | ✅ Implemented |
+| `K-03-BOUNDARY-CONTRACT.md` | Engine boundary contract | ✅ Implemented |
+| `K-04-CSL-GATE.md` | CSL gate + audit protocol | ✅ Implemented |
+| `K-05-RATE-LIMITER.md` | Rate limiter + convergence theorem | ✅ Implemented |
+| `GATE-K-EXECUTION-CHECKLIST.md` | Authoritative acceptance checklist | Live |
+| `GATE-K-RISK-REGISTER.md` | Production risk register (GK-R1..R5) | Live |
+| `GATE-K-STATUS.md` | Auto-derived status artifact | Generated |
+
+---
+
+## Relation to the workspace
+
+PIRTM is L0 in the Tooling layered architecture:
+
+```
+L5 Applications
+L4 ZK Proof & Verification
+L3 Domain Reasoning
+L2 Formal Methods
+L1 Sigma Kernel
+L0 Core Foundations  ← pirtm/ lives here
+```
+
+See the [workspace README](../README.md) for the full layer description.

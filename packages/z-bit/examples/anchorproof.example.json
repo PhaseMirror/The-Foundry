@@ -1,0 +1,7 @@
+{
+  "txid": "abc123def456789012345678901234567890123456789012345678901234abcd",
+  "vout": 0,
+  "scriptPubKey": "bcrt1p5cyxnuxmeuwuvkwfem96lqzszd02n6xdcjrs20cac6yqjjwudpxqkedrcr",
+  "leafScriptHex": "0a20cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc88a9",
+  "controlBlock": "c0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+}

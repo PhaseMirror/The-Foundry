@@ -1,0 +1,83 @@
+{
+  "schema_version": "ccre.registry.v1",
+  "description": "CCRE module registry — single source of truth for Gate 0 CI validation",
+  "modules": [
+    {
+      "module_id": "updater",
+      "path": "ccre/updater.py",
+      "role": "update_certification_pipeline",
+      "governing_adr": "ADR-004"
+    },
+    {
+      "module_id": "contraction",
+      "path": "ccre/contraction.py",
+      "role": "contraction_verification",
+      "governing_adr": "ADR-003"
+    },
+    {
+      "module_id": "drift_tracker",
+      "path": "ccre/drift_tracker.py",
+      "role": "semantic_drift_guard",
+      "governing_adr": "ADR-003"
+    },
+    {
+      "module_id": "resonance_guard",
+      "path": "ccre/resonance_guard.py",
+      "role": "resonance_safe_band",
+      "governing_adr": "ADR-003"
+    },
+    {
+      "module_id": "witness",
+      "path": "ccre/witness.py",
+      "role": "deterministic_witness_emission",
+      "governing_adr": "ADR-004"
+    },
+    {
+      "module_id": "pilot",
+      "path": "ccre/pilot.py",
+      "role": "ecp_pilot_instrumentation_and_production_gate",
+      "governing_adr": "ADR-007"
+    },
+    {
+      "module_id": "constants",
+      "path": "ccre/constants.py",
+      "role": "shared_constants",
+      "governing_adr": "ADR-010"
+    }
+  ],
+  "symbol_registry": {
+    "kappa": {
+      "description": "contraction coefficient",
+      "constraint": "kappa < 1.0",
+      "governing_adr": "ADR-002"
+    },
+    "delta": {
+      "description": "semantic drift bound",
+      "constraint": "delta < 0.3",
+      "governing_adr": "ADR-002"
+    },
+    "alpha": {
+      "description": "Lipschitz-related stability constant",
+      "constraint": "alpha > 0.0",
+      "governing_adr": "ADR-002"
+    },
+    "R_t": {
+      "description": "resonance functional",
+      "constraint": "0.3 <= R(t) <= 0.7",
+      "governing_adr": "ADR-002"
+    },
+    "J": {
+      "description": "Jubilee audit period",
+      "governing_adr": "ADR-002"
+    },
+    "FREEZE_RESONANCE": {
+      "description": "fail-closed state transition",
+      "governing_adr": "ADR-002"
+    }
+  },
+  "governance_boundary": {
+    "may_update": "parameters_within_fixed_structure",
+    "may_not_change": ["model_architecture", "operator_class", "gate_thresholds"],
+    "governing_adr": "ADR-001"
+  }
+}

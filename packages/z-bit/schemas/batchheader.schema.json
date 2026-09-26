@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lambda-proof.dev/schemas/batchheader.schema.json",
+  "title": "BatchHeader",
+  "type": "object",
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "network_id": { "type": "integer", "enum": [0,1,2,3], "description": "0=mainnet,1=testnet,2=signet,3=regtest", "default": 3 },
+    "epoch": { "type": "integer", "minimum": 0, "description": "floor(unix_time / (T*60))" },
+    "policy_id": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" },
+    "aggregator_xonly": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" }
+  },
+  "required": ["version","network_id","epoch","policy_id","aggregator_xonly"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "version": 1,
+      "network_id": 3,
+      "epoch": 123456,
+      "policy_id": "3f00000000000000000000000000000000000000000000000000000000000064",
+      "aggregator_xonly": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

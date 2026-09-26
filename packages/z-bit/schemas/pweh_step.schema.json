@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PWEH Step",
+  "description": "A single step in the Prime-Weighted Execution Hashing chain for Bitcoin ZRSD.",
+  "type": "object",
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "step_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time": {
+      "type": "number"
+    },
+    "active_prime": {
+      "type": "integer"
+    },
+    "operator_id": {
+      "type": "string"
+    },
+    "operator_norm_mult": {
+      "type": "number"
+    },
+    "lambda_m_cert": {
+      "type": "boolean"
+    },
+    "oracle_score": {
+      "type": "number"
+    },
+    "state_digest": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "run_id",
+    "step_index",
+    "time",
+    "active_prime",
+    "operator_id",
+    "operator_norm_mult",
+    "lambda_m_cert",
+    "oracle_score",
+    "state_digest"
+  ],
+  "additionalProperties": false
+}

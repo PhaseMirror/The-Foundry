@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lambda-proof.dev/schemas/anchorproof.schema.json",
+  "title": "AnchorProof",
+  "type": "object",
+  "properties": {
+    "txid": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" },
+    "vout": { "type": "integer", "minimum": 0 },
+    "scriptPubKey": { "type": "string" },
+    "leafScriptHex": { "type": "string", "pattern": "^[0-9a-fA-F]+$" },
+    "controlBlock": { "type": "string", "pattern": "^[0-9a-fA-F]+$" }
+  },
+  "required": ["txid","vout","scriptPubKey","leafScriptHex","controlBlock"],
+  "additionalProperties": false
+}

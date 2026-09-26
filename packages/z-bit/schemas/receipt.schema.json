@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lambda-proof.dev/schemas/receipt.schema.json",
+  "title": "Receipt",
+  "type": "object",
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "user_pub": { "type": "string", "pattern": "^[0-9a-fA-F]{66}|[0-9a-fA-F]{64}$" },
+    "state_root": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" },
+    "timestamp": { "type": "integer", "minimum": 0 },
+    "policy_id": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" },
+    "anchor_txref": { "type": "string" },
+    "meta": { "type": "object", "additionalProperties": { "type": "string" } },
+    "sig_alg": { "type": "string", "enum": ["ML-DSA"] },
+    "sig": { "type": "string", "pattern": "^[0-9a-fA-F]+$" },
+    "sig_pub": { "type": "string", "pattern": "^[0-9a-fA-F]+$" }
+  },
+  "required": ["version", "user_pub", "state_root", "timestamp", "policy_id", "anchor_txref", "sig_alg", "sig", "sig_pub"],
+  "additionalProperties": false
+}
