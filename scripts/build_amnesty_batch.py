@@ -286,7 +286,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--root", default=here)
     p.add_argument("--out", default=os.path.join(here, "state", "amnesty_batch_PML-005.json"))
-    p.add_argument("--manifest", default=os.path.join(here, "alp_sorry_manifest.json"))
+    p.add_argument("--manifest", default=os.path.join(here, "state", "alp_sorry_manifest.json"))
     p.add_argument("--apply-policy", action="store_true",
                    help="fill null governance fields with the uniform POLICY defaults")
     p.add_argument("--include-axioms", action="store_true",

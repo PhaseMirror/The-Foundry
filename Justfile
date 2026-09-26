@@ -69,3 +69,29 @@ bdd:
 # Advisories, bans, licences and sources, over the dependency graph.
 deny:
     cargo deny --all-features check
+
+# Build targets — development and release builds of the workspace.
+dev:
+    cargo build --workspace
+
+build-release:
+    cargo build --workspace --release
+
+doc:
+    RUSTDOCFLAGS="-D rustdoc::broken_intra_doc_links -D rustdoc::missing_crate_level_docs" \
+        cargo doc --workspace --no-deps
+
+doc-open: doc
+    cargo doc --workspace --no-deps --open
+
+# Tag a release: `just tag-release 0.1.1` creates a signed tag.
+# The Cargo workspace version must already be bumped in `[workspace.package]`
+# before tagging — the release workflow's tag-validation step rejects mismatches.
+tag-release version:
+    @if ! grep -q '^version = "{{version}}"' Cargo.toml; then \
+      echo "error: workspace version in Cargo.toml is not {{version}}" >&2; \
+      grep '^version = ' Cargo.toml >&2; \
+      exit 1; \
+    fi
+    git tag -s "v{{version}}" -m "Release v{{version}}"
+    @echo "Created signed tag v{{version}}. Push with: git push origin v{{version}}"

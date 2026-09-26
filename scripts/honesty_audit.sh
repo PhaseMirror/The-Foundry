@@ -23,10 +23,10 @@ ROOT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
 echo "=== Honesty Audit: UAC-ALP Boundary ==="
 
-if [[ -f "${ROOT_DIR}/alp_sorry_manifest.json" ]]; then
-  MANIFEST="${ROOT_DIR}/alp_sorry_manifest.json"
-elif [[ -f "${ROOT_DIR}/Prime/alp_sorry_manifest.json" ]]; then
-  MANIFEST="${ROOT_DIR}/Prime/alp_sorry_manifest.json"   # legacy layout
+if [[ -f "${ROOT_DIR}/state/alp_sorry_manifest.json" ]]; then
+  MANIFEST="${ROOT_DIR}/state/alp_sorry_manifest.json"
+elif [[ -f "${ROOT_DIR}/alp_sorry_manifest.json" ]]; then
+  MANIFEST="${ROOT_DIR}/alp_sorry_manifest.json"   # legacy layout
 else
   echo "❌ Error: alp_sorry_manifest.json not found!"
   exit 1

@@ -24,7 +24,7 @@ GOVERNED_PATHS = [
     "Projects/ECHO_BRAID/EchoBraid/SpectralCoherence.lean",
     "packages/rust/uac-gatekeeper/src/lib.rs",
     "packages/circuits/uac_safety_interlock.sv",
-    "alp_sorry_manifest.json"
+    "state/alp_sorry_manifest.json"
 ]
 
 def hash_file(filepath: str) -> str:
@@ -113,7 +113,7 @@ def main():
     print("[*] Generating Multiplicity Sovereign Core Release Witness...")
     witness = generate_witness()
 
-    out_file = "release_witness.json"
+    out_file = "state/witnesses/release_witness.json"
     with open(out_file, "w") as f:
         json.dump(witness, f, indent=2)
 

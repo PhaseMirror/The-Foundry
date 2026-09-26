@@ -63,7 +63,7 @@ STATE_SUBDIR = os.path.join("state", "phase_mirror_loop.json")
 MASTER_INDEX = "ADR-Plan-Phase-Mirror-Dissonance-Loop.md"
 PLAN_PREFIX = "ADR-PML-"  # Phase Mirror Loop plan ADRs (distinct from numeric ADRs)
 CANONICAL_NS = "PML"      # Canonical namespace for loop-generated ADR IDs (ADR-PML-065)
-SORRY_MANIFEST_REL = "alp_sorry_manifest.json"
+SORRY_MANIFEST_REL = os.path.join("state", "alp_sorry_manifest.json")
 
 # Documents that show illustrative Lean as scaffolding/templates. Their code
 # fences are NOT claims about the real implementation, so theorem-name claims

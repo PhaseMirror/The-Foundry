@@ -6,7 +6,7 @@ import sys
 
 def main():
     print("Starting Ax-Prover / MerLean Formal Verification Agent...")
-    manifest_path = "alp_sorry_manifest.json"
+    manifest_path = "state/alp_sorry_manifest.json"
     
     if not os.path.exists(manifest_path):
         print(f"Manifest {manifest_path} not found. Exiting.")

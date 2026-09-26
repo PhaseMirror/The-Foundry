@@ -9,7 +9,7 @@ Executes a full, consolidated Phase Mirror audit sweep across all layers:
 - Cross-Runtime AST Parsers (Python & Rust)
 - Architecture Decision Records (ADR-001 through ADR-042)
 
-Emits: `SOVEREIGN_CORE_COHERENCE_CERTIFICATE.json` and anchors into Archivum.
+Emits: `state/witnesses/SOVEREIGN_CORE_COHERENCE_CERTIFICATE.json` and anchors into Archivum.
 """
 
 import hashlib
@@ -68,7 +68,7 @@ def main():
         sys.exit(1)
 
     # Read the release witness
-    with open("release_witness.json", "r") as f:
+    with open("state/witnesses/release_witness.json", "r") as f:
         release_witness = json.load(f)
 
     timestamp = int(time.time())
@@ -94,7 +94,7 @@ def main():
     master_signature = hashlib.sha256(canonical_repr.encode("utf-8")).hexdigest()
     certificate["master_coherence_signature"] = master_signature
 
-    out_file = "SOVEREIGN_CORE_COHERENCE_CERTIFICATE.json"
+    out_file = "state/witnesses/SOVEREIGN_CORE_COHERENCE_CERTIFICATE.json"
     with open(out_file, "w") as f:
         json.dump(certificate, f, indent=2)
 

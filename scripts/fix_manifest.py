@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-MANIFEST_FILE = "alp_sorry_manifest.json"
+MANIFEST_FILE = "state/alp_sorry_manifest.json"
 
 # Run phase mirror loop's scan_lean
 sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))

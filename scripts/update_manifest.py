@@ -1,6 +1,6 @@
 import json
 
-manifest = "alp_sorry_manifest.json"
+manifest = "state/alp_sorry_manifest.json"
 with open(manifest, "r") as f:
     d = json.load(f)
 
