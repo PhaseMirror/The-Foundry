@@ -372,6 +372,67 @@ impl PmcpGates {
     }
 }
 
+// ============================================================================
+// ADR-0122: GLOBAL MULTIPLICITY SPECIFICATION (GMS-001)
+// ============================================================================
+
+/// The Three Operational Altitudes defined in ADR-0122.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum OperationalAltitude {
+    /// Local mission expressed in a place. Governed by local founders and node consent.
+    Craft,
+    /// Shared grammar and protocols allowing nodes to interact without a central manager.
+    CommonsTopology,
+    /// Fail-closed, non-waivable civic invariants.
+    ComplianceEnvelope,
+}
+
+/// Permitted and prohibited actions for an Operator LLC (ADR-0122).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum OperatorAction {
+    SellingSeats,
+    ManagedServices,
+    SellingExclusiveTerritories,
+    GatekeepingWithCompliancePacks,
+}
+
+impl OperatorAction {
+    /// The operator's role is clearly bounded to hosting diagnostic services and selling seats.
+    /// It is explicitly prohibited from selling exclusive territories or using compliance packs as a gatekeeping mechanism.
+    pub fn is_permitted(&self) -> bool {
+        match self {
+            OperatorAction::SellingSeats | OperatorAction::ManagedServices => true,
+            OperatorAction::SellingExclusiveTerritories | OperatorAction::GatekeepingWithCompliancePacks => false,
+        }
+    }
+}
+
+/// A standard Node Blueprint card containing standardized fields (ADR-0122).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct NodeBlueprint {
+    pub altitude_c_rules: Vec<CivicL0Invariant>,
+    pub altitude_b_sponsor: String,
+    pub altitude_a_craft_statement: String,
+    pub altitude_a_outcome_metrics: Vec<String>,
+    pub operator_node_cap: usize,
+}
+
+impl NodeBlueprint {
+    /// Validates that the compliance envelope cannot be waived.
+    pub fn validate_compliance_envelope(&self) -> Result<(), String> {
+        if self.operator_node_cap > MAX_NODE_OPERATORS {
+            return Err(format!("Node Blueprint rejected: NODE_CAP cannot exceed {} (ADR-0122)", MAX_NODE_OPERATORS));
+        }
+        if !self.altitude_c_rules.contains(&CivicL0Invariant::L0_1_NoMemberProfitDistribution) {
+            return Err("Node Blueprint rejected: Missing L0_1_NoMemberProfitDistribution invariant".to_string());
+        }
+        if !self.altitude_c_rules.contains(&CivicL0Invariant::L0_2_NoCamerasInPrivacyZone) {
+            return Err("Node Blueprint rejected: Missing L0_2_NoCamerasInPrivacyZone invariant".to_string());
+        }
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
