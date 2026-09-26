@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-06-09T17:15:33Z",
+  "manifests": {
+    "cargo": "a3f2b1c0...",
+    "pnpm": "e5d4c3b2..."
+  },
+  "governance": {
+    "genesis_env": "2521c33205d68abd1373a2549eeee3336a3ffe872911079c2cbf8add20395d1b"
+  },
+  "seal_status": "authoritative"
+}

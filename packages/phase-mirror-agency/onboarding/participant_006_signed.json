@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-006-ONBOARD",
+  "name": "Divertor Thermography Monitor Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "ea7fb003b2c3e38c8c88bde94b51f59667cf3de69fa758cb97616c7f6a332e6b",
+  "effectiveDate": "2026-06-18T10:00:00Z",
+  "signatories": [
+    {
+      "identity": "Divertor_Thermography_Monitor",
+      "role": "Participant",
+      "publicKey": "pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=",
+      "signature": "3zwlANo0eC0E2GycAxDqU+eQsh0JXPeEXgC4AbYL/iSs9G8maB9TEHUHNGNwuR5YkP5PX/D8azpQwIwuuVOhCg=="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "CCPA",
+    "auditStatus": "Approved",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Onboarded and validated under framework CCPA. Signed via Ed25519 system onboarding utility."
+  }
+}

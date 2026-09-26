@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-002-ONBOARD",
+  "name": "MHD Profile Auditor Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "4ed8e10e78e5b889f164daeeacbc6a975be73e888d949cc7f322d54d6ddca4b8",
+  "effectiveDate": "2026-06-17T17:30:00Z",
+  "signatories": [
+    {
+      "identity": "MHD_Profile_Auditor",
+      "role": "Participant",
+      "publicKey": "pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=",
+      "signature": "VPmeBkrytY2yHT0q7/gAC9Q4PvLaoqO0/ejNwBfUoYLZxH0H7+hNvAsRkhZbtoU4D3V9cNXhS6NtkZHqTLkKBA=="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "MTPI-Constitutional",
+    "auditStatus": "Approved",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Onboarded and validated under framework MTPI-Constitutional. Signed via Ed25519 system onboarding utility."
+  }
+}

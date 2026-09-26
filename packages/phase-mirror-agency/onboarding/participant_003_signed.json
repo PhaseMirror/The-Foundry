@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-003-ONBOARD",
+  "name": "Cryogenic System Controller Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "e310a2d63ad6a2f60be38b9e23f2b8dbd9e41e7db4caf674d3a1c2f16c888d04",
+  "effectiveDate": "2026-06-18T10:00:00Z",
+  "signatories": [
+    {
+      "identity": "Cryogenic_System_Controller",
+      "role": "Participant",
+      "publicKey": "pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=",
+      "signature": "7o8ywGmMLZHH4ULgrP349o8TWxwvgZYcxBl36ZQnDFoR1KurAmzJRuOWaMS+5CnKOGSPDZp6gHw3q3ZQBkurAA=="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "ISO27001",
+    "auditStatus": "Approved",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Onboarded and validated under framework ISO27001. Signed via Ed25519 system onboarding utility."
+  }
+}

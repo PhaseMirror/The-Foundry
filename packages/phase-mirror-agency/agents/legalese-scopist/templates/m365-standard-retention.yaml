@@ -1,0 +1,39 @@
+version: "1.0"
+policy_name: "Standard M365 Corporate Retention"
+sedona_references:
+  - principle: "Sedona Principle 2"
+    note: "Proportionality: Corporate ESI should be retained only as long as business necessity dictates."
+  - principle: "Sedona Principle 5"
+    note: "Preservation duty override for litigation."
+
+rules:
+  - id: "m365-email-default"
+    description: "Standard 7-year retention for corporate email."
+    scope:
+      systems: ["exchange", "m365"]
+      esi_types: ["Email"]
+    when:
+      litigation_hold_active: false
+      relevance_band: ["Unknown", "Marginal", "Irrelevant"]
+    action:
+      retain_for_days: 2555 # 7 years
+      delete_after: true
+    sedona:
+      principles: ["Principle 2"]
+      rationale: "Aligns with tax and standard corporate audit requirements while minimizing storage burden."
+
+  - id: "m365-hold-override"
+    description: "Indefinite retention for data on legal hold."
+    scope:
+      systems: ["exchange", "m365"]
+      esi_types: ["Email", "OneDrive", "SharePoint"]
+    when:
+      litigation_hold_active: true
+      relevance_band: ["Core", "Important", "Marginal"]
+    action:
+      retain_for_days: "infinite"
+      delete_after: false
+      enable_snapshot: true
+    sedona:
+      principles: ["Principle 5"]
+      rationale: "Suspends routine purge to satisfy preservation duties once litigation is anticipated."

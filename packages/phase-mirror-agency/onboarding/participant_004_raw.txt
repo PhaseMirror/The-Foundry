@@ -1,0 +1,8 @@
+Onboarding Manifest for Tritium Breeding Auditor (PARTICIPANT-004)
+Effective Date: 2026-06-18T10:00:00Z
+System Key Reference: pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=
+Prime Gate Assignment: 19
+
+Pursuant to the Sedona Spine Mandate, the Tritium Breeding Auditor is formally hooked into the legal-technical boundary.
+
+The Participant agrees to maintain compliance with SOC2 security standards and the Ξ-Constitution.

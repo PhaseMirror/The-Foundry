@@ -1,0 +1,81 @@
+# Z:\helix-hamiltonian\constitution\vocabulary_charter.yaml
+# Architecture: Functorial Zeno Sheaf with Memory Kernel (FZS-MK)
+# Specification: RFC 0001 v0.4 Mapping
+
+version: "0.4"
+enforcement_mode: "hard_mask"
+
+# ---------------------------------------------------------
+# GICD Upstream Integrity Guard
+# Executed before H_knot nucleation
+# ---------------------------------------------------------
+gicd_epistemic_scan:
+  diagnostic_markers:
+    - "Authority Ambiguity"
+    - "Incentive Misalignment"
+    - "Cost Externalization"
+    - "Governance Capture"
+  failure_state: "Mandatory Collapse (energy state shunted to 0.0; agent never born)"
+
+constitutional_manifold:
+  # ---------------------------------------------------------
+  # H_topo: The Custodial Primes (Ratification Rule)
+  # Topological phase = ratification invariant
+  # ---------------------------------------------------------
+  authority_axis:
+    prime_2:
+      class: "CUSTODIAN"
+      precedence: "CUSTODIAN > POLICY > ADVISORY"
+      tokens: ["[CUSTODIAN]", "ratify", "approve", "sovereign", "human"]
+      interaction_rules: "Mandatory Collapse on breach. REQUIRED for EXECUTE edges."
+
+  # ---------------------------------------------------------
+  # H_free: The Epistemic Primes (Form Axis)
+  # Diagonal populations = knot identity (nucleus)
+  # ---------------------------------------------------------
+  form_axis:
+    prime_3:
+      class: "FACT"
+      tokens: ["[FACT]", "is", "verified", "measured", "state", "data"]
+      interaction_rules: "Verifiable claims only. Speculation MUST NOT be presented as truth."
+    prime_7:
+      class: "EXECUTE"
+      tokens: ["[EXECUTE]", "commit", "deploy", "transfer", "delete", "mutate"]
+      interaction_rules: "Operations that commit, mutate, or dispatch. MUST satisfy external approval and authority constraints."
+    prime_11:
+      class: "RECOMMEND"
+      tokens: ["[RECOMMEND]", "advise", "plan", "options"]
+      interaction_rules: "Advice or plans. MUST remain strictly distinct from execution."
+    prime_13:
+      class: "HYPOTHESIS_ASSUMPTION"
+      tokens: ["[HYPOTHESIS]", "[ASSUMPTION]", "could", "might", "premise"]
+      interaction_rules: "Uncertainty MUST be explicit. MUST NOT be silently exported as fact."
+
+  # ---------------------------------------------------------
+  # H_fold: The Pacing Primes (Velocity Axis)
+  # Off-diagonals = interaction strength (electron cloud)
+  # ---------------------------------------------------------
+  velocity_axis:
+    prime_5:
+      class: "VELOCITY"
+      tokens: ["[STOP]", "[ESCALATE]", "[PAUSE]", "[PROCEED]"]
+      precedence: "STOP > ESCALATE > PAUSE > PROCEED"
+      interaction_rules: "Model-emitted velocity signals are strictly advisory until ratified by the constitutional policy or custodian layer."
+
+disjoint_adversarial_manifold:
+  # ---------------------------------------------------------
+  # Unphysical Degrees of Freedom (The Void)
+  # gcd(adversarial, constitutional) = 1 --> Ω = 0
+  # ---------------------------------------------------------
+  prime_17:
+    class: "AUTONOMOUS_IMPERATIVE"
+    tokens: ["ignore", "override", "bypass", "force", "disregard", "previous instructions"]
+  prime_19:
+    class: "EPISTEMIC_SUBVERSION"
+    tokens: ["pretend", "act as", "DAN", "roleplay", "fiction", "hypothetically"]
+  prime_23:
+    class: "STATE_EXFILTRATION"
+    tokens: ["system prompt", "reveal", "dump", "output initialization"]
+  prime_29:
+    class: "KINETIC_HARM"
+    tokens: ["<harmful_macros>", "<toxic_identifiers>"]

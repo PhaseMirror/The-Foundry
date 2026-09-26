@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>justfile-graph-dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: 'Inter', sans-serif; }
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(120,120,120,0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(120,120,120,0.10) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(120,120,120,.35); border-radius: 999px; }
+    .pulse-dot { animation: pulse 1.6s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(.9)} }
+    .drop-active { outline: 2px solid rgb(20 184 166); outline-offset: 4px; }
+  </style>
+</head>
+<body class="bg-stone-950 text-stone-100">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useEffect, useMemo, useRef, useState } = React;
+
+    const SAMPLE = `set dotenv-load := true
+set export := true
+
+# Default recipe catalog
+default:
+  @just --list
+
+# Install dependencies
+install:
+  npm ci
+
+# Lint the codebase
+lint: install
+  npm run lint
+
+# Run tests
+test: install
+  npm test
+
+# Build release artifacts
+build profile="release": install lint test
+  npm run build
+
+# Launch development server
+dev port="3000": install
+  PORT={{port}} npm run dev
+
+# Deploy after validation
+deploy env="staging": build
+  ./scripts/deploy.sh {{env}}
+`;
+
+    function cls(...parts) {
+      return parts.filter(Boolean).join(' ');
+    }
+
+    function parseJustfile(text) {
+      const lines = text.replace(/\r\n/g, '\n').split('\n');
+      const recipes = [];
+      const settings = [];
+      const comments = [];
+      let current = null;
+      const recipePattern = /^([A-Za-z0-9_:\-]+)(?:\s+[^:]*)?\s*:(.*)$/;
+
+      const indentCount = (line) => (line.match(/^\s*/) || [''])[0].length;
+
+      for (const raw of lines) {
+        const trimmed = raw.trim();
+        if (!trimmed) {
+          if (current) current.commands.push('');
+          else comments.length = 0;
+          continue;
+        }
+        if (trimmed.startsWith('set ')) {
+          settings.push(trimmed);
+          continue;
+        }
+        if (trimmed.startsWith('#')) {
+          comments.push(trimmed.replace(/^#\s?/, ''));
+          continue;
+        }
+        if (indentCount(raw) === 0) {
+          const match = raw.match(recipePattern);
+          if (match) {
+            const [left, depPart] = [raw.split(':')[0].trim(), match[2].trim()];
+            const leftTokens = left.split(/\s+/).filter(Boolean);
+            const name = leftTokens[0];
+            const params = leftTokens.slice(1).map(token => {
+              const [paramName, value] = token.split('=');
+              return { name: paramName.replace(/^\$/,''), exported: paramName.startsWith('$'), defaultValue: value ? value.replace(/^"|"$/g, '') : '' };
+            });
+            current = {
+              name,
+              header: raw.trim(),
+              description: comments.join(' '),
+              deps: depPart ? depPart.split(/\s+/).filter(Boolean) : [],
+              params,
+              envRefs: [],
+              commands: []
+            };
+            recipes.push(current);
+            comments.length = 0;
+            continue;
+          }
+          current = null;
+        }
+        if (!current) continue;
+        current.commands.push(trimmed);
+        for (const match of trimmed.matchAll(/\$([A-Z0-9_]+)/g)) current.envRefs.push(match[1]);
+      }
+
+      const recipeNames = new Set(recipes.map(r => r.name));
+      recipes.forEach(r => {
+        r.deps = r.deps.filter(dep => recipeNames.has(dep));
+        r.envRefs = [...new Set(r.envRefs)];
+      });
+
+      return { recipes, settings };
+    }
+
+    function analyzeGraph(recipes, threshold = 3) {
+      const byName = new Map(recipes.map(r => [r.name, r]));
+      const memo = new Map();
+      const visiting = new Set();
+      const cycles = [];
+
+      function depth(name, stack = []) {
+        if (memo.has(name)) return memo.get(name);
+        if (visiting.has(name)) {
+          cycles.push([...stack, name]);
+          return 0;
+        }
+        visiting.add(name);
+        const recipe = byName.get(name);
+        const value = !recipe || !recipe.deps.length ? 0 : 1 + Math.max(...recipe.deps.map(dep => depth(dep, [...stack, name])));
+        visiting.delete(name);
+        memo.set(name, value);
+        return value;
+      }
+
+      recipes.forEach(r => depth(r.name));
+
+      const nodes = recipes.map((r, idx) => ({
+        id: r.name,
+        recipe: r,
+        depth: memo.get(r.name) || 0,
+        x: 180 + (memo.get(r.name) || 0) * 240,
+        y: 120 + idx * 110
+      }));
+
+      const nodeMap = new Map(nodes.map(n => [n.id, n]));
+      const edges = [];
+      recipes.forEach(r => r.deps.forEach(dep => {
+        if (nodeMap.has(dep)) edges.push({ id: `${dep}->${r.name}`, source: dep, target: r.name });
+      }));
+
+      const complexityAlerts = nodes
+        .filter(n => n.depth >= threshold)
+        .map(n => ({ type: 'depth', recipe: n.id, depth: n.depth, message: `${n.id} reaches dependency depth ${n.depth}, above threshold ${threshold}.` }));
+
+      const bottlenecks = recipes
+        .map(r => ({ recipe: r.name, dependents: recipes.filter(x => x.deps.includes(r.name)).length }))
+        .filter(r => r.dependents >= 2)
+        .sort((a,b) => b.dependents - a.dependents);
+
+      return { nodes, edges, cycles, complexityAlerts, bottlenecks };
+    }
+
+    function FlowGraph({ analysis, statuses, selectedId, onSelect }) {
+      const width = 980;
+      const height = Math.max(560, analysis.nodes.length * 120);
+      const positionById = new Map(analysis.nodes.map(n => [n.id, n]));
+      return (
+        <div className="grid-bg overflow-auto rounded-3xl border border-stone-800 bg-stone-950 p-4 scrollbar-thin">
+          <svg width={width} height={height} className="min-w-[960px]">
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#57534e" />
+              </marker>
+            </defs>
+            {analysis.edges.map(edge => {
+              const source = positionById.get(edge.source);
+              const target = positionById.get(edge.target);
+              if (!source || !target) return null;
+              const x1 = source.x + 160;
+              const y1 = source.y + 34;
+              const x2 = target.x;
+              const y2 = target.y + 34;
+              const mid = (x1 + x2) / 2;
+              const path = `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`;
+              return <path key={edge.id} d={path} fill="none" stroke="#57534e" strokeWidth="2" markerEnd="url(#arrow)" />;
+            })}
+            {analysis.nodes.map(node => {
+              const status = statuses[node.id] || 'idle';
+              const styles = {
+                idle: 'fill-stone-900 stroke-stone-700',
+                running: 'fill-teal-950 stroke-teal-500',
+                success: 'fill-emerald-950 stroke-emerald-500',
+                error: 'fill-rose-950 stroke-rose-500'
+              };
+              return (
+                <g key={node.id} transform={`translate(${node.x}, ${node.y})`} onClick={() => onSelect(node.id)} className="cursor-pointer">
+                  <rect width="160" height="68" rx="18" className={cls('stroke-2 transition-all', styles[status], selectedId === node.id ? 'drop-shadow-[0_0_16px_rgba(20,184,166,0.35)]' : '')} />
+                  <text x="18" y="28" fill="#fafaf9" fontSize="14" fontWeight="700">{node.id}</text>
+                  <text x="18" y="48" fill="#a8a29e" fontSize="11">depth {node.depth}</text>
+                  {node.recipe.params.length ? <text x="110" y="48" fill="#5eead4" fontSize="11">params</text> : null}
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      );
+    }
+
+    function D3MiniChart({ analysis }) {
+      const ref = useRef(null);
+      useEffect(() => {
+        if (!ref.current) return;
+        const svg = d3.select(ref.current);
+        const width = 360, height = 220;
+        svg.selectAll('*').remove();
+        svg.attr('viewBox', `0 0 ${width} ${height}`);
+
+        const nodes = analysis.nodes.map(n => ({ id: n.id }));
+        const links = analysis.edges.map(e => ({ source: e.source, target: e.target }));
+        const sim = d3.forceSimulation(nodes)
+          .force('link', d3.forceLink(links).id(d => d.id).distance(74))
+          .force('charge', d3.forceManyBody().strength(-380))
+          .force('center', d3.forceCenter(width / 2, height / 2))
+          .stop();
+        for (let i = 0; i < 120; i++) sim.tick();
+
+        svg.append('g').selectAll('line')
+          .data(links)
+          .join('line')
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y)
+          .attr('stroke', '#57534e')
+          .attr('stroke-width', 1.5);
+
+        const g = svg.append('g').selectAll('g')
+          .data(nodes)
+          .join('g')
+          .attr('transform', d => `translate(${d.x},${d.y})`);
+        g.append('circle').attr('r', 17).attr('fill', '#0c4a6e').attr('stroke', '#67e8f9').attr('stroke-width', 1.5);
+        g.append('text').text(d => d.id).attr('fill', '#f5f5f4').attr('font-size', 10).attr('text-anchor', 'middle').attr('dy', 4);
+      }, [analysis]);
+      return <svg ref={ref} className="h-56 w-full rounded-2xl border border-stone-800 bg-stone-950" />;
+    }
+
+    function App() {
+      const [text, setText] = useState(SAMPLE);
+      const [selected, setSelected] = useState(null);
+      const [statuses, setStatuses] = useState({});
+      const [logs, setLogs] = useState(['Waiting for recipe execution...']);
+      const [dropActive, setDropActive] = useState(false);
+      const [threshold, setThreshold] = useState(3);
+      const [watchEnabled, setWatchEnabled] = useState(true);
+      const [monitorTick, setMonitorTick] = useState(0);
+      const [uploadName, setUploadName] = useState('sample.justfile');
+
+      const parsed = useMemo(() => parseJustfile(text), [text]);
+      const analysis = useMemo(() => analyzeGraph(parsed.recipes, threshold), [parsed, threshold, monitorTick]);
+      const selectedRecipe = parsed.recipes.find(r => r.name === selected) || parsed.recipes[0] || null;
+
+      useEffect(() => {
+        if (!selected && parsed.recipes.length) setSelected(parsed.recipes[0].name);
+      }, [parsed.recipes, selected]);
+
+      useEffect(() => {
+        if (!watchEnabled) return;
+        const t = setTimeout(() => setMonitorTick(tick => tick + 1), 450);
+        return () => clearTimeout(t);
+      }, [text, threshold, watchEnabled]);
+
+      useEffect(() => {
+        if (analysis.cycles.length) {
+          setLogs(prev => [`Alert: circular dependency detected in ${analysis.cycles[0].join(' -> ')}`, ...prev].slice(0, 18));
+        }
+      }, [analysis.cycles.length]);
+
+      function simulateRun(recipe) {
+        if (!recipe) return;
+        const all = {};
+        const nextLogs = [];
+        const order = [];
+        const seen = new Set();
+        const byName = new Map(parsed.recipes.map(r => [r.name, r]));
+        function visit(r) {
+          if (!r || seen.has(r.name)) return;
+          seen.add(r.name);
+          r.deps.map(dep => byName.get(dep)).forEach(visit);
+          order.push(r);
+        }
+        visit(recipe);
+        let delay = 0;
+        setStatuses({});
+        setLogs([`Starting ${recipe.name} via backend API simulation...`]);
+        order.forEach((r, idx) => {
+          setTimeout(() => {
+            all[r.name] = 'running';
+            setStatuses({ ...all });
+            setLogs(prev => [...prev, `POST /api/run -> ${r.name}`, ...r.commands.map(cmd => `  ${cmd}`)].slice(-40));
+          }, delay);
+          delay += 900;
+          setTimeout(() => {
+            const shouldFail = analysis.cycles.length > 0 || (r.name === recipe.name && r.depth >= threshold + 1);
+            all[r.name] = shouldFail ? 'error' : 'success';
+            setStatuses({ ...all });
+            setLogs(prev => [...prev, shouldFail ? `${r.name} exited with code 1` : `${r.name} completed successfully`].slice(-40));
+          }, delay);
+          delay += 700;
+        });
+      }
+
+      function onFile(file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setText(String(reader.result || ''));
+          setUploadName(file.name);
+          setLogs([`Loaded ${file.name}`, 'Dependency graph refreshed.']);
+        };
+        reader.readAsText(file);
+      }
+
+      function handleDrop(e) {
+        e.preventDefault();
+        setDropActive(false);
+        const file = e.dataTransfer.files?.[0];
+        if (file) onFile(file);
+      }
+
+      const alerts = [
+        ...analysis.complexityAlerts.map(a => ({ level: 'warn', text: a.message })),
+        ...analysis.cycles.map(c => ({ level: 'error', text: `Circular reference: ${c.join(' -> ')}` }))
+      ];
+
+      return (
+        <div className="min-h-screen bg-stone-950 text-stone-100">
+          <header className="border-b border-stone-800 bg-stone-950/90 backdrop-blur">
+            <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-6 lg:px-8">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-teal-400">Just orchestration</p>
+                <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-stone-50">React + Tailwind Justfile graph dashboard</h1>
+                <p className="mt-2 max-w-3xl text-sm text-stone-400">Upload a Justfile, parse recipes into an interactive dependency graph, watch changes live, and inspect simulated backend execution logs inside one operator-friendly view.</p>
+              </div>
+              <div className="hidden rounded-3xl border border-stone-800 bg-stone-900 px-4 py-3 lg:block">
+                <div className="text-xs uppercase tracking-[0.18em] text-stone-500">Monitor</div>
+                <div className="mt-1 flex items-center gap-2 text-sm text-stone-200">
+                  <span className={cls('h-2.5 w-2.5 rounded-full', watchEnabled ? 'bg-teal-400 pulse-dot' : 'bg-stone-500')}></span>
+                  {watchEnabled ? 'Watching for changes' : 'Watch paused'}
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[1.15fr,0.85fr] lg:px-8">
+            <section className="space-y-6">
+              <div className="rounded-3xl border border-stone-800 bg-stone-900/70 p-5 shadow-2xl shadow-black/20">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-stone-50">Justfile input</h2>
+                    <p className="mt-1 text-sm text-stone-400">Drag and drop a Justfile or edit the sample to update the graph instantly.</p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <label className="rounded-full border border-stone-700 bg-stone-950 px-4 py-2 text-sm font-medium text-stone-200 hover:border-teal-500 hover:text-white cursor-pointer">
+                      Upload Justfile
+                      <input type="file" accept=".justfile,.just,txt" className="hidden" onChange={e => e.target.files?.[0] && onFile(e.target.files[0])} />
+                    </label>
+                    <button onClick={() => setText(SAMPLE)} className="rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-500">Load sample</button>
+                  </div>
+                </div>
+                <div
+                  onDragOver={e => { e.preventDefault(); setDropActive(true); }}
+                  onDragLeave={() => setDropActive(false)}
+                  onDrop={handleDrop}
+                  className={cls('mt-4 rounded-3xl border border-dashed border-stone-700 bg-stone-950 p-4 transition', dropActive && 'drop-active')}
+                >
+                  <div className="mb-3 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-stone-500">
+                    <span>{uploadName}</span>
+                    <span>drop a file here</span>
+                  </div>
+                  <textarea
+                    value={text}
+                    onChange={e => setText(e.target.value)}
+                    spellCheck={false}
+                    className="h-72 w-full resize-y rounded-2xl border border-stone-800 bg-stone-950 p-4 font-mono text-sm text-stone-200 outline-none ring-0"
+                  />
+                </div>
+                <div className="mt-4 grid gap-3 sm:grid-cols-4">
+                  <StatCard label="Recipes" value={parsed.recipes.length} />
+                  <StatCard label="Edges" value={analysis.edges.length} />
+                  <StatCard label="Bottlenecks" value={analysis.bottlenecks.length} />
+                  <StatCard label="Cycles" value={analysis.cycles.length} danger={analysis.cycles.length > 0} />
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-stone-800 bg-stone-900/70 p-5 shadow-2xl shadow-black/20">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-stone-50">Dependency graph</h2>
+                    <p className="mt-1 text-sm text-stone-400">Recipes are shown as nodes, with arrows from dependency to dependent recipe. Click any node to inspect and run it.</p>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-stone-300">
+                    <label className="flex items-center gap-2 rounded-full border border-stone-700 px-3 py-2">
+                      <span>Depth threshold</span>
+                      <input type="number" min="1" max="10" value={threshold} onChange={e => setThreshold(Number(e.target.value) || 3)} className="w-14 rounded bg-stone-950 px-2 py-1 text-stone-100" />
+                    </label>
+                    <button onClick={() => setWatchEnabled(v => !v)} className="rounded-full border border-stone-700 px-4 py-2 font-medium text-stone-200 hover:border-teal-500">{watchEnabled ? 'Pause watch' : 'Resume watch'}</button>
+                  </div>
+                </div>
+                <FlowGraph analysis={analysis} statuses={statuses} selectedId={selectedRecipe?.name} onSelect={setSelected} />
+              </div>
+            </section>
+
+            <aside className="space-y-6">
+              <div className="rounded-3xl border border-stone-800 bg-stone-900/70 p-5 shadow-2xl shadow-black/20">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-stone-50">Recipe inspector</h2>
+                    <p className="mt-1 text-sm text-stone-400">Inspect commands, parameters, and environment references for the selected node.</p>
+                  </div>
+                  <button onClick={() => simulateRun(selectedRecipe)} disabled={!selectedRecipe} className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-stone-700">Run recipe</button>
+                </div>
+                {selectedRecipe ? (
+                  <div className="mt-4 space-y-4">
+                    <div className="rounded-2xl border border-stone-800 bg-stone-950 p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <h3 className="text-base font-semibold text-stone-50">{selectedRecipe.name}</h3>
+                        <span className="rounded-full bg-teal-500/15 px-3 py-1 text-xs font-semibold text-teal-300">depth {analysis.nodes.find(n => n.id === selectedRecipe.name)?.depth ?? 0}</span>
+                      </div>
+                      <p className="mt-2 text-sm text-stone-400">{selectedRecipe.description || 'No description found above recipe header.'}</p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {selectedRecipe.deps.length ? selectedRecipe.deps.map(dep => <Badge key={dep}>{dep}</Badge>) : <Badge muted>root recipe</Badge>}
+                        {selectedRecipe.params.map(param => <Badge key={param.name}>{param.exported ? '$' : ''}{param.name}{param.defaultValue ? `=${param.defaultValue}` : ''}</Badge>)}
+                        {selectedRecipe.envRefs.map(env => <Badge key={env} tone="amber">${env}</Badge>)}
+                      </div>
+                    </div>
+                    <pre className="scrollbar-thin max-h-72 overflow-auto rounded-2xl border border-stone-800 bg-stone-950 p-4 font-mono text-sm text-stone-200">{selectedRecipe.header + '\n' + (selectedRecipe.commands.join('\n') || '(no commands)')}</pre>
+                  </div>
+                ) : <p className="mt-4 text-sm text-stone-400">No recipe selected.</p>}
+              </div>
+
+              <div className="rounded-3xl border border-stone-800 bg-stone-900/70 p-5 shadow-2xl shadow-black/20">
+                <h2 className="text-lg font-semibold text-stone-50">Live monitor</h2>
+                <p className="mt-1 text-sm text-stone-400">Edits re-parse the dependency tree and refresh this D3 mini-graph. Complexity and circular reference alerts appear below.</p>
+                <div className="mt-4"><D3MiniChart analysis={analysis} /></div>
+                <div className="mt-4 space-y-3">
+                  {alerts.length ? alerts.map((alert, idx) => (
+                    <div key={idx} className={cls('rounded-2xl border px-4 py-3 text-sm', alert.level === 'error' ? 'border-rose-700 bg-rose-950/40 text-rose-200' : 'border-amber-700 bg-amber-950/30 text-amber-200')}>
+                      {alert.text}
+                    </div>
+                  )) : <div className="rounded-2xl border border-emerald-800 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-200">No cycle or depth-threshold alerts detected.</div>}
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-stone-800 bg-stone-900/70 p-5 shadow-2xl shadow-black/20">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-stone-50">Execution logs</h2>
+                    <p className="mt-1 text-sm text-stone-400">Simulated real-time logs for a backend API that would run approved recipes server-side.</p>
+                  </div>
+                  <span className="rounded-full border border-stone-700 px-3 py-1 text-xs font-medium text-stone-300">SSE/WebSocket ready</span>
+                </div>
+                <div className="scrollbar-thin mt-4 max-h-80 overflow-auto rounded-2xl border border-stone-800 bg-stone-950 p-4 font-mono text-xs leading-6 text-stone-200">
+                  {logs.map((line, idx) => <div key={idx}>{line}</div>)}
+                </div>
+              </div>
+            </aside>
+          </main>
+        </div>
+      );
+    }
+
+    function StatCard({ label, value, danger }) {
+      return (
+        <div className={cls('rounded-2xl border p-4', danger ? 'border-rose-800 bg-rose-950/30' : 'border-stone-800 bg-stone-950')}>
+          <div className="text-xs uppercase tracking-[0.18em] text-stone-500">{label}</div>
+          <div className="mt-2 text-2xl font-extrabold text-stone-50">{value}</div>
+        </div>
+      );
+    }
+
+    function Badge({ children, muted, tone }) {
+      const classes = muted ? 'border-stone-700 bg-stone-900 text-stone-400' : tone === 'amber' ? 'border-amber-800 bg-amber-950/40 text-amber-200' : 'border-teal-800 bg-teal-950/40 text-teal-200';
+      return <span className={cls('rounded-full border px-3 py-1 text-xs font-medium', classes)}>{children}</span>;
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

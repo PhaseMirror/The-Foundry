@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReplicationConfig",
+  "type": "object",
+  "required": [
+    "node_id",
+    "replicate_trust_levels",
+    "role"
+  ],
+  "properties": {
+    "node_id": {
+      "type": "string"
+    },
+    "replicate_trust_levels": {
+      "description": "Only these trust levels are eligible for replication across nodes. Default is [Internal] per ADR-ARCH-001 Option X.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TrustLevel"
+      }
+    },
+    "role": {
+      "$ref": "#/definitions/ReplicationRole"
+    }
+  },
+  "definitions": {
+    "ReplicationRole": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "primary"
+          ]
+        },
+        {
+          "type": "object",
+          "required": [
+            "replica"
+          ],
+          "properties": {
+            "replica": {
+              "type": "object",
+              "required": [
+                "primary_addr"
+              ],
+              "properties": {
+                "primary_addr": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "TrustLevel": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external"
+      ]
+    }
+  }
+}

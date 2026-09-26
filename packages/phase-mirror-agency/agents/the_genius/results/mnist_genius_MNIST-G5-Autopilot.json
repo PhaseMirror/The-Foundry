@@ -1,0 +1,240 @@
+{
+  "timestamp": "2026-05-26T17:52:54Z",
+  "config": {
+    "name": "MNIST-G5-Autopilot",
+    "primes": [
+      2,
+      3,
+      5
+    ],
+    "hidden_dim": 64,
+    "lambda_zeta": 1.0,
+    "a": 5.0,
+    "safety_threshold": 1.0,
+    "use_lm": true,
+    "max_batches": 20
+  },
+  "final_loss": 1.8186850547790527,
+  "telemetry_summary": [
+    {
+      "batch": 0,
+      "loss": 2.3186349868774414,
+      "pirtm_norm": 1.4244635105133057,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.4244635105133057,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 1,
+      "loss": 3.6418516635894775,
+      "pirtm_norm": 1.1399832963943481,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.282223403453827,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 2,
+      "loss": 4.912075996398926,
+      "pirtm_norm": 1.8819059133529663,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.4821175734202068,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 3,
+      "loss": 4.599353790283203,
+      "pirtm_norm": 1.7962350845336914,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.5606469511985779,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 4,
+      "loss": 2.8945300579071045,
+      "pirtm_norm": 2.2443349361419678,
+      "ctrl_status": {
+        "correlation": 0.14998743923194124,
+        "avg_norm": 1.6973845481872558,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 5,
+      "loss": 2.0456411838531494,
+      "pirtm_norm": 2.7108774185180664,
+      "ctrl_status": {
+        "correlation": -0.6047233514787763,
+        "avg_norm": 1.954667329788208,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 6,
+      "loss": 1.9820865392684937,
+      "pirtm_norm": 1.9761881828308105,
+      "ctrl_status": {
+        "correlation": -0.682748389712449,
+        "avg_norm": 2.1219083070755005,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 7,
+      "loss": 1.762269377708435,
+      "pirtm_norm": 2.5728609561920166,
+      "ctrl_status": {
+        "correlation": -0.7026614030517806,
+        "avg_norm": 2.2600993156433105,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 8,
+      "loss": 1.8893204927444458,
+      "pirtm_norm": 2.0613064765930176,
+      "ctrl_status": {
+        "correlation": -0.12432529817697313,
+        "avg_norm": 2.3131135940551757,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 9,
+      "loss": 1.8890641927719116,
+      "pirtm_norm": 1.8100084066390991,
+      "ctrl_status": {
+        "correlation": 0.05106163086790325,
+        "avg_norm": 2.226248288154602,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 10,
+      "loss": 1.8388372659683228,
+      "pirtm_norm": 2.2264630794525146,
+      "ctrl_status": {
+        "correlation": -0.808541333618219,
+        "avg_norm": 2.129365420341492,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 11,
+      "loss": 2.0589406490325928,
+      "pirtm_norm": 2.2048182487487793,
+      "ctrl_status": {
+        "correlation": -0.39703073298647007,
+        "avg_norm": 2.1750914335250853,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 12,
+      "loss": 1.8033533096313477,
+      "pirtm_norm": 2.1780457496643066,
+      "ctrl_status": {
+        "correlation": 0.07233768279643853,
+        "avg_norm": 2.0961283922195433,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 13,
+      "loss": 1.840225338935852,
+      "pirtm_norm": 1.5370451211929321,
+      "ctrl_status": {
+        "correlation": 0.2468988570627658,
+        "avg_norm": 1.9912761211395265,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 14,
+      "loss": 1.8489943742752075,
+      "pirtm_norm": 1.745018720626831,
+      "ctrl_status": {
+        "correlation": 0.3058544146780025,
+        "avg_norm": 1.9782781839370727,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 15,
+      "loss": 1.7673861980438232,
+      "pirtm_norm": 2.029420852661133,
+      "ctrl_status": {
+        "correlation": 0.3115458171795435,
+        "avg_norm": 1.9388697385787963,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 16,
+      "loss": 2.060223340988159,
+      "pirtm_norm": 1.996117353439331,
+      "ctrl_status": {
+        "correlation": 0.00386026013023711,
+        "avg_norm": 1.8971295595169066,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 17,
+      "loss": 1.9011695384979248,
+      "pirtm_norm": 2.149523973464966,
+      "ctrl_status": {
+        "correlation": 0.2533799477048828,
+        "avg_norm": 1.8914252042770385,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 18,
+      "loss": 1.821630597114563,
+      "pirtm_norm": 1.5946900844573975,
+      "ctrl_status": {
+        "correlation": 0.30255918291524003,
+        "avg_norm": 1.9029541969299317,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 19,
+      "loss": 1.8186850547790527,
+      "pirtm_norm": 1.6055444478988647,
+      "ctrl_status": {
+        "correlation": 0.3653609262248818,
+        "avg_norm": 1.8750593423843385,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    }
+  ]
+}

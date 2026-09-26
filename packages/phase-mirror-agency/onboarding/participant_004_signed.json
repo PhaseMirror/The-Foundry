@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-004-ONBOARD",
+  "name": "Tritium Breeding Auditor Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "bdafadd59e3d6a287100da5bf50e8ff60f08ed41f0766a5d0ec3f9e36aee3b26",
+  "effectiveDate": "2026-06-18T10:00:00Z",
+  "signatories": [
+    {
+      "identity": "Tritium_Breeding_Auditor",
+      "role": "Participant",
+      "publicKey": "pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=",
+      "signature": "qgjSY57cWZmE49sFHuQsp3bTKDq9nK/nfHlL0YfHiConNEJhZZ406amjK5MYKz+LTMzk8fJlBFMU9E1DLrvTDA=="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "SOC2",
+    "auditStatus": "Approved",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Onboarded and validated under framework SOC2. Signed via Ed25519 system onboarding utility."
+  }
+}

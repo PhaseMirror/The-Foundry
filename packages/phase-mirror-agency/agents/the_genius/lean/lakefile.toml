@@ -1,0 +1,14 @@
+name = "genius_proof"
+version = "0.1.0"
+defaultTargets = ["genius_proof"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+
+[[lean_lib]]
+name = "GeniusProof"
+
+[[lean_exe]]
+name = "genius_proof"
+root = "Main"

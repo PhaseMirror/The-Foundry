@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phasemirror.io/schemas/clinical-auth/v1",
+  "title": "ClinicalAuthorizationTensor",
+  "description": "Archivum-anchored, prime-indexed clinical authorization record governing write and mutation operations.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_id",
+    "prime_index",
+    "namespace",
+    "subject_did",
+    "authorizing_clinician_did",
+    "action_scope",
+    "ace_budget",
+    "provenance",
+    "archivum_anchor",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "ahgi-clinical-auth/v1" },
+    "record_id": { "type": "string", "format": "uuid" },
+    "prime_index": { "type": "integer", "minimum": 2 },
+    "namespace": { "type": "string", "const": "ahgi.clinical_auth" },
+    "subject_did": { "type": "string", "pattern": "^did:[a-z]+:.+" },
+    "authorizing_clinician_did": { "type": "string", "pattern": "^did:[a-z]+:.+" },
+    "action_scope": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "ace_budget": {
+      "type": "object",
+      "required": ["allocated_units", "unit_definition"],
+      "description": "Absolute Contraction Energy budget allocated to this authorization. The MultiplicityCell runtime debits this budget on each state transition. Auth is suspended when budget is exhausted.",
+      "properties": {
+        "allocated_units": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total ACE units allocated for the duration of this auth TTL."
+        },
+        "unit_definition": {
+          "type": "string",
+          "description": "Definition of one ACE unit in measurable terms, e.g. 'one PIRTM recursion at depth <= 4' or 'one inference pass on a tier_2 model'."
+        },
+        "consumed_units": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Populated by runtime. Debited by each agent_action execution under this auth. Read-only after issuance."
+        },
+        "exhaustion_policy": {
+          "type": "string",
+          "enum": ["block", "warn_and_continue", "escalate_judiciary"],
+          "description": "What happens when allocated_units are consumed. block is required for tier_3 and tier_4."
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["parent_prime_index", "lineage_hash"],
+      "properties": {
+        "parent_prime_index": { "type": "integer", "minimum": 2 },
+        "lineage_hash": { "type": "string" }
+      }
+    },
+    "archivum_anchor": {
+      "type": "object",
+      "required": ["archivum_record_id", "archivum_did", "anchor_timestamp", "namespace"],
+      "properties": {
+        "archivum_record_id": { "type": "string" },
+        "archivum_did": { "type": "string" },
+        "anchor_timestamp": { "type": "string", "format": "date-time" },
+        "namespace": { "type": "string", "const": "ahgi.clinical_auth" }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["type", "created", "verification_method", "proof_value"],
+      "properties": {
+        "type": { "type": "string" },
+        "created": { "type": "string", "format": "date-time" },
+        "verification_method": { "type": "string" },
+        "proof_value": { "type": "string" }
+      }
+    }
+  }
+}

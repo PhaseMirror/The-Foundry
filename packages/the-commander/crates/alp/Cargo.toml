@@ -1,0 +1,14 @@
+[package]
+name = "multiplicity-alp"
+version = "1.0.0-alpha"
+edition = "2024"
+
+[dependencies]
+multiplicity-common = { path = "../commons" }
+anyhow = "1.0.102"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+thiserror = "2.0.18"
+unicode-segmentation = "1.13.2"
+schemars = "0.8.22"
+chrono = { version = "0.4", features = ["serde"] }

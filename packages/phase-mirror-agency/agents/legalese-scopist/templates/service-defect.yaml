@@ -1,0 +1,38 @@
+version: "1.0"
+policy_name: "Service & Pleading Procedural Retention"
+sedona_references:
+  - principle: "Sedona Principle 2"
+    note: "Proportionality: GPS logs and server activity data are core unique ESI when service of process is contested."
+  - principle: "Sedona Principle 5"
+    note: "Duty to preserve evidence of service once a Motion to Vacate or jurisdictional challenge is anticipated."
+
+rules:
+  - id: "service-integrity-core"
+    description: "Infinite retention for GPS and timestamped logs of process servers."
+    scope:
+      systems: ["field-ops-app", "gps-archive"]
+      esi_types: ["ServiceLog", "GPSCoord", "PhotoEvidence"]
+    when:
+      litigation_hold_active: true
+      relevance_band: ["Core"]
+    action:
+      retain_for_days: "infinite"
+      delete_after: false
+    sedona:
+      principles: ["Principle 2", "Principle 5"]
+      rationale: "Service integrity is a jurisdictional threshold; metadata proving the physical location of the server is essential unique ESI."
+
+  - id: "internal-service-coordination"
+    description: "Standard 1-year retention for internal coordination messages."
+    scope:
+      systems: ["slack", "internal-comms"]
+      esi_types: ["DispatchChat"]
+    when:
+      litigation_hold_active: false
+      relevance_band: ["Marginal"]
+    action:
+      retain_for_days: 365
+      delete_after: true
+    sedona:
+      principles: ["Principle 2"]
+      rationale: "Lower probative value for jurisdiction compared to actual field execution logs."

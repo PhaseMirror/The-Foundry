@@ -1,0 +1,17 @@
+{
+  "name": "@mtpi/profile-web4",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "echo 'No tests for @mtpi/profile-web4 yet'"
+  },
+  "dependencies": {
+    "@mtpi/kernel": "workspace:*"
+  }
+}

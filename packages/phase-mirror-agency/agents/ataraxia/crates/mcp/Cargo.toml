@@ -1,0 +1,28 @@
+[package]
+name = "multiplicity-mcp"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "multiplicity-mcp"
+path = "src/main.rs"
+
+[dependencies]
+multiplicity-common = { path = "../common" }
+multiplicity-alp = { path = "../alp" }
+multiplicity-sigma = { path = "../sigma" }
+multiplicity-commander-core = { path = "../commander-core" }
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+axum.workspace = true
+yaml-rust2.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+tokio-stream.workspace = true

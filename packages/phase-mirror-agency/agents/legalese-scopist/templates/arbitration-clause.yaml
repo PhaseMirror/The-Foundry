@@ -1,0 +1,39 @@
+version: "1.0"
+policy_name: "Arbitration & Clickwrap Retention"
+sedona_references:
+  - principle: "Sedona Principle 2"
+    note: "Proportionality: User session logs and clickwrap audit trails are highly relevant unique ESI for enforcing arbitration and class-waivers."
+  - principle: "Sedona Principle 5"
+    note: "Duty to preserve extends to backend database logs proving contract formation when unconscionability or lack of assent is alleged."
+
+rules:
+  - id: "clickwrap-audit-core"
+    description: "Permanent retention for core contract formation logs once arbitration is contested."
+    scope:
+      systems: ["user-db", "session-logger"]
+      esi_types: ["ClickwrapAudit", "IPLog", "SessionReplay"]
+    when:
+      litigation_hold_active: true
+      relevance_band: ["Core", "Important"]
+    action:
+      retain_for_days: "infinite"
+      delete_after: false
+      enable_snapshot: true
+    sedona:
+      principles: ["Principle 2", "Principle 5"]
+      rationale: "Clickwrap audit trails are the definitive factual record of assent. Preservation is strictly required to support a Motion to Compel Arbitration."
+
+  - id: "standard-web-traffic"
+    description: "Standard 30-day rolling purge for routine, non-authenticated web traffic."
+    scope:
+      systems: ["web-server", "cdn-logs"]
+      esi_types: ["AccessLog"]
+    when:
+      litigation_hold_active: false
+      relevance_band: ["Unknown", "Marginal", "Irrelevant"]
+    action:
+      retain_for_days: 30
+      delete_after: true
+    sedona:
+      principles: ["Principle 2"]
+      rationale: "Routine, high-volume ephemeral data with low likely benefit to specific disputes unless user-authenticated."

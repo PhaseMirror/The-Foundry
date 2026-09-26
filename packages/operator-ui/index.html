@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>operator-ui</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Import the bridge -->
+    <script type="module">
+      import { validateCommand } from '../phase-mirror-mcp/phaseMirrorAlpCnlBridge.ts';
+      import { Constitution } from '../phase-mirror-mcp/pkg/sedona_spine.js';
+
+      const activeConstitution = {
+        rules: [
+          { clause: 'No unbounded quantifiers', prime_index: 1, allowed: false },
+          { clause: 'Deploy only with valid service names', prime_index: 5, allowed: true },
+        ],
+      };
+
+      const originalSend = window.sendCommand || function(text) { console.log('Original send fallback:', text); };
+      window.sendCommand = async function (text) {
+        const allowed = await validateCommand(text, activeConstitution);
+        if (!allowed) {
+          if (typeof appendLog === 'function') appendLog('❌ Vetoed by ALP constitution', 'invariant-fail');
+          if (typeof setStatus === 'function') setStatus('🔴 VETOED', '#ff5555');
+          return; // never reaches the agent
+        }
+        originalSend(text);
+      };
+    </script>
+  </body>
+</html>
