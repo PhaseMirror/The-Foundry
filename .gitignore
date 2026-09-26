@@ -21,3 +21,11 @@ release_witness.json
 
 # Test output
 uac_boundary_test_results.txt
+
+# Compiled tools / binaries
+circom
+
+# Backup files
+*.bak
+*.swp
+*.swo
