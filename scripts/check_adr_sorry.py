@@ -31,9 +31,25 @@ import sys
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Build roots that are part of `lake build` / `lake test` artifacts.
-SCAN_DIRS = ["ADR", "Care", "PirtmAuthBoundary"]
+#
+# These MUST track the roots enumerated by the lakefile. The previous list
+# (`ADR`, `Care`, `PirtmAuthBoundary`) was 2/3 dead -- `Care/` and
+# `PirtmAuthBoundary/` do not exist in this tree -- while omitting
+# `Foundations/`, which holds all 13 manifest-registered sorries. The result was
+# a false green: "PASSED: No sorry/admit tactics found" while untracked debt
+# sat in the tree, and the 13 live manifest entries surfaced only as ghost
+# warnings behind a zero exit code. D-02.
+SCAN_DIRS = ["ADR", "Foundations", "pirtm/lean", "lean"]
 
-# The ONLY allowed exception file (quarantine) regardless of name matching.
+# Roots that exist but are excluded from every lakefile. Reported, never
+# scanned for pass/fail: archive is not a protected path, but silence about it
+# is how D-02 and D-03 survived.
+REPORT_ONLY_DIRS = ["attic"]
+
+# Scan roots named in the manifest, lakefile, or AGENTS.md that do not exist.
+# A scan root that silently vanishes turns its subtree into an unscanned
+# blind spot, which is the D-02 failure mode again.
+REQUIRED_ROOTS = ["ADR", "Foundations", "pirtm/lean", "lean"]
 
 MANIFEST_PATH = os.path.join(PROJECT_DIR, "state", "alp_sorry_manifest.json")
 
@@ -122,22 +138,30 @@ def has_own_lakefile(dirpath: str) -> bool:
     )
 
 
-def scan_file(filepath: str) -> list[tuple[int, str, str]]:
-    """Return (lineno, text, enclosing-declaration-name) for each sorry/admit hit."""
+def scan_file(filepath: str) -> list[tuple[int, str, str, int]]:
+    """Return (sorry_lineno, text, enclosing-decl-name, decl_lineno) per hit.
+
+    `decl_lineno` is the line the manifest anchors on: the manifest records the
+    `theorem` header, not the `sorry` token two lines below it. Comparing a
+    manifest anchor against the sorry line reports every entry as drifted.
+    """
     with open(filepath, "r", encoding="utf-8", errors="replace") as f:
         raw_lines = f.readlines()
     code_lines = strip_strings(strip_comments(raw_lines))
 
     hits = []
     current_name: str | None = None
+    current_line = 0
     for i, line in enumerate(raw_lines):
         m = DECL_RE.match(code_lines[i])
         if m:
             current_name = m.group(2)
+            current_line = i + 1
         if SORRY_TACTIC_RE.search(code_lines[i]) or ADMIT_TACTIC_RE.search(
             code_lines[i]
         ):
-            hits.append((i + 1, raw_lines[i].rstrip(), current_name or "?"))
+            hits.append((i + 1, raw_lines[i].rstrip(), current_name or "?",
+                         current_line))
     return hits
 
 
@@ -166,19 +190,34 @@ def validate_manifest(manifest: dict) -> list[str]:
 
 
 def main() -> int:
-    print("=== ADR Sorry Check (precise, manifest-aware) ===")
-    print(f"Scanning: {', '.join(SCAN_DIRS)}")
-    print(f"Manifest: {MANIFEST_PATH}")
-    print()
+    as_json = "--json" in sys.argv
+    if not as_json:
+        print("=== ADR Sorry Check (precise, manifest-aware) ===")
+        print(f"Scanning: {', '.join(SCAN_DIRS)}")
+        print(f"Manifest: {MANIFEST_PATH}")
+        print()
 
     if not os.path.exists(MANIFEST_PATH):
-        print(f"FAILED: manifest not found at {MANIFEST_PATH}")
+        if as_json:
+            print(json.dumps({"ok": False, "error": "manifest missing"}))
+        else:
+            print(f"FAILED: manifest not found at {MANIFEST_PATH}")
         return 1
 
     manifest = load_manifest()
     manifest_problems = validate_manifest(manifest)
     for p in manifest_problems:
         print(f"MANIFEST PROBLEM: {p}")
+
+    # A declared scan root that no longer exists is a blind spot, not a
+    # pass. Fail rather than shrink coverage silently.
+    missing_roots = [
+        r for r in REQUIRED_ROOTS if not os.path.isdir(os.path.join(PROJECT_DIR, r))
+    ]
+    for r in missing_roots:
+        manifest_problems.append(
+            f"required scan root missing: {r}/ (coverage blind spot)"
+        )
 
     permitted = set(manifest.get("permitted_sorrys", []))
 
@@ -203,17 +242,63 @@ def main() -> int:
                     continue
                 filepath = os.path.join(dirpath, fname)
                 hits = scan_file(filepath)
-                for lineno, line, name in hits:
-                    all_hits.append((filepath, lineno, line, name))
+                for lineno, line, name, decl_line in hits:
+                    all_hits.append((filepath, lineno, line, name, decl_line))
                     if name in permitted:
                         found_in_scope.add(name)
 
+    # `attic/` is archive: reported, never fail-scored.
+    archived = 0
+    for root_name in REPORT_ONLY_DIRS:
+        root = os.path.join(PROJECT_DIR, root_name)
+        if not os.path.isdir(root):
+            continue
+        for dirpath, dirnames, files in os.walk(root):
+            dirnames[:] = [d for d in dirnames if d != ".lake"]
+            for fname in files:
+                if not fname.endswith(".lean"):
+                    continue
+                archived += len(scan_file(os.path.join(dirpath, fname)))
+
     violations = [h for h in all_hits if h[3] not in permitted]
     registered = [h for h in all_hits if h[3] in permitted]
+    ghosts = permitted - found_in_scope
+
+    # A manifest entry is a claim about a specific file+line. Verify the anchor
+    # still lands on a real sorry, so the ledger cannot rot in place while its
+    # declaration line-number drifts.
+    anchored = set()
+    for e in manifest.get("entries", []):
+        if not e.get("file") or not e.get("line"):
+            continue
+        anchored.add((e["file"], int(e["line"]), e.get("name")))
+    drifted = []
+    for filepath, lineno, _line, name, decl_line in registered:
+        rel = os.path.relpath(filepath, PROJECT_DIR)
+        if (rel, decl_line, name) not in anchored:
+            drifted.append(f"{rel}:{decl_line} {name}")
+
+    if as_json:
+        print(json.dumps({
+            "ok": not (violations or ghosts or manifest_problems or drifted),
+            "scanned": SCAN_DIRS,
+            "total_hits": len(all_hits),
+            "registered": len(registered),
+            "violations": [
+                {"file": os.path.relpath(f, PROJECT_DIR), "line": n,
+                 "declaration": d}
+                for f, n, _l, d, _dl in violations
+            ],
+            "ghosts": sorted(ghosts),
+            "anchor_drift": drifted,
+            "manifest_problems": manifest_problems,
+            "archived_sorry_sites": archived,
+        }, indent=2))
+        return 0 if not (violations or ghosts or manifest_problems or drifted) else 1
 
     print()
     if violations:
-        for filepath, lineno, line, name in violations:
+        for filepath, lineno, line, name, _dl in violations:
             print(
                 f"SORRY/ADMIT TACTIC (UNREGISTERED): "
                 f"{os.path.relpath(filepath, PROJECT_DIR)}:{lineno}"
@@ -224,20 +309,40 @@ def main() -> int:
 
     if registered:
         print(f"REGISTERED (manifest-authorized): {len(registered)}")
-        for filepath, lineno, _line, name in sorted(
+        for filepath, lineno, _line, name, _dl in sorted(
             registered, key=lambda h: (h[0], h[1])
         ):
             print(f"  {os.path.relpath(filepath, PROJECT_DIR)}:{lineno} {name}")
 
-    ghosts = permitted - found_in_scope
+    if archived:
+        print()
+        print(f"REPORT-ONLY: {archived} sorry/admit site(s) in "
+              f"{', '.join(REPORT_ONLY_DIRS)}/ (archive, no lakefile). "
+              f"Tracked as D-16; not scored as build-path failure.")
+
     if ghosts:
         print()
-        print("WARNING: `permitted_sorrys` entries not found in scanned tree (ghosts):")
+        print("FAILED: `permitted_sorrys` entries with no sorry in the scanned "
+              "tree (ghost manifest entries):")
         for g in sorted(ghosts):
             print(f"  {g}")
+        print("Either the debt was paid off and the entry must be pruned, or the")
+        print("scan root that hosted it is not being scanned. Both are drift.")
+
+    if drifted:
+        print()
+        print("FAILED: registered sorries whose manifest file+line anchor no "
+              "longer matches the live site:")
+        for d in drifted:
+            print(f"  {d}")
+        print("Re-anchor the entry in state/alp_sorry_manifest.json.")
 
     print()
     if manifest_problems:
+        return 1
+    if ghosts:
+        return 1
+    if drifted:
         return 1
     if violations:
         print(

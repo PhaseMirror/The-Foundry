@@ -13,4 +13,4 @@
    "configFile": "lakefile.toml"}],
  "name": "«adr-scaffold»",
  "lakeDir": ".lake",
- "fixedToolchain": false}
+ "fixedToolchain": true}

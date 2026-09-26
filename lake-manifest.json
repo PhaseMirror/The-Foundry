@@ -93,4 +93,4 @@
    "configFile": "lakefile.toml"}],
  "name": "foundations",
  "lakeDir": ".lake",
- "fixedToolchain": false}
+ "fixedToolchain": true}

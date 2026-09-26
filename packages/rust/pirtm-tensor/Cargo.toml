@@ -1,11 +1,24 @@
 [package]
 name = "pirtm-tensor"
-version.workspace = true
-edition.workspace = true
-rust-version.workspace = true
-authors.workspace = true
-license.workspace = true
-repository.workspace = true
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.89"
+authors = ["UOR Foundation"]
+license = "Prime Materia Open Commons and Bound Works License v1.0"
+repository = "https://github.com/PhaseMirror/Prime"
+
+# Standalone workspace, matching sibling `pirtm-engine`.
+#
+# This crate previously declared `version.workspace = true` and friends, but
+# its parent `packages/rust/Cargo.toml` is a bare `[package]` (`prime-rust`)
+# with no `[workspace]` table. Cargo therefore walked up to the monorepo root
+# `Cargo.toml`, which defines `[workspace]` but no `[workspace.package]`, and
+# every build died with:
+#   error inheriting `edition` from workspace root manifest's
+#   `workspace.package.edition` / `workspace.package.edition` was not defined
+# The inheritance was unsatisfiable at the time it was written, so this crate
+# has never built. Concrete values fix it at the only level that can.
+[workspace]
 
 [features]
 # Enable Kani verification harnesses. The `kani` crate is provided by the

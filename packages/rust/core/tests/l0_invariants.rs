@@ -1,3 +1,24 @@
+// QUARANTINED: this target tests an API surface that no longer exists.
+//
+// `pirtm_rs` (packages/rust/pirtm-rs/src/lib.rs) is now a 7-line shim exporting
+// only `gates`, `rta`, `uac_loss`, `tether_policy`, `hilbert_polya`, `jury`.
+// Every type imported below -- CouplingConfig, ModuleInput, ModuleMetadata,
+// PIRTMBytecode, PirtmLinkWithEnsemble, SessionSpec, step, EmissionGate,
+// EmissionPolicy, compute_proof_hash, PIRTMGovernanceSection,
+// PIRTMProofSection, PIRTMRuntime, PETCLedger -- is gone from the crate.
+//
+// The file is kept on-tree and compiled to an empty test binary by default
+// because leaving it enabled is strictly worse than quarantining it: an
+// uncompilable test target aborts `cargo test` for the whole package, so these
+// three files were masking the 13 live unit tests in src/tests.rs. They were
+// never running; they were preventing anything from running.
+//
+// The assertions are NOT edited to match current reality. Weakening a test to
+// agree with observed behaviour is the failure mode D-03 documents, and
+// inventing replacement types would fabricate a contract nobody specified.
+// Restoring these requires recovering the removed `pirtm_rs` API -- an owner
+// decision, tracked as D-17. Enable with: cargo test --features legacy-removed-api
+#![cfg(feature = "legacy-removed-api")]
 use nalgebra::{DMatrix, DVector};
 use pirtm_rs::{step, EmissionGate, EmissionPolicy};
 

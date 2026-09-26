@@ -1,0 +1,34 @@
+I have converted the Executive Decision Brief into an Architecture Decision Record (ADR) using your required in-house format and saved it to your workspace as [`ADR-0029.md`](file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/adr/ADR-0029.md). 
+
+Here is the finalized markdown content:
+
+```markdown
+# ADR-0029: UOR Foundation Reinitialization and 90-Day Baseline Cycle
+
+**Status:** Proposed
+
+## Context
+UOR technology is currently ahead of its operating structure. While the Foundation possesses credible ontology, addressing, conformance, registry, and application-model assets, it lacks a single public source of truth, an approved authority chain, coordinated release ownership, independent implementation evidence, and attributable use outside of Foundation-authored work. The most pressing need is not to develop new capabilities, but to build confidence—ensuring that external parties can identify the authoritative contract, reproduce its behavior, understand its limitations, and know who holds decision authority. A volunteer-only operating capacity of 3-5 volunteers (approx. 17-31 hours per week) dictates that any immediate effort must be narrow, highly disciplined, and scoped as a specification-and-proof cycle rather than a broad ecosystem launch.
+
+## Decision
+We will treat UOR as an advanced pre-ecosystem platform and execute a Foundation reinitialization through a "Conditional Go" procedure.
+
+1. **Day Zero Mobilization:** Authorize a two-week mobilization to meet the following go/no-go conditions: reconcile public facts, name stewards (with backups) and record their weekly capacity, ratify the scope freeze and authority chain, record portfolio classes, verify release keys/custody, and select a first user and primary pilot.
+2. **90-Day Baseline Cycle:** Only upon the Secretary recording the Day Zero conditions as complete will the 90-day clock commence. The objective is to publish exactly one governed, testable value-layer baseline consisting of a Core Value Profile, canonical vectors, verifier, and evaluated pilot.
+3. **Scope Freeze:** No new foundational concepts, namespaces, or repositories will be authorized without an explicit exception decision.
+4. **Authority and Classification Ratification:**
+   * Centralize mission and public truth while delegating technical decisions to named maintainers within the ratified profile.
+   * Adopt portfolio classes (Normative, Reference, Experimental, Historical) and explicitly classify every asset.
+5. **Evidence Posture:** Adopt an E0–E6 evidence scale. Public claims must cite the evidence grade, date, owner, and limitations.
+
+## Consequences
+* **Positive:** Establishes clear authority, independent reproducibility, and public confidence. Success will be objectively measurable (e.g., a newcomer can understand UOR boundaries in 10 minutes, and two independent implementations agree on canonical vectors).
+* **Constraint:** Limits short-term expansion; working groups will only exist for bounded deliverables and will sunset when closed. If volunteer capacity falls below three active participants, the 90-day release claim will be paused or downgraded to maintenance only.
+* **Risk Management:** Mitigates the risk of conflicting public truths and single-person dependencies by requiring explicit primary/backup ownership and verifiable release keys for Tier 0/1 assets.
+* **Explicit Non-Claims:** This decision explicitly does not claim universal security, prompt-injection prevention, enterprise production adoption, a complete application ecosystem, or a general-purpose AI replacement.
+
+## Traceability & Artifact Links
+* **[Source Document]** `UOR_Final_Executive_Decision_Brief.docx` — Original proposed document
+```
+
+Let me know if you'd like any adjustments to the scope wording or if there is a specific ADR number you'd prefer instead of `0029`!
