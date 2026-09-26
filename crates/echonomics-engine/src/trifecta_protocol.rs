@@ -38,11 +38,7 @@ pub const CONTRACTIVITY_SCALE: u64 = 1000;
 
 /// Scaled spectral 1-norm over a rectangular matrix (max row sum).
 pub fn l1_norm(matrix: &[Vec<u64>]) -> u64 {
-    matrix
-        .iter()
-        .map(|row| row.iter().sum())
-        .max()
-        .unwrap_or(0)
+    matrix.iter().map(|row| row.iter().sum()).max().unwrap_or(0)
 }
 
 /// Contractivity gate: `||G||_1 < 1.0` in ℚ (scaled by 1000).
@@ -121,7 +117,10 @@ mod tests {
             judic_signed: false,
         };
         assert!(tri.is_consensus_reached());
-        assert!(!missing.is_consensus_reached(), "missing chamber must fail closed");
+        assert!(
+            !missing.is_consensus_reached(),
+            "missing chamber must fail closed"
+        );
     }
 
     #[test]
@@ -145,15 +144,34 @@ mod tests {
     #[test]
     fn test_audit_trail_completeness() {
         let resolved: [ReviewFinding; 2] = [
-            ReviewFinding { finding_id: 1, adr_id: 13, is_resolved: true },
-            ReviewFinding { finding_id: 2, adr_id: 14, is_resolved: true },
+            ReviewFinding {
+                finding_id: 1,
+                adr_id: 13,
+                is_resolved: true,
+            },
+            ReviewFinding {
+                finding_id: 2,
+                adr_id: 14,
+                is_resolved: true,
+            },
         ];
         let with_open: [ReviewFinding; 2] = [
-            ReviewFinding { finding_id: 1, adr_id: 13, is_resolved: true },
-            ReviewFinding { finding_id: 2, adr_id: 14, is_resolved: false },
+            ReviewFinding {
+                finding_id: 1,
+                adr_id: 13,
+                is_resolved: true,
+            },
+            ReviewFinding {
+                finding_id: 2,
+                adr_id: 14,
+                is_resolved: false,
+            },
         ];
         assert!(is_audit_complete_array(&resolved));
-        assert!(!is_audit_complete_array(&with_open), "unresolved finding blocks audit");
+        assert!(
+            !is_audit_complete_array(&with_open),
+            "unresolved finding blocks audit"
+        );
 
         assert!(is_review_coverage_complete(&ACCEPTED_ADR_IDS));
         assert!(!is_review_coverage_complete(&[12, 13, 14]));
@@ -171,9 +189,16 @@ mod kani_proofs {
         let legis_signed: bool = kani::any();
         let judic_signed: bool = kani::any();
 
-        let tri = TrifectaGovernanceEngine { exec_signed, legis_signed, judic_signed };
+        let tri = TrifectaGovernanceEngine {
+            exec_signed,
+            legis_signed,
+            judic_signed,
+        };
         if !exec_signed || !legis_signed || !judic_signed {
-            kani::assert(!tri.is_consensus_reached(), "Tripartite consensus requires all 3 chamber signatures");
+            kani::assert(
+                !tri.is_consensus_reached(),
+                "Tripartite consensus requires all 3 chamber signatures",
+            );
         }
     }
 
@@ -188,7 +213,10 @@ mod kani_proofs {
     #[kani::proof]
     fn verify_full_scale_row_not_contractive() {
         let row = [1000u64, 0u64];
-        kani::assert(!is_contractive2(&row), "full-scale row must fail contractivity");
+        kani::assert(
+            !is_contractive2(&row),
+            "full-scale row must fail contractivity",
+        );
     }
 
     /// ADR-0020: every row with entries strictly below the scale sum bound is
@@ -200,7 +228,10 @@ mod kani_proofs {
         kani::assume(a < 500);
         kani::assume(b < 500);
         let row = [a, b];
-        kani::assert(is_contractive2(&row), "row sums below 1000 must be contractive");
+        kani::assert(
+            is_contractive2(&row),
+            "row sums below 1000 must be contractive",
+        );
     }
 
     /// ADR-0021: audit completeness is fail-closed — any unresolved finding
@@ -211,13 +242,28 @@ mod kani_proofs {
         let f1: bool = kani::any();
         let f2: bool = kani::any();
         let findings = [
-            ReviewFinding { finding_id: 0, adr_id: 12, is_resolved: f0 },
-            ReviewFinding { finding_id: 1, adr_id: 13, is_resolved: f1 },
-            ReviewFinding { finding_id: 2, adr_id: 14, is_resolved: f2 },
+            ReviewFinding {
+                finding_id: 0,
+                adr_id: 12,
+                is_resolved: f0,
+            },
+            ReviewFinding {
+                finding_id: 1,
+                adr_id: 13,
+                is_resolved: f1,
+            },
+            ReviewFinding {
+                finding_id: 2,
+                adr_id: 14,
+                is_resolved: f2,
+            },
         ];
         let complete = is_audit_complete_array(&findings);
         if !f0 || !f1 || !f2 {
-            kani::assert(!complete, "any unresolved finding must block audit completion");
+            kani::assert(
+                !complete,
+                "any unresolved finding must block audit completion",
+            );
         } else {
             kani::assert(complete, "all resolved findings must complete the audit");
         }

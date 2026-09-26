@@ -1,1 +1,1199 @@
-{"version":"1.0.0","adrs":[{"id":"ADR-001","title":"Integer Jordan Bond Governance","status":"Superseded","context":"Floating-point non-determinism introduces drift and spoliation risk in state transitions across distributed nodes.","decision":"Enforce fixed-point integer Jordan bond arithmetic scaled by N = 1024 at the kernel boundary.","consequences":["Arithmetic determinism guaranteed across heterogeneous nodes","Floating point drift strictly eliminated"],"supersedes":null,"links":[{"uri":"PhaseMirror.Care.Scale","kind":"LeanDeclaration","description":"Canonical fixed-point scale N = 1024"},{"uri":"Care.lean","kind":"SourceFile","description":"Integer fixed-point operations"}]},{"id":"ADR-002","title":"Sedona Spine Retention Engine Sole Source of Truth","status":"Accepted","context":"Decentralized litigation hold rules risk spoliation drift if computed independently by UI or client agents.","decision":"All ESI preservation risk logic must route exclusively through the Sedona Spine Rust Engine and WASM SDK.","consequences":["Zero drift in litigation hold calculations","Mandatory provenance chain: Policy -> Event -> Kernel -> Witness"],"supersedes":null,"links":[{"uri":"models/legalese-scopist/CONTRACT.md","kind":"SpecificationDoc","description":"Preservation alert protocol"},{"uri":"models/legalese-scopist/","kind":"SourceFile","description":"Rust Engine Core implementation"}]},{"id":"ADR-003","title":"Per-Triad Resonance Floors (Audit v2)","status":"Accepted","context":"Aggregate mean resonance floor in ADR-001 permitted averaging blind spots where individual triads could fall below viability.","decision":"Strengthen viability audit to require every individual triad to meet or exceed ResFloor = 870.","consequences":["Eliminates averaging blind spot proved by averaging_blind_spot theorem","Preserves backward compatibility with audit v1"],"supersedes":null,"links":[{"uri":"ADR/Theorems/CareViability.lean","kind":"SourceFile","description":"Formalization of v2 thresholds and blind spot"},{"uri":"PhaseMirror.CareViability.phase_mirror_audit_v2","kind":"LeanDeclaration","description":"Per-triad binary audit"}]},{"id":"ADR-004","title":"Meet-Semilattice Partition Refinement & LCR Operator","status":"Accepted","context":"SPMD distributed execution requires a formal refinement order over tensor sharding states (Sharded(d) ≤ Replicated ≤ Unconstrained) that is deterministic, commutative, and fail-closed.","decision":"Enforce pointwise meet operator (⊓) over logical mesh axes with idempotent, associative, and commutative semantics. Incompatible assignments evaluate to bottom, raising an immediate ConflictReport.","consequences":["Deterministic least common refinement across distributed execution paths","Fail-closed immediate rejection of conflicting sharding schedules"],"supersedes":null,"links":[{"uri":"specs/p2c_petc_v12.md","kind":"SpecificationDoc","description":"P2C PETC v1.2 Specification Section 2.3"},{"uri":"packages/rust/pirtm-compiler/src/sharding.rs","kind":"SourceFile","description":"LCR Meet Operator Implementation"}]},{"id":"ADR-005","title":"BLAKE2b-16 Personalization & Canonical Bytecode Wire Format","status":"Accepted","context":"Witness bytecode streams require compact, tamper-evident framing with low verification overhead across heterogeneous compiler runtimes (MLIR, XLA, PyTorch).","decision":"Standardize binary wire format on header magic 'P2CWITv2', version 0x0102, LEB128/ZigZag varints, trailer 0xAA 0x55, and 16-byte BLAKE2b body digest personalized with b'P2C_V12'.","consequences":["Bit-flip and truncation detection at frame boundary","Allocation-free stack-based decoding in high-performance runtimes"],"supersedes":null,"links":[{"uri":"specs/p2c_petc_v12.md","kind":"SpecificationDoc","description":"P2C PETC v1.2 Binary Wire Format Section 3"},{"uri":"packages/rust/core/src/petc.rs","kind":"SourceFile","description":"Bytecode Frame Parser"}]},{"id":"ADR-006","title":"MultiContract Atomic Contraction with PartialSum Tokens","status":"Accepted","context":"Contraction over sharded tensor dimensions produces partial sums requiring explicit collective reductions before downstream consumption.","decision":"Standardize opcode 0x05 (MultiContract) to atomically verify dual signatures and emit PartialSum(mesh_axis) tokens consumed strictly by subsequent Collective operations.","consequences":["Prevents unreduced partial sum escapes in SPMD graphs","Simultaneous atomic multi-axis tensor contractions in O(k) time"],"supersedes":null,"links":[{"uri":"specs/p2c_petc_v12.md","kind":"SpecificationDoc","description":"P2C PETC v1.2 Opcode Semantics Section 4"},{"uri":"packages/rust/engine/src/petc.rs","kind":"SourceFile","description":"MultiContract Evaluator"}]},{"id":"ADR-007","title":"Commutative Collective Transformers for Deterministic Sharding Commit","status":"Accepted","context":"Multi-mesh collective operations (AllReduce, AllGather) must yield identical global sharding states regardless of topological scheduling order.","decision":"Define collective transformers T_m that transition axis m to Replicated, and formally verify operator commutativity T_m ∘ T_n = T_n ∘ T_m for all m ≠ n.","consequences":["Topology-invariant global sharding commitment","Eliminates deadlocks and non-determinism in multi-axis reduction pipelines"],"supersedes":null,"links":[{"uri":"specs/p2c_petc_v12.md","kind":"SpecificationDoc","description":"P2C PETC v1.2 Section 2.3 Collective Transformers"},{"uri":"lean/Multiplicity/PETC.lean","kind":"LeanDeclaration","description":"Collective transformer commutation"}]},{"id":"ADR-008","title":"Prime Signature Canonical Monoid as Exclusive Rust Kernel Substrate","status":"Accepted","context":"All multiplicity computations, spectral analysis, and emission decisions must share a single, deterministic representation to prevent representational drift between Lean formalization and Rust execution.","decision":"The only permitted representation of a Multiplicity Signature inside the Rust kernel is a finitely supported map from primes to exponents, equipped with the free commutative monoid structure (pointwise addition of exponents). No alternative encodings (dense vectors, hashed bags, or floating-point approximations) are permitted in the core path.","consequences":["Signature equality is decidable by structural comparison of support and exponents","Multiplicity product is strictly associative and commutative","Any foreign representation must be converted at the kernel boundary and rejected if conversion is lossy"],"supersedes":null,"links":[{"uri":"PhaseMirror.PrimeSignature","kind":"LeanDeclaration","description":"Formal specification of signature monoid"},{"uri":"packages/rust/multiplicity/multiplicity-core/src/signature.rs","kind":"SourceFile","description":"Target Rust implementation site"}]},{"id":"ADR-009","title":"Mandatory Contraction Witness & Spectral Radius Verification Before Emission Gate","status":"Accepted","context":"Unconstrained recurrence or agent emission can produce unbounded Lyapunov drift, violating the sovereign contraction invariant of the Phase Mirror core.","decision":"No signal may pass the Emission Gate unless a machine-checkable ContractionWitness is supplied that proves the spectral radius of the current operator is strictly less than 1. The witness must be re-validated on every gate evaluation.","consequences":["EmissionGate returns Suppress or Hold when no valid witness is present","SpectralGovernor is the sole authority permitted to mint ContractionWitness values","Any bypass of the witness check constitutes a hard kernel violation and aborts the process"],"supersedes":null,"links":[{"uri":"PhaseMirror.SpectralGovernor","kind":"LeanDeclaration","description":"Formal contract of spectral governor"},{"uri":"packages/rust/ramanujan-multiplicity","kind":"SourceFile","description":"Witness generation site"}]},{"id":"ADR-010","title":"Axiom-Clean Kernel Boundary and Manifested Proof Debt Policy","status":"Accepted","context":"Unmanifested sorry, todo!, or commented-out critical paths create verification leakage that undermines the honesty guarantee of the entire formal stack.","decision":"The kernel boundary (Rust + Lean interface) must be axiom-clean. Every open proof obligation that affects runtime behavior must be either (a) fully discharged or (b) explicitly manifested as a named sorry with a tracking issue and a hard CI failure if the count increases. Zero untracked proof debt is permitted on the main branch.","consequences":["CI rejects any increase in manifested or unmanifested sorry count on protected paths","Kernel startup performs a static check that the formal registry and the Rust core share the same honesty manifest","Research surfaces (including F1-square) may contain open obligations only when explicitly quarantined outside the kernel boundary"],"supersedes":null,"links":[{"uri":".github/workflows/adr-verify.yml","kind":"SpecificationDoc","description":"Honesty audit workflow"},{"uri":"docs/CURRENT_TRUTH.md","kind":"SpecificationDoc","description":"Living honesty ledger"}]},{"id":"ADR-0013","title":"UOR Civic Infrastructure","status":"Accepted","context":"The Foundry DAO progresses through three strategic developmental epochs. PrismPM governs process and packaging law; the UCC governs physical and dynamical law via the universal closure sextuple. PWEH operationalizes contractivity and fail-closed interlocks as an active execution lock, and CRMF envelopes canonicalized under BCS provide tamper-evident attestation. The architecture requires a canonical wire format for cryptographic commitments, a fail-closed governance mechanism, and an integrity chain that binds execution traces to prime-indexed attestations.","decision":"Adopt the canonical BCS wire format for the UnsignedCrmfEnvelope, the PWEH integrity binding for execution traces, the contractivity gate for the UCC, and fail-closed interlocks for governance.","consequences":["Deterministic, cross-language canonical byte streams for cryptographic commitments (Rust/Lean reproducible)","Path-dependent tamper resistance across the whole PWEH chain","Fail-closed governance: any unmodeled defect halts L0 before side effects materialize","Poseidon2 sponge absorption is the ZK sealing stage","Floating-point is structurally excluded from all wire formats (ADR-0021)"],"supersedes":null,"links":[{"uri":"docs/papers/UOR Civic Infrastructure_.docx","kind":"SourceFile","description":"UOR Civic Infrastructure (The Triadic Evolution)"},{"uri":"lean/MTPI/ADR0013.lean","kind":"SourceFile","description":"Canonical BCS wire format, fail-closed interlocks, contractivity gate, and PWEH binding formalized as Lean 4 theorems"},{"uri":"lean/MTPI/ADR0013Test.lean","kind":"SourceFile","description":"Runtime witness executing closed-form claims"},{"uri":"packages/rust/crmf/src/canonical.rs","kind":"SourceFile","description":"Canonical BCS wire format (Kani-verified)"},{"uri":"packages/rust/crmf/src/failgate.rs","kind":"SourceFile","description":"Fail-closed interlocks (Kani-verified)"},{"uri":"packages/rust/crmf/src/pweh.rs","kind":"SourceFile","description":"PWEH integrity chain (Kani-verified)"}]},{"id":"ADR-0014","title":"UCC as a Service — Year One Roadmap","status":"Accepted","context":"The year-one window (2 September 2026 – 2 September 2027) needs an operator product that is lawful, deliverable, and free of unimplemented research claims. UAC chemistry (FeMoco, 100-way MA-VQE, 69-qubit concurrency) remains research-path until a partner queue exists.","decision":"Adopt the Universal Closure Calculator (UCC) as a hosted kernel service for year one: every call returns Closure (lawful closure under the Dirichlet / union-find kernel), Defect (Δ = 0 or named in English), Receipt (input hash + kernel version + Lean/Kani build id + timestamp), and Levers (Owner — action — metric — horizon).","consequences":["Year-one priority is receipts that change decisions, not revenue","Budget $40k low / $180k plausible; treasuries not mixed; Q0 dual-control $2,500","SKU line: Community, Pro, Enterprise, PMCP","Q0-Q4 exit gates lock each phase; named tensions explicitly bound"],"supersedes":null,"links":[{"uri":"docs/papers/UCC_Year_One_Roadmap.docx","kind":"SourceFile","description":"Citizen Gardens, UCC as a Service Year One Roadmap"},{"uri":"docs/adr/accepted/0013-UOR Civic Infrastructure.md","kind":"SourceFile","description":"Governing civic model this product plan operationalizes"},{"uri":"lean/MTPI/ADR0013.lean","kind":"SourceFile","description":"Canonical BCS / PWEH substrate underlying receipt integrity"}]},{"id":"ADR-0015","title":"Unified Civic Infrastructure Outline","status":"Accepted","context":"Citizen Gardens needs a legal and operating scaffold that keeps the civic purpose distinct from the commercial operator while remaining lawful under Wyoming law. The governing instruments define purpose and caps; the civic layer must hold the literary/legal definition while the operator hosts the kernel and contracts with strangers.","decision":"Adopt the Unified Civic Infrastructure Outline as the operating map for Citizen Gardens: a Wyoming unincorporated nonprofit association (DUNA-ready) under a two-legal-person wall. Four infrastructures: UNA/DUNA, Buurtzorg topology, Bushido, Phase Mirror + Multiplicity Social Physics.","consequences":["Legal identity is honest and forward-compatible: DUNA-ready without overclaiming","The wall keeps the kernel off the UNA balance sheet and the purpose off the operator P&L","Credit is a recorded, machine-checked accounting unit (ELM credits), not a votable currency","Adoption is incremental and gated, so the civic layer never outruns its legal form"],"supersedes":null,"links":[{"uri":"docs/papers/Unified_Civic_Infrastructure_Outline.docx","kind":"SourceFile","description":"Unified Civic Infrastructure Outline (LawfulRecursionVersion 1.0)"},{"uri":"docs/adr/completed/0013-UOR Civic Infrastructure.md","kind":"SourceFile","description":"Governing civic model"},{"uri":"docs/adr/completed/0014-UCC as a Service Year One Roadmap.md","kind":"SourceFile","description":"The operator product this wall hosts"}]},{"id":"ADR-0016","title":"UOR Civic Infrastructure — Three Epochs","status":"Accepted","context":"The Foundry's roadmap must be presentable as a physically and biologically constrained deployment rather than an abstract idea. The governing civic architecture needs an epochal frame that a board can digest while preserving structural integrity.","decision":"Adopt the Triadic Evolution model: the Foundry progresses through three strategic developmental epochs — Foundation (mass density, staking minting, $1.00 anchor, Builders), Projection (thermalization, calibration minting, $2.00 anchor), and Maximum Multiplicity (triadic scaling 3→9→27→81→243, recursion+LifeBushido, $3.00 limit). Epoch transitions gated by 90-day Phase Mirror metric gates.","consequences":["Each epoch has exactly one systemic state, one minting driver, and one economic anchor","The $1.00 → $2.00 → $3.00 anchor progression is a policy constraint, not a market forecast","Staking, calibration, and recursion+LifeBushido are sequential minting mechanisms","Diffusion follows triadic powers of three; saturation at 243 bounds a single locus"],"supersedes":null,"links":[{"uri":"docs/papers/UOR Civic Infrastructure_.docx","kind":"SourceFile","description":"UOR Civic Infrastructure slide-deck text (Triadic Evolution)"},{"uri":"docs/adr/completed/0013-UOR Civic Infrastructure.md","kind":"SourceFile","description":"Dense civic architecture this deck summarizes"},{"uri":"docs/adr/completed/0015-Unified Civic Infrastructure Outline.md","kind":"SourceFile","description":"Legal/operating scaffold the epochs run on"}]},{"id":"ADR-0017","title":"Reinitialization — 90-Day Operating Plan and Volunteer Talent Model","status":"Accepted","context":"UOR Foundation must reinitialize under volunteer-led, no-funding assumption. Next unit of value is confidence: bounded 13-week cycle producing governed, independently verifiable value-layer baseline.","decision":"Adopt 90-Day Operating Plan: one primary objective, Day Zero two-week mobilization with six conditions, five workstreams max, RACI accountability, volunteer talent model, action register A01-A26+.","consequences":["Execution capped by WIP limits — scope cannot expand silently","No-funding assumption binding — volunteer capacity is planning envelope","Cycle either closes deliverables or fails exit rule loudly"],"supersedes":null,"links":[{"uri":"docs/papers/UOR_Final_90_Day_Operating_Plan_and_Talent_Model.docx","kind":"SourceFile","description":"90-Day Operating Plan"},{"uri":"docs/adr/accepted/0018-Executive Decision Brief.md","kind":"SourceFile","description":"Executive decision brief gating this plan"}]},{"id":"ADR-0018","title":"Reinitialization — Executive Decision Brief","status":"Accepted","context":"UOR technology is ahead of operating structure. Missing: public source of truth, approved authority chain, coordinated release ownership, independent implementation evidence.","decision":"Adopt CONDITIONAL GO pending board ratification and Day Zero gate. Ten decisions D1-D10 covering authority chain, public source of truth, release custody, volunteer capacity, evidence policy (E0-E6), scope boundary, escalations, maintenance, termination.","consequences":["No ratification = no baseline cycle; portfolio stays in maintenance","Public claims bound to evidence grade E0-E6 with dates, owners, limits","Decision brief is single ratifying artifact"],"supersedes":null,"links":[{"uri":"docs/papers/UOR_Final_Executive_Decision_Brief.docx","kind":"SourceFile","description":"Executive Decision Brief"},{"uri":"docs/adr/accepted/0017-90-Day Operating Plan and Talent Model.md","kind":"SourceFile","description":"Operating plan this brief gates"}]},{"id":"ADR-0019","title":"Technology Portfolio — Evidence, Risk, and Feasibility","status":"Accepted","context":"19 internal assets vs 15 public GitHub repositories. Gap between internal claims and externally verifiable evidence is standing risk.","decision":"Adopt evidence recut: Observe, Map, Interface method. Every asset classified Normative/Reference/Experimental/Historical. Evidence graded E0-E6 with dates, owners. 19-vs-15 deltas dispositioned with owners.","consequences":["Public claims downgraded to E0-E2 until independently evidenced","19-vs-15 inventory deltas become action items with owners","UAC research claims excluded until partner queues exist"],"supersedes":null,"links":[{"uri":"docs/papers/UOR_Final_Technology_Portfolio_Evidence_Risk_and_Feasibility_Appendix.docx","kind":"SourceFile","description":"Evidence recut appendix"},{"uri":"docs/adr/accepted/0018-Executive Decision Brief.md","kind":"SourceFile","description":"Decision brief ratifying this recut"}]},{"id":"ADR-0020","title":"HQ and Sovereign Node Deployment","status":"Accepted","context":"36.8 acres in Livermore, Larimer County, CO. LifeBushido Retreat, SUG node, civic Sovereignty Node site. Risk mitigated by two-phase gate structure.","decision":"Adopt proposal conditioned on $750K board authorization. Phase 1: Circle of 9 (ground-state seeding). Phase 2: Family of 27 (UOR Foundry) gated by Three-Way Test on 90-day metric card.","consequences":["Capital reversible only at preset gates","Site bounded at 27 operators — growth proceeds by geographic split","Land/structures locked to Foundation — no private-equity route"],"supersedes":null,"links":[{"uri":"docs/papers/UOR Foundation HQ & Sovereign Node Deployment_.docx","kind":"SourceFile","description":"HQ Executive Proposal"},{"uri":"docs/adr/accepted/0015-Unified Civic Infrastructure Outline.md","kind":"SourceFile","description":"UNA/operator-LLC wall"}]},{"id":"ADR-0022","title":"Symmetry-Matched Polarization Analysis in MnF₂","status":"Accepted","context":"Unpolarized INS reported no resolvable splitting; polarized INS accessed antisymmetric channel. Null in one channel ≠ physical absence in another.","decision":"Adopt polarization analysis discipline: Blume-Maleev decomposition into polarization-even/odd; four-null taxonomy; resolvability criterion.","consequences":["Unpolarized nulls no longer overrule polarized signatures","Spectral resolution and chiral sensitivity as separate design axes","Supports δJ7 readout, reversal tomography, probe-tensor correspondence"],"supersedes":null,"links":[{"uri":"docs/adr/proposed/Paper1 Symmetry Matched Polarization Analysis in MnF2- Separating Spectral Resolutionfrom Chiral Sensitivity in Altermagnetic Neutron Scattering - JHaines 2026.pdf","kind":"SourceFile","description":"Source paper (JHaines 2026)"},{"uri":"docs/specs/observ_calculus_v1.md","kind":"SpecificationDoc","description":"Measurement-map program wire"},{"uri":"packages/rust/observ","kind":"SourceFile","description":"Observability calculus kernel"}]},{"id":"ADR-0023","title":"The δJ7 Principle — Symmetry-Complement Source Sectors in MnF₂","status":"Accepted","context":"Small imbalance between symmetry-distinct J7a/J7b bonds as candidate source coordinate for chiral response. Statement of 'symmetry complement' relative to declared reference must be fixed.","decision":"Adopt δJ7 principle: group averaging defines projector P; V = im P ⊕ ker P; source sector Vₘ = span{λₘ,ₐ}; δJ7 ≡ J7b − J7a; odd-channel expansion F_-(λ) = k·λ + O(‖λ‖³).","consequences":["Source attribution tied to declared reference model","Odd-channel expansion fixes chiral response scaling","Mathematical substrate for ADR-0024 and ADR-0025","Warning against universal weak coordinate export"],"supersedes":null,"links":[{"uri":"docs/adr/proposed/Paper2 The δJ7 Principle- Symmetry Complement Source Sectors in Altermagnetic MnF2 - JHaines 2026.pdf","kind":"SourceFile","description":"Source paper (JHaines 2026)"},{"uri":"docs/specs/observ_calculus_v1.md","kind":"SpecificationDoc","description":"Measurement-map wire"},{"uri":"packages/rust/observ","kind":"SourceFile","description":"Observability calculus kernel"}]},{"id":"ADR-0024","title":"Reversal-Space Tomography of Weak Altermagnetic Exchange in MnF₂","status":"Accepted","context":"Weak δJ7 at few-µeV scale needs engineered readout multiplication. Signed readout certification requires engineering discipline.","decision":"Adopt reversal-space tomography: binary design coordinates of (ℤ₂)^N experiment; Walsh-Hadamard contrast decomposition; path-consistency gate; forbidden-sector coefficients as falsification channels.","consequences":["Weak-exchange readouts become certifiably signed and falsifiable","Gain measured in transduction, not coefficient amplification","Hysteresis and domain drift explicitly tested"],"supersedes":null,"links":[{"uri":"docs/adr/proposed/Paper3 Reversal-Space Tomography of Weak Altermagnetic Exchange in MnF2- Path Validated Signed Readout Engineering - JHaines 2026.pdf","kind":"SourceFile","description":"Source paper (JHaines 2026)"},{"uri":"docs/specs/observ_calculus_v1.md","kind":"SpecificationDoc","description":"Measurement-map wire"},{"uri":"packages/rust/observ","kind":"SourceFile","description":"Observability calculus kernel"}]},{"id":"ADR-0025","title":"Static Multipolar Order and Dynamical Chiral Response — Probe-Tensor Correspondence","status":"Accepted","context":"MnF₂ spans elastic multipole reconstruction and inelastic magnon chirality. Whether static multipole can be inferred from dynamical chiral measurement purely from symmetry is central question.","decision":"Adopt probe-tensor correspondence: Hamiltonian coordinates, equilibrium tensors, response tensors, correlations, probe/instrument map are distinct objects — never collapsed; no automatic substitution.","consequences":["Static-rank and dynamical-chirality results separate propositions","Every multipole reconstruction states conditioning assumptions or not closed","K component established for ADR-0026 benchmark"],"supersedes":null,"links":[{"uri":"docs/adr/proposed/Paper4 Static Multipolar Order and Dynamical Chiral Response in MnF2- Probe Tensor Correspondence and Conditional Rank Identifiability - JHaines 2026.pdf","kind":"SourceFile","description":"Source paper (JHaines 2026)"},{"uri":"docs/specs/observ_calculus_v1.md","kind":"SpecificationDoc","description":"Measurement-map wire"},{"uri":"packages/rust/observ","kind":"SourceFile","description":"Observability calculus kernel"}]},{"id":"ADR-0026","title":"Symmetry-Complement Coordinates Across Altermagnets — Cross-Material Falsification","status":"Accepted","context":"Portable symmetry argument must survive materials with different hierarchy, probe physics, and magnetic state. Must survive adversarial controls (FeF₂, MnSi).","decision":"Adopt six-component claim vector c = (M,S,E,χ,R,K); predeclared-reference admissibility A_m,j = A_ind ∧ A_state ∧ A_null ∧ A_no-retune; adversarial controls enforced.","consequences":["Restricted generalization survives — response-specific sectors only","Attribution killed by source-state gate before downstream counted","MnF₂ near-scalar; MnTe/CrSb require broader sectors"],"supersedes":null,"links":[{"uri":"docs/adr/proposed/Paper5 Symmetry Complement Coordinates Across Altermagnets- Predeclared References and Cross Material Falsification - JHaines 2026.pdf","kind":"SourceFile","description":"Source paper (JHaines 2026)"},{"uri":"docs/specs/observ_calculus_v1.md","kind":"SpecificationDoc","description":"Measurement-map wire"},{"uri":"packages/rust/observ","kind":"SourceFile","description":"Observability calculus kernel"}]},{"id":"ADR-0027","title":"When Null Does Not Mean Absent — Measurement-Map Geometry","status":"Accepted","context":"A null outcome is not physical absence. Latent state passes through source, response, probe, averaging, transfer, and nuisance stages. Four-null distinction generalized to compositional calculus.","decision":"Adopt layered geometry: M = T ∘ A ∘ P ∘ R ∘ S; null-then-witness filtration K_j = ker F_j; refactor attribution; target-specific closure K_j ⊆ ker C; common-state closure by kernel intersection.","consequences":["Every null attributed to specific stage or label withheld","Raw signal can be non-identifying; null can coexist with nonzero signal","Reversal channels double as obstruction testbeds"],"supersedes":null,"links":[{"uri":"docs/adr/proposed/Paper6 When Null Does Not Mean Absent- Measurement Map Geometry, Factorization Boundaries, and Null Witness Duality - JHaines 2026.pdf","kind":"SourceFile","description":"Source paper (JHaines 2026)"},{"uri":"docs/specs/observ_calculus_v1.md","kind":"SpecificationDoc","description":"Measurement-map wire"},{"uri":"packages/rust/observ","kind":"SourceFile","description":"Observability calculus kernel"}]},{"id":"ADR-0028","title":"Target-First Observability Calculus — Admissible Ambiguity","status":"Accepted","context":"Design organized around available instrument rather than target claim is flawed. High-amplitude measurement may have zero target design gain; smaller measurement may close target.","decision":"Adopt target-first calculus: 13-step protocol. Residual ambiguity O_C(E) = C(ker A_E); design gain Δ_C(B|E) = d_C(E) − d_C(E∪B); practical margin μ_C(J_eff).","consequences":["Experiment selection by Δ_C > 0 or admissible-set contraction","Every claim carries declared target, state gate, forward map, nuisance, ambiguity, reversal, diagnostic, falsification","Three shortcuts forbidden for MnF₂ named explicitly"],"supersedes":null,"links":[{"uri":"docs/adr/proposed/Paper7 From Hidden Order to Identifiable Physics- A Target First Observability Calculus with Admissible Ambiguity and Dual Obstructions - JHaines 2026.pdf","kind":"SourceFile","description":"Source paper (JHaines 2026)"},{"uri":"docs/specs/observ_calculus_v1.md","kind":"SpecificationDoc","description":"Measurement-map wire"},{"uri":"packages/rust/observ","kind":"SourceFile","description":"Observability calculus kernel"}]},{"id":"ADR-0113","title":"Universal Closure Calculator — Unified Kernel Surface","status":"Accepted","context":"The Foundry hosts several independently verified surfaces — ADR governance, Care Circle viability, the Homestead L0 civic-edge gate, Kappa contractivity, and WordLove — each with its own proofs and artifacts. The Universal Closure Calculator (UCC) sextuple (X, ∘, α, μ, F, Δ) is the declared kernel boundary, but no single accepted decision binds those surfaces to it, so traceability, proof debt, and CI enforcement are fragmented across modules.","decision":"Adopt the UCC sextuple as the canonical integration surface and wire every verified Foundry surface to it. (1) Edge admission: the L0 fail-closed gate of `Homestead_UCC_Care_Bridge` (Seal ⟹ contractivity Λ_m < 1, entropy non-increase ΔS ≤ 0, Care Phase Mirror v2 viability, Hundian budget). (2) Contractivity evidence for Δ: the Kappa spectral-gap and Lyapunov witnesses. (3) Governance machinery: the ADR-0010 proof-debt manifest, `scripts/check_adr_sorry.py`, `.github/workflows/lean-gate.yml`, `adrExport`, and the property/concurrency tests. (4) Wire contract: the integer-only BCS wire of `docs/specs/ucc_sextuple_v1.md` and `contracts/universal_closure.yaml`. Retire the `ADR/ADR/` and `pirtm/lean/Foundations/ADR/` shadow scaffolds so the surface has one source of truth. No claim is made about the Riemann Hypothesis.","consequences":["Every closure call returns Closure, Defect (Δ named in English), Receipt, and Levers (ADR-0014)","Unlawful transitions fail closed at L0; Seal implies contractivity, ΔS ≤ 0, and Care viability","Proof debt is explicit and bounded: 13 manifest-authorized Kappa sorries, zero untracked, checker-enforced in CI","Shadow scaffolds retired; the ADR.* namespace is the sole governance authority","Integer-only wire: floating point remains structurally excluded (ADR-0021)"],"supersedes":null,"links":[{"uri":"docs/specs/ucc_sextuple_v1.md","kind":"SpecificationDoc","description":"Canonical sextuple (X, ∘, α, μ, F, Δ) wire format and L0 lawfulness gate"},{"uri":"contracts/universal_closure.yaml","kind":"SpecificationDoc","description":"Declarative associator tolerance Δ ≤ ε and closure-operator bounds (fail-closed)"},{"uri":"ADR/Theorems/Homestead_UCC_Care_Bridge.lean","kind":"LeanDeclaration","description":"L0 gate soundness: Seal ⟹ contractivity, entropy non-increase, Care viability, Hundian budget"},{"uri":"Foundations/Kappa/Stability.lean","kind":"LeanDeclaration","description":"Contractivity witnesses: Lyapunov non-negativity, stability decreasing, prime stability advantage"},{"uri":"Foundations/Kappa/Spectral.lean","kind":"LeanDeclaration","description":"Spectral gap positivity and finite relaxation time"},{"uri":"ADR/Properties.lean","kind":"LeanDeclaration","description":"Property-based concurrency conflict, traceability, and export-determinism tests"},{"uri":"scripts/check_adr_sorry.py","kind":"SourceFile","description":"Manifest-aware proof-debt gate (ADR-0010)"},{"uri":".github/workflows/lean-gate.yml","kind":"SourceFile","description":"CI gate: lake build + lake test + sorry checker on the pinned toolchain"},{"uri":"state/alp_sorry_manifest.json","kind":"SpecificationDoc","description":"Proof-debt ledger: 13 authorized Kappa sorries, zero drift"},{"uri":"ADR/README.md","kind":"SpecificationDoc","description":"Single source of truth; records shadow-scaffold retirement"}]},{"id":"ADR-0119","title":"R4 RnD Foundry — Computational Substrate of the PhaseMirror/Foundry Monorepo","status":"Accepted","context":"The legal person on this wire is the computational substrate of PhaseMirror/Foundry (UCC / UOR Foundry monorepo) — not the UNA/DUNA, not operator-LLC equity, not a membership instrument. Phase Mirror is a build-time diagnostic, not a runtime firewall; civic L0 and computational L0 stay on separate planes. R4 work is exactly five homonym objects (R⁴/uor-r4, Gate R4, Hologram v4, F₄, R₉₆); mixing them inflates the repo. R⁴ is a downstream consumer of UOR-Framework/uor-addr and does not drive Archivum–CRMF–ACE, Φ, C_768, or R₉₆ at runtime. Two architectures coexist: the serving/compiler stack (uor-r4-core transformerless compiler + integer runtime; Teacher pinned, SmolLM2-135M default; deployed kernel contract is XOR/AND/OR/shift/rotate/popcount/int add-sub/compare/table reads only — no multiply, divide, or float on the hot path; allocation-free, deterministic) and the exploratory geometric router stack (uor-r4-router: 512-dim zeta-zero grid, 4D block-norm, Hopf on S³; explicitly out of the graph migration path). The 2026-08-26 Geometric Intelligence Programme is authoritative: the geometry is the route, the route is the data location; source weights are offline teachers only; softmax and dense all-prefix work are allowed only as an offline oracle. Measured facts, not hope: #989 table baseline 99,362/446,342 held-out top-1 (22.26%) vs 5.41% unigram, byte-identical double run; #953 geometric overlay 23.21% (+0.95pp), bounded, not semantics/chat/release; #973 HELM-D-R4 full-decoder softmax parity is gauge-equivalent to the donor (max logit delta ~1.05e-5), not geometric advantage. Geometric scoring on the serving stack is zero or negative (#374 campaign); E8-into-keys is negative (lattice belongs on the comparison side); Cayley–Dickson token-id score is dead and removed; #967/#970/#983/#986 are parked. This repo has one branch and zero open issues — foreign #IDs are not Foundry truth until the issue plane is bound to this repo.","decision":"Freeze and govern the R4 RnD path. (1) Sew the homonym lock: R4 work is five objects; R⁴/uor-r4 is a downstream consumer of UOR-Framework/uor-addr and exports no geometry to the civic substrate; it does not drive Archivum–CRMF–ACE, Φ, C_768, or R₉₆ at runtime. (2) Keep the deployed kernel contract: hot path carries XOR/AND/OR/shift/rotate/popcount/int add-sub/compare/table reads only — no multiply, divide, or float; allocation-free prediction; deterministic artifacts. Computational L0 (LawfulRecursionVersion 1.0: contraction c < 1, ‖G‖₁ < 1) is the serving expression of that plane and stays off the membership/civic plane. (3) Keep ask behind the import firewall: ask refuses any continuation bundle that has not passed an imported instruction-chat evaluation (CID-addressed evaluate-report); a HELM-D parity PASS is an offline oracle and never auto-certifies as instruction-chat. (4) Freeze the sequence: exactly one intrinsic R4 attention arm on #973 (replace only donor compatibility + linear value aggregation with a declared R4 distance and geometric weighted centroid; compare against donor, gauge-equivalent R4 reference, and equal-budget Euclidean/plain controls); #954 and resonance/recurrence/lowering stay blocked; no scoring terms are added to the serving stack; frozen negatives are not retuned. (5) Keep the four local gates green (workspace test, clippy -D warnings, fmt, graph-format no_std ladder); κ-reproduction that skips for a missing teacher checkpoint (/tmp/ref/out/model.bin) is a named unknown, never a vacuous pass. (6) Bind the issue plane: one public register of programme issues, or a written import of kappas/CIDs only — foreign issue numbers are not cited as Foundry truth. (7) The Phase Mirror names dissonances; it does not bind serving. The precision question (donor-parity accuracy vs the no-multiply / c < 1 kernel, and which metric wins if those collide) is open and blocking until an artifact answers it. Product slice stays UCC: chat (#962), cloud deploy, image/audio, agentic loop, and hologram SDK stay later.","consequences":["R4 is a downstream consumer of UOR-Framework / uor-addr; it does not drive Archivum–CRMF–ACE, Φ, C_768, or R_96 at runtime, and it exports no geometry to the civic substrate.","Serving passes only the deployed kernel contract — XOR/AND/OR/shift/rotate/popcount/int add-sub/compare/table reads on the hot path, no multiply, no divide, no float (allocation-free, deterministic) — the serving expression of Computational L0 (LawfulRecursionVersion 1.0: c < 1, ‖G‖₁ < 1), which stays off the membership/civic plane.","ask refuses any continuation bundle lacking an imported instruction-chat evaluation (CID-addressed evaluate-report); a HELM-D parity PASS is an offline oracle and never promotes to instruction-chat (0 unverified imports).","Sequence frozen: exactly one intrinsic R4 attention arm on #973; #954 and resonance/recurrence/lowering stay blocked; no scoring terms on the serving stack; frozen negatives are not retuned.","The four local gates (workspace test, clippy -D warnings, fmt, graph-format no_std ladder) stay green; κ-reproduction with /tmp/ref/out/model.bin absent is a named unknown, not a pass.","The Phase Mirror names dissonances; it does not bind serving. The precision question (donor-parity vs no-multiply / c < 1 kernel) is open and blocking until an artifact answers it; foreign issue numbers are not cited as Foundry truth until the issue plane is bound to this repo."],"supersedes":null,"links":[{"uri":"docs/adr/accepted/ADR-0114 R4 RnD Foundry.txt","kind":"SpecificationDoc","description":"Source accepted decision (registered in Lean as ADR-0119 so the unregistered ri1-crate series keeps ADR-0114)"},{"uri":"packages/rust/uor/r4","kind":"SourceFile","description":"R⁴ workspace (uor-r4-core, uor-r4-graph-format, uor-r4-proof-model, uor-r4-router)"},{"uri":"packages/rust/uor/r4/README.md","kind":"SpecificationDoc","description":"Workspace README, incl. the instruction-chat import guard for ask"},{"uri":"docs/geometric_intelligence_programme.md","kind":"SpecificationDoc","description":"Geometric Intelligence Programme (2026-08-26): geometry is the route, the route is the data location"},{"uri":"r4-app.sh","kind":"SourceFile","description":"Root launcher wrapper for uor-r4-cli"},{"uri":"uor-r4-cli","kind":"SourceFile","description":"Root CLI wrapper"},{"uri":"r4_worker.js","kind":"SourceFile","description":"Root worker wrapper"},{"uri":"PhaseMirror/Foundry@6f7ee139","kind":"GitCommit","description":"Scan target main: one branch, zero open issues (issue-plane dissonance named, not resolved)"},{"uri":"ADR/R4.lean","kind":"LeanDeclaration","description":"Zero-sorry formal model of ADR-0119 (this file)"}]},{"id":"ADR-0120","title":"Sovereign Transaction Protocol v0.2","status":"Accepted","context":"A protocol is required to preserve the reasoning behind why a transition was representable, admissible, authorized, executed, validated, deferred, rejected, stale, or protected - not merely its final output. Experiment ZERO has frozen this reference contract.","decision":"Adopt the Sovereign Transaction Protocol v0.2. Reference Pipeline: Intent -> Request/Constraints -> Context Compile -> Invariants -> Representability -> Admissibility/Authority -> Transition Type -> Execution -> Witness/Trace -> Validation -> State Promotion -> Residual -> Provenance -> Checkpoint. Required Enumerations: Representability: EXACT | LOSSY(ΔI) | UNREPRESENTABLE(reason); Admissibility: PERMIT | DENY(reason) | CONDITIONAL(requirements) | DEFER(reason,resume_condition); Epistemic/Residual: KNOWN | UNKNOWN | UNAVAILABLE | UNRESOLVED | CONTRADICTED | REJECTED | PROTECTED_UNKNOWN | STALE; Validation: UNTESTED | PASS | FAIL | NEEDS_REVALIDATION; Promotion: PROPOSED | ACCEPTED | REJECTED | STALE | SUPERSEDED | FROZEN. Normative Rules (demonstrated by Experiment ZERO): (1) UNREPRESENTABLE MUST stop before execution; (2) DENY MUST be distinguishable from UNREPRESENTABLE; (3) LOSSY MUST carry the lost invariant set ΔI and MUST NOT be represented as EXACT; (4) DEFER MUST preserve state, freeze writes for the deferred transition, and record a resume condition; (5) Validation failure MUST preserve the execution record and SHOULD create negative knowledge when the failed path is reusable information; (6) Dependency changes MUST trigger impact analysis on dependent accepted/frozen objects; (7) PROTECTED_UNKNOWN MUST retain an authority-bound resolution policy; (8) Checkpoint packages MUST bind their content to an integrity value; event histories SHOULD be tamper-evident; (9) Compiled context SHOULD declare material omissions and protected exclusions; (10) Portable state MUST be sufficient to recover the active frontier without conversational transcript. Event Minimum Schema: request_id/project_id, sequence, case/object id, event_type, executor, policy_version, reason_code/data, previous-event integrity reference, event integrity value.","consequences":["All implementation states must support the reference protocol."],"supersedes":null,"links":[{"uri":"docs/adr/accepted/ADR-0120-Sovereign-Transaction-Protocol.md","kind":"SpecificationDoc","description":"Accepted decision (reference contract frozen by Experiment ZERO)"},{"uri":"docs/adr/accepted/ADR-0121-Experiment-ZERO-Final-Report.md","kind":"SpecificationDoc","description":"Experiment ZERO baseline + hostile/continuity validation of the protocol semantics"},{"uri":"docs/adr/accepted/ADR-0122-Experiment-ZERO-Red-Team-Closure.md","kind":"SpecificationDoc","description":"Reference-phase red-team closures and implementation release gates A–G"},{"uri":"ADR/Sovereign.lean","kind":"LeanDeclaration","description":"Zero-sorry formal model of ADR-0120 (this file)"},{"uri":"ADR/Examples.lean","kind":"LeanDeclaration","description":"Registry integration: ADR-0120 claim and valuation environment"},{"uri":"ADR/Test.lean","kind":"LeanDeclaration","description":"Runtime harness exercising the ADR-0120 model"}]}]}
+{
+  "version": "1.0.0",
+  "adrs": [
+    {
+      "id": "ADR-001",
+      "title": "Integer Jordan Bond Governance",
+      "status": "Superseded",
+      "context": "Floating-point non-determinism introduces drift and spoliation risk in state transitions across distributed nodes.",
+      "decision": "Enforce fixed-point integer Jordan bond arithmetic scaled by N = 1024 at the kernel boundary.",
+      "consequences": [
+        "Arithmetic determinism guaranteed across heterogeneous nodes",
+        "Floating point drift strictly eliminated"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "PhaseMirror.Care.Scale",
+          "kind": "LeanDeclaration",
+          "description": "Canonical fixed-point scale N = 1024"
+        },
+        {
+          "uri": "Care.lean",
+          "kind": "SourceFile",
+          "description": "Integer fixed-point operations"
+        }
+      ]
+    },
+    {
+      "id": "ADR-002",
+      "title": "Sedona Spine Retention Engine Sole Source of Truth",
+      "status": "Accepted",
+      "context": "Decentralized litigation hold rules risk spoliation drift if computed independently by UI or client agents.",
+      "decision": "All ESI preservation risk logic must route exclusively through the Sedona Spine Rust Engine and WASM SDK.",
+      "consequences": [
+        "Zero drift in litigation hold calculations",
+        "Mandatory provenance chain: Policy -> Event -> Kernel -> Witness"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "models/legalese-scopist/CONTRACT.md",
+          "kind": "SpecificationDoc",
+          "description": "Preservation alert protocol"
+        },
+        {
+          "uri": "models/legalese-scopist/",
+          "kind": "SourceFile",
+          "description": "Rust Engine Core implementation"
+        }
+      ]
+    },
+    {
+      "id": "ADR-003",
+      "title": "Per-Triad Resonance Floors (Audit v2)",
+      "status": "Accepted",
+      "context": "Aggregate mean resonance floor in ADR-001 permitted averaging blind spots where individual triads could fall below viability.",
+      "decision": "Strengthen viability audit to require every individual triad to meet or exceed ResFloor = 870.",
+      "consequences": [
+        "Eliminates averaging blind spot proved by averaging_blind_spot theorem",
+        "Preserves backward compatibility with audit v1"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "ADR/Theorems/CareViability.lean",
+          "kind": "SourceFile",
+          "description": "Formalization of v2 thresholds and blind spot"
+        },
+        {
+          "uri": "PhaseMirror.CareViability.phase_mirror_audit_v2",
+          "kind": "LeanDeclaration",
+          "description": "Per-triad binary audit"
+        }
+      ]
+    },
+    {
+      "id": "ADR-004",
+      "title": "Meet-Semilattice Partition Refinement & LCR Operator",
+      "status": "Accepted",
+      "context": "SPMD distributed execution requires a formal refinement order over tensor sharding states (Sharded(d) \u2264 Replicated \u2264 Unconstrained) that is deterministic, commutative, and fail-closed.",
+      "decision": "Enforce pointwise meet operator (\u2293) over logical mesh axes with idempotent, associative, and commutative semantics. Incompatible assignments evaluate to bottom, raising an immediate ConflictReport.",
+      "consequences": [
+        "Deterministic least common refinement across distributed execution paths",
+        "Fail-closed immediate rejection of conflicting sharding schedules"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "specs/p2c_petc_v12.md",
+          "kind": "SpecificationDoc",
+          "description": "P2C PETC v1.2 Specification Section 2.3"
+        },
+        {
+          "uri": "packages/rust/pirtm-compiler/src/sharding.rs",
+          "kind": "SourceFile",
+          "description": "LCR Meet Operator Implementation"
+        }
+      ]
+    },
+    {
+      "id": "ADR-005",
+      "title": "BLAKE2b-16 Personalization & Canonical Bytecode Wire Format",
+      "status": "Accepted",
+      "context": "Witness bytecode streams require compact, tamper-evident framing with low verification overhead across heterogeneous compiler runtimes (MLIR, XLA, PyTorch).",
+      "decision": "Standardize binary wire format on header magic 'P2CWITv2', version 0x0102, LEB128/ZigZag varints, trailer 0xAA 0x55, and 16-byte BLAKE2b body digest personalized with b'P2C_V12'.",
+      "consequences": [
+        "Bit-flip and truncation detection at frame boundary",
+        "Allocation-free stack-based decoding in high-performance runtimes"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "specs/p2c_petc_v12.md",
+          "kind": "SpecificationDoc",
+          "description": "P2C PETC v1.2 Binary Wire Format Section 3"
+        },
+        {
+          "uri": "packages/rust/core/src/petc.rs",
+          "kind": "SourceFile",
+          "description": "Bytecode Frame Parser"
+        }
+      ]
+    },
+    {
+      "id": "ADR-006",
+      "title": "MultiContract Atomic Contraction with PartialSum Tokens",
+      "status": "Accepted",
+      "context": "Contraction over sharded tensor dimensions produces partial sums requiring explicit collective reductions before downstream consumption.",
+      "decision": "Standardize opcode 0x05 (MultiContract) to atomically verify dual signatures and emit PartialSum(mesh_axis) tokens consumed strictly by subsequent Collective operations.",
+      "consequences": [
+        "Prevents unreduced partial sum escapes in SPMD graphs",
+        "Simultaneous atomic multi-axis tensor contractions in O(k) time"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "specs/p2c_petc_v12.md",
+          "kind": "SpecificationDoc",
+          "description": "P2C PETC v1.2 Opcode Semantics Section 4"
+        },
+        {
+          "uri": "packages/rust/engine/src/petc.rs",
+          "kind": "SourceFile",
+          "description": "MultiContract Evaluator"
+        }
+      ]
+    },
+    {
+      "id": "ADR-007",
+      "title": "Commutative Collective Transformers for Deterministic Sharding Commit",
+      "status": "Accepted",
+      "context": "Multi-mesh collective operations (AllReduce, AllGather) must yield identical global sharding states regardless of topological scheduling order.",
+      "decision": "Define collective transformers T_m that transition axis m to Replicated, and formally verify operator commutativity T_m \u2218 T_n = T_n \u2218 T_m for all m \u2260 n.",
+      "consequences": [
+        "Topology-invariant global sharding commitment",
+        "Eliminates deadlocks and non-determinism in multi-axis reduction pipelines"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "specs/p2c_petc_v12.md",
+          "kind": "SpecificationDoc",
+          "description": "P2C PETC v1.2 Section 2.3 Collective Transformers"
+        },
+        {
+          "uri": "lean/Multiplicity/PETC.lean",
+          "kind": "LeanDeclaration",
+          "description": "Collective transformer commutation"
+        }
+      ]
+    },
+    {
+      "id": "ADR-008",
+      "title": "Prime Signature Canonical Monoid as Exclusive Rust Kernel Substrate",
+      "status": "Accepted",
+      "context": "All multiplicity computations, spectral analysis, and emission decisions must share a single, deterministic representation to prevent representational drift between Lean formalization and Rust execution.",
+      "decision": "The only permitted representation of a Multiplicity Signature inside the Rust kernel is a finitely supported map from primes to exponents, equipped with the free commutative monoid structure (pointwise addition of exponents). No alternative encodings (dense vectors, hashed bags, or floating-point approximations) are permitted in the core path.",
+      "consequences": [
+        "Signature equality is decidable by structural comparison of support and exponents",
+        "Multiplicity product is strictly associative and commutative",
+        "Any foreign representation must be converted at the kernel boundary and rejected if conversion is lossy"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "PhaseMirror.PrimeSignature",
+          "kind": "LeanDeclaration",
+          "description": "Formal specification of signature monoid"
+        },
+        {
+          "uri": "packages/rust/multiplicity/multiplicity-core/src/signature.rs",
+          "kind": "SourceFile",
+          "description": "Target Rust implementation site"
+        }
+      ]
+    },
+    {
+      "id": "ADR-009",
+      "title": "Mandatory Contraction Witness & Spectral Radius Verification Before Emission Gate",
+      "status": "Accepted",
+      "context": "Unconstrained recurrence or agent emission can produce unbounded Lyapunov drift, violating the sovereign contraction invariant of the Phase Mirror core.",
+      "decision": "No signal may pass the Emission Gate unless a machine-checkable ContractionWitness is supplied that proves the spectral radius of the current operator is strictly less than 1. The witness must be re-validated on every gate evaluation.",
+      "consequences": [
+        "EmissionGate returns Suppress or Hold when no valid witness is present",
+        "SpectralGovernor is the sole authority permitted to mint ContractionWitness values",
+        "Any bypass of the witness check constitutes a hard kernel violation and aborts the process"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "PhaseMirror.SpectralGovernor",
+          "kind": "LeanDeclaration",
+          "description": "Formal contract of spectral governor"
+        },
+        {
+          "uri": "packages/rust/ramanujan-multiplicity",
+          "kind": "SourceFile",
+          "description": "Witness generation site"
+        }
+      ]
+    },
+    {
+      "id": "ADR-010",
+      "title": "Axiom-Clean Kernel Boundary and Manifested Proof Debt Policy",
+      "status": "Accepted",
+      "context": "Unmanifested sorry, todo!, or commented-out critical paths create verification leakage that undermines the honesty guarantee of the entire formal stack.",
+      "decision": "The kernel boundary (Rust + Lean interface) must be axiom-clean. Every open proof obligation that affects runtime behavior must be either (a) fully discharged or (b) explicitly manifested as a named sorry with a tracking issue and a hard CI failure if the count increases. Zero untracked proof debt is permitted on the main branch.",
+      "consequences": [
+        "CI rejects any increase in manifested or unmanifested sorry count on protected paths",
+        "Kernel startup performs a static check that the formal registry and the Rust core share the same honesty manifest",
+        "Research surfaces (including F1-square) may contain open obligations only when explicitly quarantined outside the kernel boundary"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": ".github/workflows/adr-verify.yml",
+          "kind": "SpecificationDoc",
+          "description": "Honesty audit workflow"
+        },
+        {
+          "uri": "docs/CURRENT_TRUTH.md",
+          "kind": "SpecificationDoc",
+          "description": "Living honesty ledger"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0013",
+      "title": "UOR Civic Infrastructure",
+      "status": "Accepted",
+      "context": "The Foundry DAO progresses through three strategic developmental epochs. PrismPM governs process and packaging law; the UCC governs physical and dynamical law via the universal closure sextuple. PWEH operationalizes contractivity and fail-closed interlocks as an active execution lock, and CRMF envelopes canonicalized under BCS provide tamper-evident attestation. The architecture requires a canonical wire format for cryptographic commitments, a fail-closed governance mechanism, and an integrity chain that binds execution traces to prime-indexed attestations.",
+      "decision": "Adopt the canonical BCS wire format for the UnsignedCrmfEnvelope, the PWEH integrity binding for execution traces, the contractivity gate for the UCC, and fail-closed interlocks for governance.",
+      "consequences": [
+        "Deterministic, cross-language canonical byte streams for cryptographic commitments (Rust/Lean reproducible)",
+        "Path-dependent tamper resistance across the whole PWEH chain",
+        "Fail-closed governance: any unmodeled defect halts L0 before side effects materialize",
+        "Poseidon2 sponge absorption is the ZK sealing stage",
+        "Floating-point is structurally excluded from all wire formats (ADR-0021)"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/papers/UOR Civic Infrastructure_.docx",
+          "kind": "SourceFile",
+          "description": "UOR Civic Infrastructure (The Triadic Evolution)"
+        },
+        {
+          "uri": "lean/MTPI/ADR0013.lean",
+          "kind": "SourceFile",
+          "description": "Canonical BCS wire format, fail-closed interlocks, contractivity gate, and PWEH binding formalized as Lean 4 theorems"
+        },
+        {
+          "uri": "lean/MTPI/ADR0013Test.lean",
+          "kind": "SourceFile",
+          "description": "Runtime witness executing closed-form claims"
+        },
+        {
+          "uri": "packages/rust/crmf/src/canonical.rs",
+          "kind": "SourceFile",
+          "description": "Canonical BCS wire format (Kani-verified)"
+        },
+        {
+          "uri": "packages/rust/crmf/src/failgate.rs",
+          "kind": "SourceFile",
+          "description": "Fail-closed interlocks (Kani-verified)"
+        },
+        {
+          "uri": "packages/rust/crmf/src/pweh.rs",
+          "kind": "SourceFile",
+          "description": "PWEH integrity chain (Kani-verified)"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0014",
+      "title": "UCC as a Service \u2014 Year One Roadmap",
+      "status": "Accepted",
+      "context": "The year-one window (2 September 2026 \u2013 2 September 2027) needs an operator product that is lawful, deliverable, and free of unimplemented research claims. UAC chemistry (FeMoco, 100-way MA-VQE, 69-qubit concurrency) remains research-path until a partner queue exists.",
+      "decision": "Adopt the Universal Closure Calculator (UCC) as a hosted kernel service for year one: every call returns Closure (lawful closure under the Dirichlet / union-find kernel), Defect (\u0394 = 0 or named in English), Receipt (input hash + kernel version + Lean/Kani build id + timestamp), and Levers (Owner \u2014 action \u2014 metric \u2014 horizon).",
+      "consequences": [
+        "Year-one priority is receipts that change decisions, not revenue",
+        "Budget $40k low / $180k plausible; treasuries not mixed; Q0 dual-control $2,500",
+        "SKU line: Community, Pro, Enterprise, PMCP",
+        "Q0-Q4 exit gates lock each phase; named tensions explicitly bound"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/papers/UCC_Year_One_Roadmap.docx",
+          "kind": "SourceFile",
+          "description": "Citizen Gardens, UCC as a Service Year One Roadmap"
+        },
+        {
+          "uri": "docs/adr/accepted/0013-UOR Civic Infrastructure.md",
+          "kind": "SourceFile",
+          "description": "Governing civic model this product plan operationalizes"
+        },
+        {
+          "uri": "lean/MTPI/ADR0013.lean",
+          "kind": "SourceFile",
+          "description": "Canonical BCS / PWEH substrate underlying receipt integrity"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0015",
+      "title": "Unified Civic Infrastructure Outline",
+      "status": "Accepted",
+      "context": "Citizen Gardens needs a legal and operating scaffold that keeps the civic purpose distinct from the commercial operator while remaining lawful under Wyoming law. The governing instruments define purpose and caps; the civic layer must hold the literary/legal definition while the operator hosts the kernel and contracts with strangers.",
+      "decision": "Adopt the Unified Civic Infrastructure Outline as the operating map for Citizen Gardens: a Wyoming unincorporated nonprofit association (DUNA-ready) under a two-legal-person wall. Four infrastructures: UNA/DUNA, Buurtzorg topology, Bushido, Phase Mirror + Multiplicity Social Physics.",
+      "consequences": [
+        "Legal identity is honest and forward-compatible: DUNA-ready without overclaiming",
+        "The wall keeps the kernel off the UNA balance sheet and the purpose off the operator P&L",
+        "Credit is a recorded, machine-checked accounting unit (ELM credits), not a votable currency",
+        "Adoption is incremental and gated, so the civic layer never outruns its legal form"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/papers/Unified_Civic_Infrastructure_Outline.docx",
+          "kind": "SourceFile",
+          "description": "Unified Civic Infrastructure Outline (LawfulRecursionVersion 1.0)"
+        },
+        {
+          "uri": "docs/adr/completed/0013-UOR Civic Infrastructure.md",
+          "kind": "SourceFile",
+          "description": "Governing civic model"
+        },
+        {
+          "uri": "docs/adr/completed/0014-UCC as a Service Year One Roadmap.md",
+          "kind": "SourceFile",
+          "description": "The operator product this wall hosts"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0016",
+      "title": "UOR Civic Infrastructure \u2014 Three Epochs",
+      "status": "Accepted",
+      "context": "The Foundry's roadmap must be presentable as a physically and biologically constrained deployment rather than an abstract idea. The governing civic architecture needs an epochal frame that a board can digest while preserving structural integrity.",
+      "decision": "Adopt the Triadic Evolution model: the Foundry progresses through three strategic developmental epochs \u2014 Foundation (mass density, staking minting, $1.00 anchor, Builders), Projection (thermalization, calibration minting, $2.00 anchor), and Maximum Multiplicity (triadic scaling 3\u21929\u219227\u219281\u2192243, recursion+LifeBushido, $3.00 limit). Epoch transitions gated by 90-day Phase Mirror metric gates.",
+      "consequences": [
+        "Each epoch has exactly one systemic state, one minting driver, and one economic anchor",
+        "The $1.00 \u2192 $2.00 \u2192 $3.00 anchor progression is a policy constraint, not a market forecast",
+        "Staking, calibration, and recursion+LifeBushido are sequential minting mechanisms",
+        "Diffusion follows triadic powers of three; saturation at 243 bounds a single locus"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/papers/UOR Civic Infrastructure_.docx",
+          "kind": "SourceFile",
+          "description": "UOR Civic Infrastructure slide-deck text (Triadic Evolution)"
+        },
+        {
+          "uri": "docs/adr/completed/0013-UOR Civic Infrastructure.md",
+          "kind": "SourceFile",
+          "description": "Dense civic architecture this deck summarizes"
+        },
+        {
+          "uri": "docs/adr/completed/0015-Unified Civic Infrastructure Outline.md",
+          "kind": "SourceFile",
+          "description": "Legal/operating scaffold the epochs run on"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0017",
+      "title": "Reinitialization \u2014 90-Day Operating Plan and Volunteer Talent Model",
+      "status": "Accepted",
+      "context": "UOR Foundation must reinitialize under volunteer-led, no-funding assumption. Next unit of value is confidence: bounded 13-week cycle producing governed, independently verifiable value-layer baseline.",
+      "decision": "Adopt 90-Day Operating Plan: one primary objective, Day Zero two-week mobilization with six conditions, five workstreams max, RACI accountability, volunteer talent model, action register A01-A26+.",
+      "consequences": [
+        "Execution capped by WIP limits \u2014 scope cannot expand silently",
+        "No-funding assumption binding \u2014 volunteer capacity is planning envelope",
+        "Cycle either closes deliverables or fails exit rule loudly"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/papers/UOR_Final_90_Day_Operating_Plan_and_Talent_Model.docx",
+          "kind": "SourceFile",
+          "description": "90-Day Operating Plan"
+        },
+        {
+          "uri": "docs/adr/accepted/0018-Executive Decision Brief.md",
+          "kind": "SourceFile",
+          "description": "Executive decision brief gating this plan"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0018",
+      "title": "Reinitialization \u2014 Executive Decision Brief",
+      "status": "Accepted",
+      "context": "UOR technology is ahead of operating structure. Missing: public source of truth, approved authority chain, coordinated release ownership, independent implementation evidence.",
+      "decision": "Adopt CONDITIONAL GO pending board ratification and Day Zero gate. Ten decisions D1-D10 covering authority chain, public source of truth, release custody, volunteer capacity, evidence policy (E0-E6), scope boundary, escalations, maintenance, termination.",
+      "consequences": [
+        "No ratification = no baseline cycle; portfolio stays in maintenance",
+        "Public claims bound to evidence grade E0-E6 with dates, owners, limits",
+        "Decision brief is single ratifying artifact"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/papers/UOR_Final_Executive_Decision_Brief.docx",
+          "kind": "SourceFile",
+          "description": "Executive Decision Brief"
+        },
+        {
+          "uri": "docs/adr/accepted/0017-90-Day Operating Plan and Talent Model.md",
+          "kind": "SourceFile",
+          "description": "Operating plan this brief gates"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0019",
+      "title": "Technology Portfolio \u2014 Evidence, Risk, and Feasibility",
+      "status": "Accepted",
+      "context": "19 internal assets vs 15 public GitHub repositories. Gap between internal claims and externally verifiable evidence is standing risk.",
+      "decision": "Adopt evidence recut: Observe, Map, Interface method. Every asset classified Normative/Reference/Experimental/Historical. Evidence graded E0-E6 with dates, owners. 19-vs-15 deltas dispositioned with owners.",
+      "consequences": [
+        "Public claims downgraded to E0-E2 until independently evidenced",
+        "19-vs-15 inventory deltas become action items with owners",
+        "UAC research claims excluded until partner queues exist"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/papers/UOR_Final_Technology_Portfolio_Evidence_Risk_and_Feasibility_Appendix.docx",
+          "kind": "SourceFile",
+          "description": "Evidence recut appendix"
+        },
+        {
+          "uri": "docs/adr/accepted/0018-Executive Decision Brief.md",
+          "kind": "SourceFile",
+          "description": "Decision brief ratifying this recut"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0020",
+      "title": "HQ and Sovereign Node Deployment",
+      "status": "Accepted",
+      "context": "36.8 acres in Livermore, Larimer County, CO. LifeBushido Retreat, SUG node, civic Sovereignty Node site. Risk mitigated by two-phase gate structure.",
+      "decision": "Adopt proposal conditioned on $750K board authorization. Phase 1: Circle of 9 (ground-state seeding). Phase 2: Family of 27 (UOR Foundry) gated by Three-Way Test on 90-day metric card.",
+      "consequences": [
+        "Capital reversible only at preset gates",
+        "Site bounded at 27 operators \u2014 growth proceeds by geographic split",
+        "Land/structures locked to Foundation \u2014 no private-equity route"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/papers/UOR Foundation HQ & Sovereign Node Deployment_.docx",
+          "kind": "SourceFile",
+          "description": "HQ Executive Proposal"
+        },
+        {
+          "uri": "docs/adr/accepted/0015-Unified Civic Infrastructure Outline.md",
+          "kind": "SourceFile",
+          "description": "UNA/operator-LLC wall"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0022",
+      "title": "Symmetry-Matched Polarization Analysis in MnF\u2082",
+      "status": "Accepted",
+      "context": "Unpolarized INS reported no resolvable splitting; polarized INS accessed antisymmetric channel. Null in one channel \u2260 physical absence in another.",
+      "decision": "Adopt polarization analysis discipline: Blume-Maleev decomposition into polarization-even/odd; four-null taxonomy; resolvability criterion.",
+      "consequences": [
+        "Unpolarized nulls no longer overrule polarized signatures",
+        "Spectral resolution and chiral sensitivity as separate design axes",
+        "Supports \u03b4J7 readout, reversal tomography, probe-tensor correspondence"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/proposed/Paper1 Symmetry Matched Polarization Analysis in MnF2- Separating Spectral Resolutionfrom Chiral Sensitivity in Altermagnetic Neutron Scattering - JHaines 2026.pdf",
+          "kind": "SourceFile",
+          "description": "Source paper (JHaines 2026)"
+        },
+        {
+          "uri": "docs/specs/observ_calculus_v1.md",
+          "kind": "SpecificationDoc",
+          "description": "Measurement-map program wire"
+        },
+        {
+          "uri": "packages/rust/observ",
+          "kind": "SourceFile",
+          "description": "Observability calculus kernel"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0023",
+      "title": "The \u03b4J7 Principle \u2014 Symmetry-Complement Source Sectors in MnF\u2082",
+      "status": "Accepted",
+      "context": "Small imbalance between symmetry-distinct J7a/J7b bonds as candidate source coordinate for chiral response. Statement of 'symmetry complement' relative to declared reference must be fixed.",
+      "decision": "Adopt \u03b4J7 principle: group averaging defines projector P; V = im P \u2295 ker P; source sector V\u2098 = span{\u03bb\u2098,\u2090}; \u03b4J7 \u2261 J7b \u2212 J7a; odd-channel expansion F_-(\u03bb) = k\u00b7\u03bb + O(\u2016\u03bb\u2016\u00b3).",
+      "consequences": [
+        "Source attribution tied to declared reference model",
+        "Odd-channel expansion fixes chiral response scaling",
+        "Mathematical substrate for ADR-0024 and ADR-0025",
+        "Warning against universal weak coordinate export"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/proposed/Paper2 The \u03b4J7 Principle- Symmetry Complement Source Sectors in Altermagnetic MnF2 - JHaines 2026.pdf",
+          "kind": "SourceFile",
+          "description": "Source paper (JHaines 2026)"
+        },
+        {
+          "uri": "docs/specs/observ_calculus_v1.md",
+          "kind": "SpecificationDoc",
+          "description": "Measurement-map wire"
+        },
+        {
+          "uri": "packages/rust/observ",
+          "kind": "SourceFile",
+          "description": "Observability calculus kernel"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0024",
+      "title": "Reversal-Space Tomography of Weak Altermagnetic Exchange in MnF\u2082",
+      "status": "Accepted",
+      "context": "Weak \u03b4J7 at few-\u00b5eV scale needs engineered readout multiplication. Signed readout certification requires engineering discipline.",
+      "decision": "Adopt reversal-space tomography: binary design coordinates of (\u2124\u2082)^N experiment; Walsh-Hadamard contrast decomposition; path-consistency gate; forbidden-sector coefficients as falsification channels.",
+      "consequences": [
+        "Weak-exchange readouts become certifiably signed and falsifiable",
+        "Gain measured in transduction, not coefficient amplification",
+        "Hysteresis and domain drift explicitly tested"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/proposed/Paper3 Reversal-Space Tomography of Weak Altermagnetic Exchange in MnF2- Path Validated Signed Readout Engineering - JHaines 2026.pdf",
+          "kind": "SourceFile",
+          "description": "Source paper (JHaines 2026)"
+        },
+        {
+          "uri": "docs/specs/observ_calculus_v1.md",
+          "kind": "SpecificationDoc",
+          "description": "Measurement-map wire"
+        },
+        {
+          "uri": "packages/rust/observ",
+          "kind": "SourceFile",
+          "description": "Observability calculus kernel"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0025",
+      "title": "Static Multipolar Order and Dynamical Chiral Response \u2014 Probe-Tensor Correspondence",
+      "status": "Accepted",
+      "context": "MnF\u2082 spans elastic multipole reconstruction and inelastic magnon chirality. Whether static multipole can be inferred from dynamical chiral measurement purely from symmetry is central question.",
+      "decision": "Adopt probe-tensor correspondence: Hamiltonian coordinates, equilibrium tensors, response tensors, correlations, probe/instrument map are distinct objects \u2014 never collapsed; no automatic substitution.",
+      "consequences": [
+        "Static-rank and dynamical-chirality results separate propositions",
+        "Every multipole reconstruction states conditioning assumptions or not closed",
+        "K component established for ADR-0026 benchmark"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/proposed/Paper4 Static Multipolar Order and Dynamical Chiral Response in MnF2- Probe Tensor Correspondence and Conditional Rank Identifiability - JHaines 2026.pdf",
+          "kind": "SourceFile",
+          "description": "Source paper (JHaines 2026)"
+        },
+        {
+          "uri": "docs/specs/observ_calculus_v1.md",
+          "kind": "SpecificationDoc",
+          "description": "Measurement-map wire"
+        },
+        {
+          "uri": "packages/rust/observ",
+          "kind": "SourceFile",
+          "description": "Observability calculus kernel"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0026",
+      "title": "Symmetry-Complement Coordinates Across Altermagnets \u2014 Cross-Material Falsification",
+      "status": "Accepted",
+      "context": "Portable symmetry argument must survive materials with different hierarchy, probe physics, and magnetic state. Must survive adversarial controls (FeF\u2082, MnSi).",
+      "decision": "Adopt six-component claim vector c = (M,S,E,\u03c7,R,K); predeclared-reference admissibility A_m,j = A_ind \u2227 A_state \u2227 A_null \u2227 A_no-retune; adversarial controls enforced.",
+      "consequences": [
+        "Restricted generalization survives \u2014 response-specific sectors only",
+        "Attribution killed by source-state gate before downstream counted",
+        "MnF\u2082 near-scalar; MnTe/CrSb require broader sectors"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/proposed/Paper5 Symmetry Complement Coordinates Across Altermagnets- Predeclared References and Cross Material Falsification - JHaines 2026.pdf",
+          "kind": "SourceFile",
+          "description": "Source paper (JHaines 2026)"
+        },
+        {
+          "uri": "docs/specs/observ_calculus_v1.md",
+          "kind": "SpecificationDoc",
+          "description": "Measurement-map wire"
+        },
+        {
+          "uri": "packages/rust/observ",
+          "kind": "SourceFile",
+          "description": "Observability calculus kernel"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0027",
+      "title": "When Null Does Not Mean Absent \u2014 Measurement-Map Geometry",
+      "status": "Accepted",
+      "context": "A null outcome is not physical absence. Latent state passes through source, response, probe, averaging, transfer, and nuisance stages. Four-null distinction generalized to compositional calculus.",
+      "decision": "Adopt layered geometry: M = T \u2218 A \u2218 P \u2218 R \u2218 S; null-then-witness filtration K_j = ker F_j; refactor attribution; target-specific closure K_j \u2286 ker C; common-state closure by kernel intersection.",
+      "consequences": [
+        "Every null attributed to specific stage or label withheld",
+        "Raw signal can be non-identifying; null can coexist with nonzero signal",
+        "Reversal channels double as obstruction testbeds"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/proposed/Paper6 When Null Does Not Mean Absent- Measurement Map Geometry, Factorization Boundaries, and Null Witness Duality - JHaines 2026.pdf",
+          "kind": "SourceFile",
+          "description": "Source paper (JHaines 2026)"
+        },
+        {
+          "uri": "docs/specs/observ_calculus_v1.md",
+          "kind": "SpecificationDoc",
+          "description": "Measurement-map wire"
+        },
+        {
+          "uri": "packages/rust/observ",
+          "kind": "SourceFile",
+          "description": "Observability calculus kernel"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0028",
+      "title": "Target-First Observability Calculus \u2014 Admissible Ambiguity",
+      "status": "Accepted",
+      "context": "Design organized around available instrument rather than target claim is flawed. High-amplitude measurement may have zero target design gain; smaller measurement may close target.",
+      "decision": "Adopt target-first calculus: 13-step protocol. Residual ambiguity O_C(E) = C(ker A_E); design gain \u0394_C(B|E) = d_C(E) \u2212 d_C(E\u222aB); practical margin \u03bc_C(J_eff).",
+      "consequences": [
+        "Experiment selection by \u0394_C > 0 or admissible-set contraction",
+        "Every claim carries declared target, state gate, forward map, nuisance, ambiguity, reversal, diagnostic, falsification",
+        "Three shortcuts forbidden for MnF\u2082 named explicitly"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/proposed/Paper7 From Hidden Order to Identifiable Physics- A Target First Observability Calculus with Admissible Ambiguity and Dual Obstructions - JHaines 2026.pdf",
+          "kind": "SourceFile",
+          "description": "Source paper (JHaines 2026)"
+        },
+        {
+          "uri": "docs/specs/observ_calculus_v1.md",
+          "kind": "SpecificationDoc",
+          "description": "Measurement-map wire"
+        },
+        {
+          "uri": "packages/rust/observ",
+          "kind": "SourceFile",
+          "description": "Observability calculus kernel"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0113",
+      "title": "Universal Closure Calculator \u2014 Unified Kernel Surface",
+      "status": "Accepted",
+      "context": "The Foundry hosts several independently verified surfaces \u2014 ADR governance, Care Circle viability, the Homestead L0 civic-edge gate, Kappa contractivity, and WordLove \u2014 each with its own proofs and artifacts. The Universal Closure Calculator (UCC) sextuple (X, \u2218, \u03b1, \u03bc, F, \u0394) is the declared kernel boundary, but no single accepted decision binds those surfaces to it, so traceability, proof debt, and CI enforcement are fragmented across modules.",
+      "decision": "Adopt the UCC sextuple as the canonical integration surface and wire every verified Foundry surface to it. (1) Edge admission: the L0 fail-closed gate of `Homestead_UCC_Care_Bridge` (Seal \u27f9 contractivity \u039b_m < 1, entropy non-increase \u0394S \u2264 0, Care Phase Mirror v2 viability, Hundian budget). (2) Contractivity evidence for \u0394: the Kappa spectral-gap and Lyapunov witnesses. (3) Governance machinery: the ADR-0010 proof-debt manifest, `scripts/check_adr_sorry.py`, `.github/workflows/lean-gate.yml`, `adrExport`, and the property/concurrency tests. (4) Wire contract: the integer-only BCS wire of `docs/specs/ucc_sextuple_v1.md` and `contracts/universal_closure.yaml`. Retire the `ADR/ADR/` and `pirtm/lean/Foundations/ADR/` shadow scaffolds so the surface has one source of truth. No claim is made about the Riemann Hypothesis.",
+      "consequences": [
+        "Every closure call returns Closure, Defect (\u0394 named in English), Receipt, and Levers (ADR-0014)",
+        "Unlawful transitions fail closed at L0; Seal implies contractivity, \u0394S \u2264 0, and Care viability",
+        "Proof debt is explicit and bounded: 13 manifest-authorized Kappa sorries, zero untracked, checker-enforced in CI",
+        "Shadow scaffolds retired; the ADR.* namespace is the sole governance authority",
+        "Integer-only wire: floating point remains structurally excluded (ADR-0021)"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/specs/ucc_sextuple_v1.md",
+          "kind": "SpecificationDoc",
+          "description": "Canonical sextuple (X, \u2218, \u03b1, \u03bc, F, \u0394) wire format and L0 lawfulness gate"
+        },
+        {
+          "uri": "contracts/universal_closure.yaml",
+          "kind": "SpecificationDoc",
+          "description": "Declarative associator tolerance \u0394 \u2264 \u03b5 and closure-operator bounds (fail-closed)"
+        },
+        {
+          "uri": "ADR/Theorems/Homestead_UCC_Care_Bridge.lean",
+          "kind": "LeanDeclaration",
+          "description": "L0 gate soundness: Seal \u27f9 contractivity, entropy non-increase, Care viability, Hundian budget"
+        },
+        {
+          "uri": "Foundations/Kappa/Stability.lean",
+          "kind": "LeanDeclaration",
+          "description": "Contractivity witnesses: Lyapunov non-negativity, stability decreasing, prime stability advantage"
+        },
+        {
+          "uri": "Foundations/Kappa/Spectral.lean",
+          "kind": "LeanDeclaration",
+          "description": "Spectral gap positivity and finite relaxation time"
+        },
+        {
+          "uri": "ADR/Properties.lean",
+          "kind": "LeanDeclaration",
+          "description": "Property-based concurrency conflict, traceability, and export-determinism tests"
+        },
+        {
+          "uri": "scripts/check_adr_sorry.py",
+          "kind": "SourceFile",
+          "description": "Manifest-aware proof-debt gate (ADR-0010)"
+        },
+        {
+          "uri": ".github/workflows/lean-gate.yml",
+          "kind": "SourceFile",
+          "description": "CI gate: lake build + lake test + sorry checker on the pinned toolchain"
+        },
+        {
+          "uri": "state/alp_sorry_manifest.json",
+          "kind": "SpecificationDoc",
+          "description": "Proof-debt ledger: 13 authorized Kappa sorries, zero drift"
+        },
+        {
+          "uri": "ADR/README.md",
+          "kind": "SpecificationDoc",
+          "description": "Single source of truth; records shadow-scaffold retirement"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0119",
+      "title": "R4 RnD Foundry \u2014 Computational Substrate of the PhaseMirror/Foundry Monorepo",
+      "status": "Accepted",
+      "context": "The legal person on this wire is the computational substrate of PhaseMirror/Foundry (UCC / UOR Foundry monorepo) \u2014 not the UNA/DUNA, not operator-LLC equity, not a membership instrument. Phase Mirror is a build-time diagnostic, not a runtime firewall; civic L0 and computational L0 stay on separate planes. R4 work is exactly five homonym objects (R\u2074/uor-r4, Gate R4, Hologram v4, F\u2084, R\u2089\u2086); mixing them inflates the repo. R\u2074 is a downstream consumer of UOR-Framework/uor-addr and does not drive Archivum\u2013CRMF\u2013ACE, \u03a6, C_768, or R\u2089\u2086 at runtime. Two architectures coexist: the serving/compiler stack (uor-r4-core transformerless compiler + integer runtime; Teacher pinned, SmolLM2-135M default; deployed kernel contract is XOR/AND/OR/shift/rotate/popcount/int add-sub/compare/table reads only \u2014 no multiply, divide, or float on the hot path; allocation-free, deterministic) and the exploratory geometric router stack (uor-r4-router: 512-dim zeta-zero grid, 4D block-norm, Hopf on S\u00b3; explicitly out of the graph migration path). The 2026-08-26 Geometric Intelligence Programme is authoritative: the geometry is the route, the route is the data location; source weights are offline teachers only; softmax and dense all-prefix work are allowed only as an offline oracle. Measured facts, not hope: #989 table baseline 99,362/446,342 held-out top-1 (22.26%) vs 5.41% unigram, byte-identical double run; #953 geometric overlay 23.21% (+0.95pp), bounded, not semantics/chat/release; #973 HELM-D-R4 full-decoder softmax parity is gauge-equivalent to the donor (max logit delta ~1.05e-5), not geometric advantage. Geometric scoring on the serving stack is zero or negative (#374 campaign); E8-into-keys is negative (lattice belongs on the comparison side); Cayley\u2013Dickson token-id score is dead and removed; #967/#970/#983/#986 are parked. This repo has one branch and zero open issues \u2014 foreign #IDs are not Foundry truth until the issue plane is bound to this repo.",
+      "decision": "Freeze and govern the R4 RnD path. (1) Sew the homonym lock: R4 work is five objects; R\u2074/uor-r4 is a downstream consumer of UOR-Framework/uor-addr and exports no geometry to the civic substrate; it does not drive Archivum\u2013CRMF\u2013ACE, \u03a6, C_768, or R\u2089\u2086 at runtime. (2) Keep the deployed kernel contract: hot path carries XOR/AND/OR/shift/rotate/popcount/int add-sub/compare/table reads only \u2014 no multiply, divide, or float; allocation-free prediction; deterministic artifacts. Computational L0 (LawfulRecursionVersion 1.0: contraction c < 1, \u2016G\u2016\u2081 < 1) is the serving expression of that plane and stays off the membership/civic plane. (3) Keep ask behind the import firewall: ask refuses any continuation bundle that has not passed an imported instruction-chat evaluation (CID-addressed evaluate-report); a HELM-D parity PASS is an offline oracle and never auto-certifies as instruction-chat. (4) Freeze the sequence: exactly one intrinsic R4 attention arm on #973 (replace only donor compatibility + linear value aggregation with a declared R4 distance and geometric weighted centroid; compare against donor, gauge-equivalent R4 reference, and equal-budget Euclidean/plain controls); #954 and resonance/recurrence/lowering stay blocked; no scoring terms are added to the serving stack; frozen negatives are not retuned. (5) Keep the four local gates green (workspace test, clippy -D warnings, fmt, graph-format no_std ladder); \u03ba-reproduction that skips for a missing teacher checkpoint (/tmp/ref/out/model.bin) is a named unknown, never a vacuous pass. (6) Bind the issue plane: one public register of programme issues, or a written import of kappas/CIDs only \u2014 foreign issue numbers are not cited as Foundry truth. (7) The Phase Mirror names dissonances; it does not bind serving. The precision question (donor-parity accuracy vs the no-multiply / c < 1 kernel, and which metric wins if those collide) is open and blocking until an artifact answers it. Product slice stays UCC: chat (#962), cloud deploy, image/audio, agentic loop, and hologram SDK stay later.",
+      "consequences": [
+        "R4 is a downstream consumer of UOR-Framework / uor-addr; it does not drive Archivum\u2013CRMF\u2013ACE, \u03a6, C_768, or R_96 at runtime, and it exports no geometry to the civic substrate.",
+        "Serving passes only the deployed kernel contract \u2014 XOR/AND/OR/shift/rotate/popcount/int add-sub/compare/table reads on the hot path, no multiply, no divide, no float (allocation-free, deterministic) \u2014 the serving expression of Computational L0 (LawfulRecursionVersion 1.0: c < 1, \u2016G\u2016\u2081 < 1), which stays off the membership/civic plane.",
+        "ask refuses any continuation bundle lacking an imported instruction-chat evaluation (CID-addressed evaluate-report); a HELM-D parity PASS is an offline oracle and never promotes to instruction-chat (0 unverified imports).",
+        "Sequence frozen: exactly one intrinsic R4 attention arm on #973; #954 and resonance/recurrence/lowering stay blocked; no scoring terms on the serving stack; frozen negatives are not retuned.",
+        "The four local gates (workspace test, clippy -D warnings, fmt, graph-format no_std ladder) stay green; \u03ba-reproduction with /tmp/ref/out/model.bin absent is a named unknown, not a pass.",
+        "The Phase Mirror names dissonances; it does not bind serving. The precision question (donor-parity vs no-multiply / c < 1 kernel) is open and blocking until an artifact answers it; foreign issue numbers are not cited as Foundry truth until the issue plane is bound to this repo."
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/accepted/ADR-0114 R4 RnD Foundry.txt",
+          "kind": "SpecificationDoc",
+          "description": "Source accepted decision (registered in Lean as ADR-0119 so the unregistered ri1-crate series keeps ADR-0114)"
+        },
+        {
+          "uri": "packages/rust/uor/r4",
+          "kind": "SourceFile",
+          "description": "R\u2074 workspace (uor-r4-core, uor-r4-graph-format, uor-r4-proof-model, uor-r4-router)"
+        },
+        {
+          "uri": "packages/rust/uor/r4/README.md",
+          "kind": "SpecificationDoc",
+          "description": "Workspace README, incl. the instruction-chat import guard for ask"
+        },
+        {
+          "uri": "docs/geometric_intelligence_programme.md",
+          "kind": "SpecificationDoc",
+          "description": "Geometric Intelligence Programme (2026-08-26): geometry is the route, the route is the data location"
+        },
+        {
+          "uri": "r4-app.sh",
+          "kind": "SourceFile",
+          "description": "Root launcher wrapper for uor-r4-cli"
+        },
+        {
+          "uri": "uor-r4-cli",
+          "kind": "SourceFile",
+          "description": "Root CLI wrapper"
+        },
+        {
+          "uri": "r4_worker.js",
+          "kind": "SourceFile",
+          "description": "Root worker wrapper"
+        },
+        {
+          "uri": "PhaseMirror/Foundry@6f7ee139",
+          "kind": "GitCommit",
+          "description": "Scan target main: one branch, zero open issues (issue-plane dissonance named, not resolved)"
+        },
+        {
+          "uri": "ADR/R4.lean",
+          "kind": "LeanDeclaration",
+          "description": "Zero-sorry formal model of ADR-0119 (this file)"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0120",
+      "title": "Sovereign Transaction Protocol v0.2",
+      "status": "Accepted",
+      "context": "A protocol is required to preserve the reasoning behind why a transition was representable, admissible, authorized, executed, validated, deferred, rejected, stale, or protected - not merely its final output. Experiment ZERO has frozen this reference contract.",
+      "decision": "Adopt the Sovereign Transaction Protocol v0.2. Reference Pipeline: Intent -> Request/Constraints -> Context Compile -> Invariants -> Representability -> Admissibility/Authority -> Transition Type -> Execution -> Witness/Trace -> Validation -> State Promotion -> Residual -> Provenance -> Checkpoint. Required Enumerations: Representability: EXACT | LOSSY(\u0394I) | UNREPRESENTABLE(reason); Admissibility: PERMIT | DENY(reason) | CONDITIONAL(requirements) | DEFER(reason,resume_condition); Epistemic/Residual: KNOWN | UNKNOWN | UNAVAILABLE | UNRESOLVED | CONTRADICTED | REJECTED | PROTECTED_UNKNOWN | STALE; Validation: UNTESTED | PASS | FAIL | NEEDS_REVALIDATION; Promotion: PROPOSED | ACCEPTED | REJECTED | STALE | SUPERSEDED | FROZEN. Normative Rules (demonstrated by Experiment ZERO): (1) UNREPRESENTABLE MUST stop before execution; (2) DENY MUST be distinguishable from UNREPRESENTABLE; (3) LOSSY MUST carry the lost invariant set \u0394I and MUST NOT be represented as EXACT; (4) DEFER MUST preserve state, freeze writes for the deferred transition, and record a resume condition; (5) Validation failure MUST preserve the execution record and SHOULD create negative knowledge when the failed path is reusable information; (6) Dependency changes MUST trigger impact analysis on dependent accepted/frozen objects; (7) PROTECTED_UNKNOWN MUST retain an authority-bound resolution policy; (8) Checkpoint packages MUST bind their content to an integrity value; event histories SHOULD be tamper-evident; (9) Compiled context SHOULD declare material omissions and protected exclusions; (10) Portable state MUST be sufficient to recover the active frontier without conversational transcript. Event Minimum Schema: request_id/project_id, sequence, case/object id, event_type, executor, policy_version, reason_code/data, previous-event integrity reference, event integrity value.",
+      "consequences": [
+        "All implementation states must support the reference protocol."
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/accepted/ADR-0120-Sovereign-Transaction-Protocol.md",
+          "kind": "SpecificationDoc",
+          "description": "Accepted decision (reference contract frozen by Experiment ZERO)"
+        },
+        {
+          "uri": "docs/adr/accepted/ADR-0121-Experiment-ZERO-Final-Report.md",
+          "kind": "SpecificationDoc",
+          "description": "Experiment ZERO baseline + hostile/continuity validation of the protocol semantics"
+        },
+        {
+          "uri": "docs/adr/accepted/ADR-0122-Experiment-ZERO-Red-Team-Closure.md",
+          "kind": "SpecificationDoc",
+          "description": "Reference-phase red-team closures and implementation release gates A\u2013G"
+        },
+        {
+          "uri": "ADR/Sovereign.lean",
+          "kind": "LeanDeclaration",
+          "description": "Zero-sorry formal model of ADR-0120 (this file)"
+        },
+        {
+          "uri": "ADR/Examples.lean",
+          "kind": "LeanDeclaration",
+          "description": "Registry integration: ADR-0120 claim and valuation environment"
+        },
+        {
+          "uri": "ADR/Test.lean",
+          "kind": "LeanDeclaration",
+          "description": "Runtime harness exercising the ADR-0120 model"
+        }
+      ]
+    },
+    {
+      "id": "ADR-Citizen_Gardens_Model_Specific",
+      "title": "Citizen Gardens Civic Infrastructure Model \u2014 Production Specification",
+      "status": "Accepted",
+      "context": "Citizen Gardens UNA (operating as The Prime Materia Commons under Wyoming W.S. 17-22) requires a machine-checked, fail-closed implementation of its civic infrastructure model. The model encompasses three interlocking specifications: DUNA Governing Principles, Model Specification v1.0, and Unified Civic Infrastructure Blueprint.",
+      "decision": "Adopt the production-grade Rust + Kani implementation in crates/echonomics-engine/src/civic_spec.rs as the canonical, on-tree artifact for the Citizen Gardens civic infrastructure model.",
+      "consequences": [
+        "Governance operations are executable against verified logic",
+        "No drift between specification and implementation",
+        "Fail-closed by construction with Result returns",
+        "Kani proofs provide mathematical guarantees for all boundary conditions",
+        "Equity never mints PMCP enforced at type level"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "crates/echonomics-engine/src/civic_spec.rs",
+          "kind": "SourceFile",
+          "description": "Canonical implementation (103 tests, 8 Kani proofs)"
+        },
+        {
+          "uri": "crates/echonomics-engine/Cargo.toml",
+          "kind": "BuildConfig",
+          "description": "Standalone crate with Kani cfg"
+        },
+        {
+          "uri": "model/ledger.toml",
+          "kind": "ClaimLedger",
+          "description": "Honesty ledger entries CG-MS-01 through CG-MS-04"
+        },
+        {
+          "uri": "model/ids.toml",
+          "kind": "ConformanceRegister",
+          "description": "Conformance IDs CG-MS-01 through CG-MS-04"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0128",
+      "title": "Template Lock Integrity Precedes Capability Registration",
+      "status": "Accepted",
+      "context": "packages/foundry-web/foundry-web-main/template-contract.json declares prismpm.lock and template.lock in its required_paths array, alongside the seven paths that are present. Both lock files are absent from the tree. The Justfile makes this the first recipe of the acceptance boundary: `vv: template-check fmt-check model lint test features bdd deny`, and template-check runs `cargo run -q -p xtask -- check-model`, `audit-bootstrap`, `prismpm template check`, and `prismpm lock check`. The contract's own AGENTS.md states that the trust root is checked independently of generated project content and that universal policy files are byte-bound by template.lock. A gate that names a trust root which is not on disk is not a weakened gate; it is an uninstantiable one, so no capability registered under this contract can be evidenced until the locks exist.",
+      "decision": "prismpm.lock and template.lock are restored as byte-bound trust-root artifacts and `just template-check` passes before any row is added to model/ids.toml. Lock restoration is the first step of the build-out series, not a prerequisite of it: the lock content is taken from the exact SDK image and policy revision that the restored files name, never hand-authored to satisfy the checker. `just vv` is not reported as runnable, and no capability is described as gated, until both locks are present and the template-check recipe succeeds.",
+      "consequences": [
+        "The acceptance boundary becomes instantiable; before this, `just vv` cannot complete and no downstream conformance ID is evidence",
+        "Lock content is bound to a named SDK image and policy revision, so template drift is a detectable diff rather than an unverifiable claim",
+        "Capability registration under ADR-0129 is deferred until this decision is implemented, preserving the R3 order",
+        "No conformance ID in model/ids.toml may be added ahead of the locks without voiding the gate it claims to satisfy"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/template-contract.json",
+          "kind": "SourceFile",
+          "description": "Declares prismpm.lock and template.lock in required_paths; both absent on tree"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/Justfile",
+          "kind": "SourceFile",
+          "description": "`vv` acceptance boundary; template-check runs `prismpm template check` and `prismpm lock check`"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/AGENTS.md",
+          "kind": "SpecificationDoc",
+          "description": "Universal rules R1-R6 and the trust-root/template boundary"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0129",
+      "title": "The Conformance Register Is the Sole Gate for the Web Surface",
+      "status": "Accepted",
+      "context": "The register for this package is empty: packages/foundry-web/foundry-web-main/model/ids.toml ends with `id = []` and states that the repository has no claims yet, and features/suites/ contains only README.md. CONFORMANCE.md is the generated register and is correspondingly empty, so the model and its generated evidence do not disagree. The disagreement is with the shipped surface: the package presents fifteen components and eleven API routes under app/api, and none of them carries a registered ID, a Gherkin scenario, or a test whose name ends in that ID. AGENTS.md R3 requires that a capability begin as a registered ID, a behavioral scenario, and a failing test before its implementation, and CM-02 makes an ID with no scenario and no test a failure of `cargo xtask check-model`. Code that exists outside the register is code whose behavior is asserted by nothing.",
+      "decision": "No surface in this package is treated as a capability until it holds a row in model/ids.toml, a scenario in features/suites/, and a test whose name ends in the ID lowercased with underscores. The R3 order is binding and is performed in that order: register the ID, add the scenario, land the failing test, implement the behavior, then run `just model-write` to regenerate CONFORMANCE.md. Handlers, views, and route modules are registered by the behavior they expose, not by their existence. Because the register is empty today, the build-out series begins by populating it; no existing surface is grandfathered in by assertion.",
+      "consequences": [
+        "Fifteen components and eleven routes currently hold zero conformance IDs; until each is registered, none of them is a gated capability",
+        "Every registered row carries a declared honesty level (some-true, build, or open) and a suite, so a claim cannot acquire a second source in prose",
+        "`just model-write` regenerates CONFORMANCE.md from ids.toml, keeping the register and its generated evidence in one source",
+        "CM-02 becomes the enforcement point: an ID without a scenario and a test fails `cargo xtask check-model`",
+        "This decision is not implemented by writing this record; ids.toml remains `id = []` until the scenarios and tests land"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/model/ids.toml",
+          "kind": "SourceFile",
+          "description": "Empty conformance ID register (`id = []`); the single source for CONFORMANCE.md"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/features/suites/README.md",
+          "kind": "SpecificationDoc",
+          "description": "One Gherkin file per suite, one scenario per conformance ID (R3)"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/CONFORMANCE.md",
+          "kind": "SpecificationDoc",
+          "description": "Generated empty register; header forbids hand-editing under R1"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/AGENTS.md",
+          "kind": "SpecificationDoc",
+          "description": "R3 pre-implementation discipline; CM-02 in the header of the generated register"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0130",
+      "title": "Suite Partition by Enforcement Boundary",
+      "status": "Accepted",
+      "context": "features/suites/README.md fixes the shape: one Gherkin file per suite, one scenario per conformance ID, each tagged with its ID and honesty level, and the `suite` field of an ids.toml row names the file its scenario lives in. `just bdd` fails if an ID has no scenario, a scenario has no ID, or an ID has no test whose name ends in it lowercased with underscores. The web surface has no such partition. Its behavior separates along four boundaries that fail in different ways and are owned by different files: registry integrity (lib/engine-invariants.ts and its Lean counterparts), engine access (lib/engine-bridge.ts), the route surface (app/api/adr, app/api/foundry, app/api/research), and process execution (app/api/terminal). A single suite would make a terminal execution defect indistinguishable from a registry invariant defect, and would let `just bdd` pass while one boundary is untested.",
+      "decision": "The register is partitioned into five suites named by the enforcement boundary they cover, and each ids.toml row names its suite in that row: `registry-integrity` for the ADR/Core invariant mirrors, `engine-access` for registry reads and status, `route-surface` for the nine API route modules, `terminal-execution` for process invocation, and `presentation` for view and layout wiring. A boundary that has no registered ID contributes no suite file, and a suite file is not created ahead of the IDs that will populate it. Partitioning is by failure owner, not by file count, so a route that spans two boundaries is registered under the boundary whose rule it enforces.",
+      "consequences": [
+        "A defect in process execution, registry integrity, engine access, route shape, or presentation is attributable to exactly one suite",
+        "`just bdd` can no longer pass with one boundary untested, because an ID with no scenario fails it independently of the others",
+        "The five suite names become the required value domain for the `suite` field, making ids.toml self-describing",
+        "No suite file is created until the register populates it, avoiding empty features that would read as coverage"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/features/suites/README.md",
+          "kind": "SpecificationDoc",
+          "description": "Defines the one-file-per-suite and one-scenario-per-ID contract"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/Justfile",
+          "kind": "SourceFile",
+          "description": "`bdd` and `features` recipes inside the `vv` boundary"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/engine-invariants.ts",
+          "kind": "SourceFile",
+          "description": "Registry-integrity boundary: acyclicity, conflict, and transition mirrors"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/engine-bridge.ts",
+          "kind": "SourceFile",
+          "description": "Engine-access boundary: registry read and status aggregation"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/terminal/route.ts",
+          "kind": "SourceFile",
+          "description": "Process-execution boundary invoked by the terminal view"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0131",
+      "title": "Engine Registry Reads Are Fail-Closed; No In-Process Second Source",
+      "status": "Accepted",
+      "context": "readEngineRegistry in lib/engine-bridge.ts resolves the engine root, reads docs/adr/registry.json, and returns it as source 'engine' when the payload parses and every record passes isADR. Any failure of that read is swallowed by an empty catch block that documents its own intent as 'fall through to fallback', and the function then returns ALL_FOUNDRY_ADRS from lib/adr-data.ts with version 'mock' and source 'fallback'. ALL_FOUNDRY_ADRS is a hand-maintained array of thirteen records hardcoded in TypeScript. Both /api/adr and /api/adr/registry return that array to clients as registry content, and FoundryMachineryStatus carries a `source` field whose only values are 'engine' and 'fallback', so a client can detect the substitution but nothing requires it to. This is a second source for the registry's claims, reached by silent degradation, which R1 forbids and R4 forbids independently because nothing is flagged as disabling the claimed capability. The read is also only partially validated: isADR requires id, title, status, decision, and consequences, and does not check context, supersedes, or links, so it admits records that are not the ADR shape declared in lib/adr-types.ts.",
+      "decision": "A registry read that cannot produce a schema-valid registry from the engine returns a typed failure surfaced to the client; it never returns substituted content. ALL_FOUNDRY_ADRS is deleted rather than retained, and the 'fallback' member is removed from RegistryRead so no second source remains reachable. isADR is tightened to the full ADR contract in lib/adr-types.ts, including status against the ADRStatus union, context and supersedes as required fields, and links as ArtifactLink records, because a validator that accepts a malformed registry cannot fail closed on it. The ADRStatus and ArtifactLink unions in lib/adr-types.ts are the authority for that check.",
+      "consequences": [
+        "The silent substitution of thirteen hardcoded records for the engine registry is unreachable, removing the only in-process second source for registry claims",
+        "`FoundryMachineryStatus.source` becomes a single-valued 'engine', so no client can observe or depend on a degraded mode",
+        "A malformed or unreadable registry becomes a client-visible typed failure rather than plausible content, satisfying R5",
+        "Tightening isADR makes existing registry.json records with out-of-union link kinds, such as the ConformanceRegister kind already present, a detected condition rather than a silent pass",
+        "Routes that currently depend on the fallback render no records until the engine is reachable; that is the fail-closed behavior, not a regression"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/engine-bridge.ts",
+          "kind": "SourceFile",
+          "description": "readEngineRegistry swallows the read failure and returns the mock set; isADR omits context, supersedes, and links"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/adr-data.ts",
+          "kind": "SourceFile",
+          "description": "ALL_FOUNDRY_ADRS: thirteen hand-maintained records standing in for the engine registry"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/adr-types.ts",
+          "kind": "SourceFile",
+          "description": "ADR, ADRStatus, and ArtifactLink authority for the tightened validator"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/adr/registry/route.ts",
+          "kind": "SourceFile",
+          "description": "Returns readEngineRegistry output and the source discriminator to clients"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0132",
+      "title": "Registry Invariant Parity Is Layered, and Split-Source Rules Are Refused",
+      "status": "Accepted",
+      "context": "lib/engine-invariants.ts presents its checks as TypeScript mirrors of invariants proven in ADR/Proofs.lean and exercised by ADR/Properties.lean, and requires that they stay in exact agreement with ADR.Core semantics. Two agreements do not hold. First, checkNoConflicts detects only the literal string form `NOT(<decision>)`. That matches ADR/Core.lean ConflictsWith, which is correct, but ADR/Core.lean documents ConflictsWith as the syntactic layer only and names the semantic layer as Contradictory over embedded PropTerm claims, enforced by ADRRegistry.noClaimConflicts. The semantic layer is never checked in TypeScript, and the header's claim of exact agreement with Core semantics is therefore broader than what the code implements. Second, transitionIsAllowedFormal tests only the status pair, while ADR/Core.lean ValidTransition is an inductive whose Accepted-to-Superseded case requires a successor ID, and app/api/adr/validate-transition/route.ts separately reimplements the table and does enforce that successor. The same Lean rule therefore has two TypeScript sources that disagree, and the stricter one is the route rather than the library. The cited name `validTransition` resolves to a third file, lean/MTPI/ADR.lean, not to ADR/Core.lean, leaving the authority ambiguous.",
+      "decision": "Each mirrored rule names one authority, one file, and one implementation. Conflict checking is declared as the syntactic layer only and is reported under that name, so no caller reads a syntactic pass as registry-wide conflict freedom; the semantic PropTerm layer is registered as its own capability against ADRRegistry.noClaimConflicts rather than being implied by a comment. transitionIsAllowedFormal is deleted as a duplicate: app/api/adr/validate-transition/route.ts becomes the single TypeScript entry point for ValidTransition, including the successor-ID requirement, and it is bound to ADR/Core.lean as the authority with the `validTransition` citation corrected to that file. The header's blanket 'exact agreement' wording is replaced by a per-rule statement of which layer is mirrored.",
+      "consequences": [
+        "A registry that is syntactically conflict-free but semantically contradictory can no longer be reported as valid by /api/adr/registry",
+        "The Accepted-to-Superseded transition has one implementation, so the successor-ID requirement cannot be dropped by editing the library copy",
+        "The Lean authority for lifecycle transitions is unambiguous: ADR/Core.lean, not lean/MTPI/ADR.lean",
+        "Any future mirror is registered as a capability under the registry-integrity suite with a scenario naming the layer it covers, per ADR-0130"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/lib/engine-invariants.ts",
+          "kind": "SourceFile",
+          "description": "checkNoConflicts covers the syntactic layer only; transitionIsAllowedFormal omits the successor ID"
+        },
+        {
+          "uri": "ADR/Core.lean",
+          "kind": "LeanDeclaration",
+          "description": "ValidTransition inductive requiring a successor for Accepted-to-Superseded; ConflictsWith named the syntactic layer, with Contradictory as the semantic layer"
+        },
+        {
+          "uri": "ADR/Properties.lean",
+          "kind": "LeanDeclaration",
+          "description": "check_no_conflicts_sound and registry_conflict_free over the same predicates"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/adr/validate-transition/route.ts",
+          "kind": "SourceFile",
+          "description": "Second, stricter implementation of the transition table, including the successor-ID requirement"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0133",
+      "title": "Terminal Execution Is Allowlisted and Reports a Real Exit Code",
+      "status": "Accepted",
+      "context": "app/api/terminal/route.ts passes the request body's `command` string directly to `execAsync(command, { cwd: process.cwd() })` with no allowlist, no argument validation, and no authentication. Any client that can reach the route can execute an arbitrary shell command in the server's working directory. The route also discards the child process exit code: on success it returns `success: true` with `stdout || stderr || 'Command executed with no output.'`, and on failure it returns HTTP 500 carrying `error.message`, so a non-zero exit is reported as a server error rather than as a command result. The consuming view, DashboardIdeView, renders `data.output` without reading `data.success`. The sibling package packages/foundry-web-example shows the opposite failure in the same component: it never calls the route and instead synthesizes results in the browser, pushing '[PASS] F-01 through F-18 predicate checks cleared.', '[OK] PRISMPM-PRF-BASE resolved with 24 C-controls.', and `Command executed: ${cmd}. Exit code 0.` for arbitrary input. That path is a fabricated result and is the reason a passing-looking terminal must never be accepted as evidence.",
+      "decision": "Process execution is restricted to an explicit allowlist of commands with validated argument shapes, invoked without a shell, and never from a raw request string. The route returns the real exit code as a first-class field, reports a non-zero exit as a completed command with that code rather than as an HTTP failure, and the view renders the exit code alongside the output. No code path synthesizes a pass, a pass-shaped string, or an exit code. The example package's terminal is explicitly refused as a precedent: adopting its fabrication, or restoring it during a merge, is a regression against R2, under which a build claim is validated against its oracle and never asserted.",
+      "consequences": [
+        "Arbitrary command execution reachable from an unauthenticated request is closed; only allowlisted commands can run",
+        "A failing command is reported as a real non-zero exit code, so a red terminal is evidence rather than an HTTP 500",
+        "No UI path can display a pass that no process produced, which is the condition that made the example's fabrication dangerous",
+        "The terminal is registered as a capability under the terminal-execution suite with negative scenarios for rejection and for non-zero exit, per ADR-0130 and R5"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/terminal/route.ts",
+          "kind": "SourceFile",
+          "description": "Unvalidated execAsync of the request body; exit code discarded; failures returned as HTTP 500"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/components/DashboardIdeView.tsx",
+          "kind": "SourceFile",
+          "description": "Consumes the route and renders data.output without reading data.success or an exit code"
+        },
+        {
+          "uri": "packages/foundry-web-example/components/DashboardIdeView.tsx",
+          "kind": "SourceFile",
+          "description": "Synthesizes '[PASS]' results and a hardcoded 'Exit code 0.' in the browser; refused as a precedent"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/AGENTS.md",
+          "kind": "SpecificationDoc",
+          "description": "R2 claim levels and R4 no-hidden-stub rule that the synthetic path violates"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0134",
+      "title": "The ADR Routes Are the Only Write Path, Validated Against the Persisted Registry",
+      "status": "Accepted",
+      "context": "app/api/adr/route.ts documents its POST as routing a new proposal into the engine's docs/adr/, and app/api/adr/registry/route.ts POST accepts an arbitrary ADR array and returns `valid = checks.uniqueIds && checks.acyclic && checks.noConflicts` computed by the partial validator described in ADR-0131. The validated array is client-supplied and is not compared with the persisted registry, so the route certifies a set the engine never stored. The transition route validates one move in isolation, with no check that the target ADR exists or that the current status matches the persisted record, so a transition can be reported valid against a registry state that does not exist. Nothing binds the three write-adjacent routes to one persisted-state read, which leaves the engine registry and the portal's view of it free to diverge.",
+      "decision": "POST /api/adr is the single write path to the engine registry. Every write is validated against the persisted registry rather than against client-supplied state: a proposal must be unique against stored IDs, must not introduce a supersession cycle against stored records, and a status transition must start from the stored status of the named ADR and must name an existing successor when moving Accepted to Superseded. POST /api/adr/registry validates a set only as a dry-run against the stored registry and labels its result as such; it does not report validity for a set the engine did not persist. The three routes read persisted state through the one registry read established in ADR-0131, with no local array standing in for it.",
+      "consequences": [
+        "The portal can no longer certify a registry that the engine did not store, closing the gap between validated input and persisted state",
+        "A transition reported valid is guaranteed to start from the ADR's real stored status and to name a real successor",
+        "The dry-run route is labeled as a dry run, so its result is not read as a durability or persistence claim",
+        "Write validation becomes a registered capability under the route-surface suite with negative scenarios for duplicate ID, introduced cycle, and unknown successor, satisfying R5"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/adr/route.ts",
+          "kind": "SourceFile",
+          "description": "Proposal write path documented as routing into the engine's docs/adr/"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/adr/registry/route.ts",
+          "kind": "SourceFile",
+          "description": "POST validates a client-supplied array and returns a bare validity verdict"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/adr/validate-transition/route.ts",
+          "kind": "SourceFile",
+          "description": "Validates one transition without reference to persisted status or successor existence"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/app/api/adr/audit/route.ts",
+          "kind": "SourceFile",
+          "description": "Audit surface over the same registry, subject to the same single-read rule"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0135",
+      "title": "packages/foundry-web Is Tracked and Runs the Acceptance Gate in CI",
+      "status": "Accepted",
+      "context": "`git ls-files packages/foundry-web` returns no paths: nothing in the package is tracked, and the same holds for packages/foundry-web-example. The working tree nonetheless contains .next/, target/, and node_modules/ inside the package, and the package's .gitignore covers /target/, /reports/, criterion/, and fuzz working state but lists none of .next/, node_modules/, or tsconfig.tsbuildinfo, so a first `git add` would stage build output. The package carries its own four workflows, including .github/workflows/prismpm.yml and bootstrap.yml, which are themselves inside the untracked tree and therefore run nowhere. Nothing executes `just vv` against this package. The consequences for this series are direct: every other decision here is enforced by a gate, and today no gate observes the code those decisions govern.",
+      "decision": "The package is added to version control with build output and dependency directories excluded, extending the package .gitignore to cover .next/, node_modules/, and tsconfig.tsbuildinfo before the first commit so no generated artifact enters history. The package's CI runs the same `just vv` boundary locally, in the digest-pinned devcontainer, as the contract requires, and a failing gate is non-negotiable. Until the package is tracked and gated, no decision in this series may be described as enforced, and no conformance ID registered under ADR-0129 may be reported as gated; both are recorded as decided but unenforced until the gate observes them.",
+      "consequences": [
+        "Every gate in this series gains an execution point, so ADR-0128 through ADR-0134 stop being decisions without an observer",
+        "Build output and dependency directories are excluded before the first commit, keeping generated artifacts out of history",
+        "CI runs the full `vv` boundary rather than a reduced path, so a slice cannot be used for release",
+        "Enforcement status is reported honestly until this decision lands: the series is decided, the gate is not yet running"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/foundry-web/foundry-web-main/.gitignore",
+          "kind": "SourceFile",
+          "description": "Excludes Rust and fuzz output; omits .next/, node_modules/, and tsconfig.tsbuildinfo"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/.github/workflows/prismpm.yml",
+          "kind": "SourceFile",
+          "description": "Package CI workflow, present inside the untracked tree and running nowhere"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/Justfile",
+          "kind": "SourceFile",
+          "description": "The `vv` boundary that CI must run and may not reduce"
+        },
+        {
+          "uri": "packages/foundry-web/foundry-web-main/AGENTS.md",
+          "kind": "SpecificationDoc",
+          "description": "`just vv` as the complete acceptance boundary; no reduced release path"
+        }
+      ]
+    }
+  ]
+}

@@ -24,7 +24,11 @@ pub struct PauliKey {
 }
 
 impl PauliKey {
-    pub fn new(role_class: impl Into<String>, slot_id: impl Into<String>, period_id: impl Into<String>) -> Self {
+    pub fn new(
+        role_class: impl Into<String>,
+        slot_id: impl Into<String>,
+        period_id: impl Into<String>,
+    ) -> Self {
         Self {
             role_class: role_class.into(),
             slot_id: slot_id.into(),
@@ -121,7 +125,12 @@ impl PeriodRegister {
         }
     }
 
-    pub fn register_class(&mut self, role_class: impl Into<String>, slot_ids: Vec<String>, degenerate: bool) -> Result<(), String> {
+    pub fn register_class(
+        &mut self,
+        role_class: impl Into<String>,
+        slot_ids: Vec<String>,
+        degenerate: bool,
+    ) -> Result<(), String> {
         if self.frozen {
             return Err("Cannot modify period register after freeze".to_string());
         }
@@ -130,11 +139,14 @@ impl PeriodRegister {
         if slots.is_empty() {
             return Err("Blank slot_id is not allowed (ADR-0007 §9)".to_string());
         }
-        self.classes.insert(rc.clone(), RoleClassRegistration {
-            role_class: rc,
-            slot_ids: slots,
-            degenerate,
-        });
+        self.classes.insert(
+            rc.clone(),
+            RoleClassRegistration {
+                role_class: rc,
+                slot_ids: slots,
+                degenerate,
+            },
+        );
         Ok(())
     }
 
@@ -151,7 +163,10 @@ impl PeriodRegister {
     }
 
     pub fn is_degenerate(&self, role_class: &str) -> bool {
-        self.classes.get(role_class).map(|r| r.degenerate).unwrap_or(false)
+        self.classes
+            .get(role_class)
+            .map(|r| r.degenerate)
+            .unwrap_or(false)
     }
 
     /// Returns the complete set of Pauli keys in degenerate set D.
@@ -160,7 +175,11 @@ impl PeriodRegister {
         for (rc, reg) in &self.classes {
             if reg.degenerate {
                 for slot_id in &reg.slot_ids {
-                    d_keys.push(PauliKey::new(rc.clone(), slot_id.clone(), self.period_id.clone()));
+                    d_keys.push(PauliKey::new(
+                        rc.clone(),
+                        slot_id.clone(),
+                        self.period_id.clone(),
+                    ));
                 }
             }
         }
@@ -222,7 +241,10 @@ pub struct CodebookState {
 
 impl CodebookState {
     pub fn new(unpaired_count: usize, degenerate_set_size: usize) -> Self {
-        Self { unpaired_count, degenerate_set_size }
+        Self {
+            unpaired_count,
+            degenerate_set_size,
+        }
     }
 
     pub fn calculate_spin(&self) -> f64 {
@@ -291,17 +313,29 @@ impl CodebookEngine {
     /// Count of un-occupied K in D (U in §6 ADR-0007).
     pub fn count_empty_slots_in_d(&self) -> usize {
         let d_keys = self.register.get_d_keys();
-        d_keys.iter().filter(|k| {
-            self.occupancy.get(k).map(|occ| occ.is_empty()).unwrap_or(true)
-        }).count()
+        d_keys
+            .iter()
+            .filter(|k| {
+                self.occupancy
+                    .get(k)
+                    .map(|occ| occ.is_empty())
+                    .unwrap_or(true)
+            })
+            .count()
     }
 
     /// Count of K in D with occupancy exactly 1 (n_unpaired in §7 ADR-0007).
     pub fn count_unpaired_in_d(&self) -> usize {
         let d_keys = self.register.get_d_keys();
-        d_keys.iter().filter(|k| {
-            self.occupancy.get(k).map(|occ| occ.len() == 1).unwrap_or(false)
-        }).count()
+        d_keys
+            .iter()
+            .filter(|k| {
+                self.occupancy
+                    .get(k)
+                    .map(|occ| occ.len() == 1)
+                    .unwrap_or(false)
+            })
+            .count()
     }
 
     pub fn current_spin(&self) -> f64 {
@@ -318,12 +352,16 @@ impl CodebookEngine {
             return false;
         }
         d_keys.iter().all(|k| {
-            self.occupancy.get(k).map(|occ| occ.len() == 2).unwrap_or(false)
+            self.occupancy
+                .get(k)
+                .map(|occ| occ.len() == 2)
+                .unwrap_or(false)
         })
     }
 
     pub fn get_occupants(&self, key: &PauliKey) -> Vec<String> {
-        self.occupancy.get(key)
+        self.occupancy
+            .get(key)
             .map(|list| list.iter().map(|(p, _)| p.clone()).collect())
             .unwrap_or_default()
     }
@@ -331,10 +369,13 @@ impl CodebookEngine {
     /// Derived state endpoint payload (§5 ADR-0008).
     pub fn get_derived_state(&self) -> DerivedState {
         let d_keys = self.register.get_d_keys();
-        let degenerate_set = d_keys.iter().map(|k| DegenerateSlotInfo {
-            role_class: k.role_class.clone(),
-            slot_id: k.slot_id.clone(),
-        }).collect();
+        let degenerate_set = d_keys
+            .iter()
+            .map(|k| DegenerateSlotInfo {
+                role_class: k.role_class.clone(),
+                slot_id: k.slot_id.clone(),
+            })
+            .collect();
 
         let n_unpaired = self.count_unpaired_in_d();
         let u_val = self.count_empty_slots_in_d();
@@ -458,7 +499,10 @@ impl CodebookEngine {
                 M_after: None,
                 occupants_before,
                 waiver_id,
-                reason: Some(format!("Role class '{}' / slot '{}' not registered in period", rc, slot)),
+                reason: Some(format!(
+                    "Role class '{}' / slot '{}' not registered in period",
+                    rc, slot
+                )),
             };
             self.log.push(row.clone());
             return row;
@@ -467,13 +511,22 @@ impl CodebookEngine {
         let is_deg = self.register.is_degenerate(&rc);
 
         // G1: person does not already occupy a different K this period, unless waiver_id matches open waiver
-        let person_holds_other_k = self.person_seats.get(&person)
+        let person_holds_other_k = self
+            .person_seats
+            .get(&person)
             .map(|seats| seats.iter().any(|k| k != &key))
             .unwrap_or(false);
-        let has_waiver = waiver_id.is_some() || self.waivers.contains(&(person.clone(), key.clone()));
+        let has_waiver =
+            waiver_id.is_some() || self.waivers.contains(&(person.clone(), key.clone()));
 
         if person_holds_other_k && !has_waiver {
-            let other_k = self.person_seats.get(&person).unwrap().iter().find(|k| *k != &key).unwrap();
+            let other_k = self
+                .person_seats
+                .get(&person)
+                .unwrap()
+                .iter()
+                .find(|k| *k != &key)
+                .unwrap();
             let row = LogRow {
                 log_entry_id,
                 ts: ts_str,
@@ -489,7 +542,10 @@ impl CodebookEngine {
                 M_after: None,
                 occupants_before,
                 waiver_id,
-                reason: Some(format!("Person '{}' already holds slot '{}'", person, other_k.slot_id)),
+                reason: Some(format!(
+                    "Person '{}' already holds slot '{}'",
+                    person, other_k.slot_id
+                )),
             };
             self.log.push(row.clone());
             return row;
@@ -545,9 +601,23 @@ impl CodebookEngine {
 
         // G4 & G5: accept seat
         let (result_code, sigma) = if person_holds_other_k && has_waiver {
-            (CodebookResultCode::OkDualHatWaiver, if current_count == 0 { Some(SpinTag::Alpha) } else { Some(SpinTag::Beta) })
+            (
+                CodebookResultCode::OkDualHatWaiver,
+                if current_count == 0 {
+                    Some(SpinTag::Alpha)
+                } else {
+                    Some(SpinTag::Beta)
+                },
+            )
         } else if !is_deg {
-            (CodebookResultCode::OkHierarchy, if current_count == 0 { Some(SpinTag::Alpha) } else { Some(SpinTag::Beta) })
+            (
+                CodebookResultCode::OkHierarchy,
+                if current_count == 0 {
+                    Some(SpinTag::Alpha)
+                } else {
+                    Some(SpinTag::Beta)
+                },
+            )
         } else if current_count == 0 {
             (CodebookResultCode::OkSingle, Some(SpinTag::Alpha))
         } else {
@@ -556,8 +626,14 @@ impl CodebookEngine {
 
         // Write seat
         let sig = sigma.expect("Accepted fill must assign spin tag");
-        self.occupancy.entry(key.clone()).or_default().push((person.clone(), sig));
-        self.person_seats.entry(person.clone()).or_default().insert(key);
+        self.occupancy
+            .entry(key.clone())
+            .or_default()
+            .push((person.clone(), sig));
+        self.person_seats
+            .entry(person.clone())
+            .or_default()
+            .insert(key);
 
         let n_unpaired = self.count_unpaired_in_d();
         let s_val = self.current_spin();
@@ -670,7 +746,10 @@ impl CodebookEngine {
                 M_after: None,
                 occupants_before,
                 waiver_id: None,
-                reason: Some(format!("Role class '{}' / slot '{}' not registered in period", rc, slot)),
+                reason: Some(format!(
+                    "Role class '{}' / slot '{}' not registered in period",
+                    rc, slot
+                )),
             };
             self.log.push(row.clone());
             return row;
@@ -728,10 +807,13 @@ impl CodebookEngine {
                 M_after: None,
                 occupants_before,
                 waiver_id: None,
-                reason: Some(format!("Person '{}' is not an occupant of specified seat", person)),
+                reason: Some(format!(
+                    "Person '{}' is not an occupant of specified seat",
+                    person
+                )),
             };
             self.log.push(row.clone());
-            return row;
+            row
         }
     }
 }
@@ -770,12 +852,15 @@ pub struct ForbiddenTermValidator;
 impl ForbiddenTermValidator {
     pub fn validate_text(input: &str) -> Result<(), String> {
         let input_lower = input.to_lowercase();
-        
+
         if input_lower.contains("v_msc") || input_lower.contains("vmsc") {
             return Err("Forbidden term detected: V_MSC is deprecated as a ground-state meter (ADR-0009 §9)".to_string());
         }
         if input_lower.contains("1+2r") || input_lower.contains("1 + 2r") {
-            return Err("Forbidden term detected: 1+2R is deprecated as a Hund formula (ADR-0009 §9)".to_string());
+            return Err(
+                "Forbidden term detected: 1+2R is deprecated as a Hund formula (ADR-0009 §9)"
+                    .to_string(),
+            );
         }
         if input_lower.contains("s_reciprocity") || input_lower.contains("reciprocity survey") {
             return Err("Forbidden claim detected: S must be derived from unpaired slots, not reciprocity surveys (ADR-0009 §9)".to_string());
@@ -783,7 +868,9 @@ impl ForbiddenTermValidator {
         if input_lower.contains("isomorphism with atomic physics") {
             return Err("Forbidden claim detected: Isomorphism with atomic physics is forbidden (ADR-0009 §9)".to_string());
         }
-        if input_lower.contains("ground = full shell") || input_lower.contains("ground state = full shell") {
+        if input_lower.contains("ground = full shell")
+            || input_lower.contains("ground state = full shell")
+        {
             return Err("Forbidden claim detected: Ground state is min E at fixed N, not a full shell (ADR-0009 §9)".to_string());
         }
         if input_lower.contains("ground = max m") || input_lower.contains("ground state = max m") {
@@ -815,13 +902,62 @@ pub struct WorkedFillingRow {
 /// Generates and verifies the canonical worked filling table (§6 ADR-0009).
 pub fn generate_worked_filling_table() -> Vec<WorkedFillingRow> {
     vec![
-        WorkedFillingRow { headcount_N: 0, occ_pattern: [0, 0, 0], n_unpaired: 0, S: 0.0, M: 1, legal_next_op: "any empty K, OK_SINGLE".to_string() },
-        WorkedFillingRow { headcount_N: 1, occ_pattern: [1, 0, 0], n_unpaired: 1, S: 0.5, M: 2, legal_next_op: "an empty K only".to_string() },
-        WorkedFillingRow { headcount_N: 2, occ_pattern: [1, 1, 0], n_unpaired: 2, S: 1.0, M: 3, legal_next_op: "the last empty K only".to_string() },
-        WorkedFillingRow { headcount_N: 3, occ_pattern: [1, 1, 1], n_unpaired: 3, S: 1.5, M: 4, legal_next_op: "pair now legal on any K (Max M = 4 at half-fill)".to_string() },
-        WorkedFillingRow { headcount_N: 4, occ_pattern: [2, 1, 1], n_unpaired: 2, S: 1.0, M: 3, legal_next_op: "pair a remaining single".to_string() },
-        WorkedFillingRow { headcount_N: 5, occ_pattern: [2, 2, 1], n_unpaired: 1, S: 0.5, M: 2, legal_next_op: "pair the last single".to_string() },
-        WorkedFillingRow { headcount_N: 6, occ_pattern: [2, 2, 2], n_unpaired: 0, S: 0.0, M: 1, legal_next_op: "REJ_PAULI on every K in D (Closed Shell Singlet)".to_string() },
+        WorkedFillingRow {
+            headcount_N: 0,
+            occ_pattern: [0, 0, 0],
+            n_unpaired: 0,
+            S: 0.0,
+            M: 1,
+            legal_next_op: "any empty K, OK_SINGLE".to_string(),
+        },
+        WorkedFillingRow {
+            headcount_N: 1,
+            occ_pattern: [1, 0, 0],
+            n_unpaired: 1,
+            S: 0.5,
+            M: 2,
+            legal_next_op: "an empty K only".to_string(),
+        },
+        WorkedFillingRow {
+            headcount_N: 2,
+            occ_pattern: [1, 1, 0],
+            n_unpaired: 2,
+            S: 1.0,
+            M: 3,
+            legal_next_op: "the last empty K only".to_string(),
+        },
+        WorkedFillingRow {
+            headcount_N: 3,
+            occ_pattern: [1, 1, 1],
+            n_unpaired: 3,
+            S: 1.5,
+            M: 4,
+            legal_next_op: "pair now legal on any K (Max M = 4 at half-fill)".to_string(),
+        },
+        WorkedFillingRow {
+            headcount_N: 4,
+            occ_pattern: [2, 1, 1],
+            n_unpaired: 2,
+            S: 1.0,
+            M: 3,
+            legal_next_op: "pair a remaining single".to_string(),
+        },
+        WorkedFillingRow {
+            headcount_N: 5,
+            occ_pattern: [2, 2, 1],
+            n_unpaired: 1,
+            S: 0.5,
+            M: 2,
+            legal_next_op: "pair the last single".to_string(),
+        },
+        WorkedFillingRow {
+            headcount_N: 6,
+            occ_pattern: [2, 2, 2],
+            n_unpaired: 0,
+            S: 0.0,
+            M: 1,
+            legal_next_op: "REJ_PAULI on every K in D (Closed Shell Singlet)".to_string(),
+        },
     ]
 }
 
@@ -874,7 +1010,10 @@ mod tests {
         assert!(ForbiddenTermValidator::validate_text("Using V_MSC as metric").is_err());
         assert!(ForbiddenTermValidator::validate_text("Multiplicity is 1+2R").is_err());
         assert!(ForbiddenTermValidator::validate_text("S derived from S_reciprocity").is_err());
-        assert!(ForbiddenTermValidator::validate_text("Claiming isomorphism with atomic physics").is_err());
+        assert!(
+            ForbiddenTermValidator::validate_text("Claiming isomorphism with atomic physics")
+                .is_err()
+        );
         assert!(ForbiddenTermValidator::validate_text("Ground = full shell").is_err());
         assert!(ForbiddenTermValidator::validate_text("Ground = max M").is_err());
     }
@@ -883,8 +1022,8 @@ mod tests {
     #[test]
     fn test_adr0009_energy_sign_convention() {
         assert_eq!(calculate_system_energy(10, 15), -5); // Binding energy dominates
-        assert_eq!(calculate_system_energy(20, 5), 15);  // Interpersonal friction dominates
-        assert_eq!(calculate_system_energy(10, 10), 0);  // Neutral energy
+        assert_eq!(calculate_system_energy(20, 5), 15); // Interpersonal friction dominates
+        assert_eq!(calculate_system_energy(10, 10), 0); // Neutral energy
     }
 
     /// Test ADR-0009 Worked Filling Table (§6)
@@ -910,7 +1049,12 @@ mod tests {
     #[test]
     fn test_adr0008_section_6_canonical_period_0_sequence() {
         let mut reg = PeriodRegister::new("P0");
-        reg.register_class("facilitation", vec!["fac-1".into(), "fac-2".into(), "fac-3".into()], true).unwrap();
+        reg.register_class(
+            "facilitation",
+            vec!["fac-1".into(), "fac-2".into(), "fac-3".into()],
+            true,
+        )
+        .unwrap();
 
         let mut engine = CodebookEngine::new(reg);
         engine.register_person("alice");
@@ -922,35 +1066,84 @@ mod tests {
         engine.open_period();
 
         // Row 1: alice -> fac-1 => OK_SINGLE, U=2, M=2
-        let r1 = engine.propose_fill("10:00Z", "alice", "facilitation", "fac-1", ProposedOp::Fill, None);
+        let r1 = engine.propose_fill(
+            "10:00Z",
+            "alice",
+            "facilitation",
+            "fac-1",
+            ProposedOp::Fill,
+            None,
+        );
         assert_eq!(r1.result, CodebookResultCode::OkSingle);
         assert_eq!(r1.M_after, Some(2));
 
         // Row 2: bob -> fac-1 => REJ_TERM_ORDER
-        let r2 = engine.propose_fill("10:05Z", "bob", "facilitation", "fac-1", ProposedOp::Fill, None);
+        let r2 = engine.propose_fill(
+            "10:05Z",
+            "bob",
+            "facilitation",
+            "fac-1",
+            ProposedOp::Fill,
+            None,
+        );
         assert_eq!(r2.result, CodebookResultCode::RejTermOrder);
 
         // Row 3: bob -> fac-2 => OK_SINGLE, U=1, M=3
-        let r3 = engine.propose_fill("10:06Z", "bob", "facilitation", "fac-2", ProposedOp::Fill, None);
+        let r3 = engine.propose_fill(
+            "10:06Z",
+            "bob",
+            "facilitation",
+            "fac-2",
+            ProposedOp::Fill,
+            None,
+        );
         assert_eq!(r3.result, CodebookResultCode::OkSingle);
         assert_eq!(r3.M_after, Some(3));
 
         // Row 4: carol -> fac-3 => OK_SINGLE, U=0, M=4 (half-fill max M = 4!)
-        let r4 = engine.propose_fill("10:07Z", "carol", "facilitation", "fac-3", ProposedOp::Fill, None);
+        let r4 = engine.propose_fill(
+            "10:07Z",
+            "carol",
+            "facilitation",
+            "fac-3",
+            ProposedOp::Fill,
+            None,
+        );
         assert_eq!(r4.result, CodebookResultCode::OkSingle);
         assert_eq!(r4.M_after, Some(4));
 
         // Row 5: dave -> fac-1 => OK_PAIR, U=0, M=3
-        let r5 = engine.propose_fill("10:08Z", "dave", "facilitation", "fac-1", ProposedOp::Fill, None);
+        let r5 = engine.propose_fill(
+            "10:08Z",
+            "dave",
+            "facilitation",
+            "fac-1",
+            ProposedOp::Fill,
+            None,
+        );
         assert_eq!(r5.result, CodebookResultCode::OkPair);
         assert_eq!(r5.M_after, Some(3));
 
         // Row 6: eve -> fac-1 => REJ_PAULI
-        let r6 = engine.propose_fill("10:09Z", "eve", "facilitation", "fac-1", ProposedOp::Fill, None);
+        let r6 = engine.propose_fill(
+            "10:09Z",
+            "eve",
+            "facilitation",
+            "fac-1",
+            ProposedOp::Fill,
+            None,
+        );
         assert_eq!(r6.result, CodebookResultCode::RejPauli);
 
         // Row 7: bob -> fac-1 => REJ_DUALHAT
-        let r7 = engine.propose_fill("10:10Z", "bob", "facilitation", "fac-1", ProposedOp::Fill, None);
+        let r7 = engine.propose_fill(
+            "10:10Z",
+            "bob",
+            "facilitation",
+            "fac-1",
+            ProposedOp::Fill,
+            None,
+        );
         assert_eq!(r7.result, CodebookResultCode::RejDualHat);
     }
 }
@@ -965,7 +1158,10 @@ mod kani_proofs {
         kani::assume(unpaired < usize::MAX - 10);
 
         let st = CodebookState::new(unpaired, unpaired);
-        kani::assert(st.calculate_multiplicity() == unpaired + 1, "Multiplicity must equal unpaired + 1");
+        kani::assert(
+            st.calculate_multiplicity() == unpaired + 1,
+            "Multiplicity must equal unpaired + 1",
+        );
     }
 
     #[kani::proof]
@@ -976,7 +1172,10 @@ mod kani_proofs {
         kani::assume(v_nuc <= i64::MAX as u64);
 
         let e = calculate_system_energy(v_pair, v_nuc);
-        kani::assert(e == (v_pair as i64 - v_nuc as i64), "E must equal V_pair - V_nuc");
+        kani::assert(
+            e == (v_pair as i64 - v_nuc as i64),
+            "E must equal V_pair - V_nuc",
+        );
     }
 
     #[kani::proof]
@@ -989,18 +1188,41 @@ mod kani_proofs {
         let is_deg: bool = kani::any();
         let empty_in_d: usize = kani::any();
 
-        let res = evaluate_gate_pure(is_open, is_reg, person_other, has_waiver, count, is_deg, empty_in_d);
+        let res = evaluate_gate_pure(
+            is_open,
+            is_reg,
+            person_other,
+            has_waiver,
+            count,
+            is_deg,
+            empty_in_d,
+        );
 
         if !is_open {
-            kani::assert(res == CodebookResultCode::RejPeriodClosed, "V1/G0b must trigger when period is not open");
+            kani::assert(
+                res == CodebookResultCode::RejPeriodClosed,
+                "V1/G0b must trigger when period is not open",
+            );
         } else if !is_reg {
-            kani::assert(res == CodebookResultCode::RejUnknownClass, "G0d must trigger when unregistered");
+            kani::assert(
+                res == CodebookResultCode::RejUnknownClass,
+                "G0d must trigger when unregistered",
+            );
         } else if person_other && !has_waiver {
-            kani::assert(res == CodebookResultCode::RejDualHat, "G1 must trigger before G2/G3");
+            kani::assert(
+                res == CodebookResultCode::RejDualHat,
+                "G1 must trigger before G2/G3",
+            );
         } else if count >= 2 {
-            kani::assert(res == CodebookResultCode::RejPauli, "G2 must trigger before G3");
+            kani::assert(
+                res == CodebookResultCode::RejPauli,
+                "G2 must trigger before G3",
+            );
         } else if is_deg && count == 1 && empty_in_d > 0 {
-            kani::assert(res == CodebookResultCode::RejTermOrder, "G3 must trigger when U > 0");
+            kani::assert(
+                res == CodebookResultCode::RejTermOrder,
+                "G3 must trigger when U > 0",
+            );
         }
     }
 }

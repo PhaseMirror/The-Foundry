@@ -57,7 +57,7 @@ pub fn is_prime(n: u16) -> bool {
     // u16 domain we test all d in [2, n-1], which is exact.
     let mut d: u16 = 2;
     while d < n {
-        if n % d == 0 {
+        if n.is_multiple_of(d) {
             return false;
         }
         d += 1;
@@ -120,7 +120,10 @@ mod tests {
     #[test]
     fn test_exact_conservation_seals() {
         assert!(is_exact_conservation(20, 20));
-        assert_eq!(evaluate_conservation_gate(20, 20), ConservationDecision::Seal);
+        assert_eq!(
+            evaluate_conservation_gate(20, 20),
+            ConservationDecision::Seal
+        );
     }
 
     #[test]
@@ -134,7 +137,10 @@ mod tests {
     #[test]
     fn test_zero_bound_rejects_positive() {
         assert!(!is_conserved(5, 0));
-        assert_eq!(evaluate_conservation_gate(5, 0), ConservationDecision::RejOverBound);
+        assert_eq!(
+            evaluate_conservation_gate(5, 0),
+            ConservationDecision::RejOverBound
+        );
     }
 
     #[test]
@@ -170,7 +176,10 @@ mod kani_proofs {
         let bound: u64 = kani::any();
         kani::assume(bound < sum);
         let d = evaluate_conservation_gate(sum, bound);
-        kani::assert(d == ConservationDecision::RejOverBound, "Over-bound must be rejected");
+        kani::assert(
+            d == ConservationDecision::RejOverBound,
+            "Over-bound must be rejected",
+        );
     }
 
     // Seal is sound: a sealed transfer is conserved.
@@ -180,7 +189,10 @@ mod kani_proofs {
         let bound: u64 = kani::any();
         let d = evaluate_conservation_gate(sum, bound);
         kani::assume(d == ConservationDecision::Seal);
-        kani::assert(is_conserved(sum, bound), "A sealed transfer must be conserved");
+        kani::assert(
+            is_conserved(sum, bound),
+            "A sealed transfer must be conserved",
+        );
     }
 
     // Completeness: a conserved transfer is sealed.
@@ -190,7 +202,10 @@ mod kani_proofs {
         let bound: u64 = kani::any();
         kani::assume(is_conserved(sum, bound));
         let d = evaluate_conservation_gate(sum, bound);
-        kani::assert(d == ConservationDecision::Seal, "A conserved transfer must be sealed");
+        kani::assert(
+            d == ConservationDecision::Seal,
+            "A conserved transfer must be sealed",
+        );
     }
 
     // Zero bound rejects any positive factor sum.
@@ -199,7 +214,10 @@ mod kani_proofs {
         let sum: u64 = kani::any();
         kani::assume(sum > 0);
         let d = evaluate_conservation_gate(sum, 0);
-        kani::assert(d == ConservationDecision::RejOverBound, "Zero bound rejects positive sum");
+        kani::assert(
+            d == ConservationDecision::RejOverBound,
+            "Zero bound rejects positive sum",
+        );
     }
 
     // Exact conservation (sum == bound) always seals.

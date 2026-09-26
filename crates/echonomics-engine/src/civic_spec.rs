@@ -85,8 +85,12 @@ pub fn evaluate_duna_proposal(
         ProposalType::AssociationWide => {
             let wrapper = determine_operating_wrapper(total_voting_members);
             let quorum_needed = if wrapper == DunaOperatingWrapper::Duna {
-                let ten_percent = (total_voting_members + 9) / 10;
-                if ten_percent < 30 { ten_percent } else { 30 }
+                let ten_percent = total_voting_members.div_ceil(10);
+                if ten_percent < 30 {
+                    ten_percent
+                } else {
+                    30
+                }
             } else {
                 1 // Single member threshold for UNA
             };
@@ -170,7 +174,10 @@ pub fn validate_credit_cashout(role: MemberClass, amount_usd: u64) -> Result<(),
     if amount_usd <= max_cap {
         Ok(())
     } else {
-        Err(format!("Cashout amount ${} exceeds monthly role cap of ${}", amount_usd, max_cap))
+        Err(format!(
+            "Cashout amount ${} exceeds monthly role cap of ${}",
+            amount_usd, max_cap
+        ))
     }
 }
 
@@ -181,7 +188,10 @@ pub fn validate_credit_transfer(credits: u64) -> Result<(), String> {
     if credits <= MAX_MONTHLY_RECIPIENT_TRANSFER_CREDITS {
         Ok(())
     } else {
-        Err(format!("Credit transfer {} exceeds recipient monthly cap of 2,000 credits", credits))
+        Err(format!(
+            "Credit transfer {} exceeds recipient monthly cap of 2,000 credits",
+            credits
+        ))
     }
 }
 
@@ -222,7 +232,12 @@ impl SovereigntyNodeState {
     /// Evaluates quarterly Three-Way Test (§5.5): Member Dignity, Community Outcome, Node Solvency.
     /// If all 3 pass, reset failed counter. If any fail, increment failed counter.
     /// If failed counter reaches 2, node enters Paused state (Kill-switch).
-    pub fn record_quarterly_test(&mut self, dignity_pass: bool, outcome_pass: bool, solvency_pass: bool) {
+    pub fn record_quarterly_test(
+        &mut self,
+        dignity_pass: bool,
+        outcome_pass: bool,
+        solvency_pass: bool,
+    ) {
         let passed_all = dignity_pass && outcome_pass && solvency_pass;
         if passed_all {
             self.consecutive_failed_quarters = 0;
@@ -321,7 +336,10 @@ impl CivicL0Invariant {
         if condition_pass {
             Ok(())
         } else {
-            Err(format!("Civic L0 Invariant violation: {:?} failed closed (ADR-0011 §4.1)", self))
+            Err(format!(
+                "Civic L0 Invariant violation: {:?} failed closed (ADR-0011 §4.1)",
+                self
+            ))
         }
     }
 }
@@ -362,9 +380,16 @@ impl PmcpGates {
     /// Equity NEVER mints a diploma (`equity_shortcut_attempted` MUST be false).
     pub fn verify_certification(&self, equity_shortcut_attempted: bool) -> Result<(), String> {
         if equity_shortcut_attempted {
-            return Err("PMCP certification rejected: Equity never mints a diploma (ADR-0011 §7.4)".to_string());
+            return Err(
+                "PMCP certification rejected: Equity never mints a diploma (ADR-0011 §7.4)"
+                    .to_string(),
+            );
         }
-        if self.mastery_pass && self.playbook_pass && self.compliance_pass && self.supervised_engagement_pass {
+        if self.mastery_pass
+            && self.playbook_pass
+            && self.compliance_pass
+            && self.supervised_engagement_pass
+        {
             Ok(())
         } else {
             Err("PMCP certification rejected: All four gates required (Mastery, Playbook, Compliance, Supervised Engagement)".to_string())
@@ -473,13 +498,25 @@ mod tests {
 
     #[test]
     fn test_adr0012_dual_seat_firewall() {
-        let practitioner = DualSeat { pmcp_certified: true, equity_held: false };
-        let equity_holder = DualSeat { pmcp_certified: false, equity_held: true };
-        let both = DualSeat { pmcp_certified: true, equity_held: true };
+        let practitioner = DualSeat {
+            pmcp_certified: true,
+            equity_held: false,
+        };
+        let equity_holder = DualSeat {
+            pmcp_certified: false,
+            equity_held: true,
+        };
+        let both = DualSeat {
+            pmcp_certified: true,
+            equity_held: true,
+        };
 
         assert!(practitioner.is_equity_pmcp_firewalled());
         assert!(equity_holder.is_equity_pmcp_firewalled());
-        assert!(!both.is_equity_pmcp_firewalled(), "equity close never mints PMCP");
+        assert!(
+            !both.is_equity_pmcp_firewalled(),
+            "equity close never mints PMCP"
+        );
     }
 
     #[test]
@@ -508,9 +545,15 @@ mod kani_proofs {
         let count: usize = kani::any();
         let wrapper = determine_operating_wrapper(count);
         if count >= 100 {
-            kani::assert(wrapper == DunaOperatingWrapper::Duna, "Must be DUNA when member count >= 100");
+            kani::assert(
+                wrapper == DunaOperatingWrapper::Duna,
+                "Must be DUNA when member count >= 100",
+            );
         } else {
-            kani::assert(wrapper == DunaOperatingWrapper::Una, "Must be UNA when member count < 100");
+            kani::assert(
+                wrapper == DunaOperatingWrapper::Una,
+                "Must be UNA when member count < 100",
+            );
         }
     }
 
@@ -572,11 +615,20 @@ mod kani_proofs {
     fn verify_dual_seat_firewall_equity_never_mints_pmcp() {
         let pmcp_certified: bool = kani::any();
         let equity_held: bool = kani::any();
-        let seat = DualSeat { pmcp_certified, equity_held };
+        let seat = DualSeat {
+            pmcp_certified,
+            equity_held,
+        };
         if equity_held && pmcp_certified {
-            kani::assert(!seat.is_equity_pmcp_firewalled(), "Equity close must never mint PMCP");
+            kani::assert(
+                !seat.is_equity_pmcp_firewalled(),
+                "Equity close must never mint PMCP",
+            );
         } else {
-            kani::assert(seat.is_equity_pmcp_firewalled(), "Firewall admits non-overlapping seats");
+            kani::assert(
+                seat.is_equity_pmcp_firewalled(),
+                "Firewall admits non-overlapping seats",
+            );
         }
     }
 

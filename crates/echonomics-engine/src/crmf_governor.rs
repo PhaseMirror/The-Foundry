@@ -115,24 +115,49 @@ mod tests {
 
     #[test]
     fn test_crmf_seal_fail_closed() {
-        let sealed = CrmfSeal { bcs_canonical: true, poseidon_seal_valid: true, dual_signed: true };
-        let partial = CrmfSeal { bcs_canonical: true, poseidon_seal_valid: true, dual_signed: false };
+        let sealed = CrmfSeal {
+            bcs_canonical: true,
+            poseidon_seal_valid: true,
+            dual_signed: true,
+        };
+        let partial = CrmfSeal {
+            bcs_canonical: true,
+            poseidon_seal_valid: true,
+            dual_signed: false,
+        };
 
         assert!(sealed.is_seal_complete());
         assert!(is_constitutional_action_lawful(&sealed));
-        assert!(!is_constitutional_action_lawful(&partial), "missing dual signature blocks action");
-        assert!(!CrmfSeal { bcs_canonical: false, poseidon_seal_valid: true, dual_signed: true }
-            .is_seal_complete());
-        assert!(!CrmfSeal { bcs_canonical: true, poseidon_seal_valid: false, dual_signed: true }
-            .is_seal_complete());
+        assert!(
+            !is_constitutional_action_lawful(&partial),
+            "missing dual signature blocks action"
+        );
+        assert!(!CrmfSeal {
+            bcs_canonical: false,
+            poseidon_seal_valid: true,
+            dual_signed: true
+        }
+        .is_seal_complete());
+        assert!(!CrmfSeal {
+            bcs_canonical: true,
+            poseidon_seal_valid: false,
+            dual_signed: true
+        }
+        .is_seal_complete());
     }
 
     #[test]
     fn test_rwq_power_caps() {
         // V = balance × 1 + bonus.
         assert_eq!(voting_power(40, 2), Some(42));
-        assert!(is_power_within_cap(40, 2), "small bonus stays within 5× cap");
-        assert!(!is_power_within_cap(40, 200), "bonus beyond the cap is rejected");
+        assert!(
+            is_power_within_cap(40, 2),
+            "small bonus stays within 5× cap"
+        );
+        assert!(
+            !is_power_within_cap(40, 200),
+            "bonus beyond the cap is rejected"
+        );
         assert!(is_reputation_score_valid(100));
         assert!(!is_reputation_score_valid(101));
         assert!(passes_reputation_quorum(40, 2, 42));
@@ -150,10 +175,17 @@ mod kani_proofs {
         let bcs_canonical: bool = kani::any();
         let poseidon_seal_valid: bool = kani::any();
         let dual_signed: bool = kani::any();
-        let seal = CrmfSeal { bcs_canonical, poseidon_seal_valid, dual_signed };
+        let seal = CrmfSeal {
+            bcs_canonical,
+            poseidon_seal_valid,
+            dual_signed,
+        };
         if seal.is_seal_complete() {
             kani::assert(bcs_canonical, "complete seal implies BCS canonical");
-            kani::assert(poseidon_seal_valid, "complete seal implies Poseidon2 anchor");
+            kani::assert(
+                poseidon_seal_valid,
+                "complete seal implies Poseidon2 anchor",
+            );
             kani::assert(dual_signed, "complete seal implies dual signature");
         }
     }
@@ -164,9 +196,16 @@ mod kani_proofs {
         let bcs_canonical: bool = kani::any();
         let poseidon_seal_valid: bool = kani::any();
         let dual_signed: bool = kani::any();
-        let seal = CrmfSeal { bcs_canonical, poseidon_seal_valid, dual_signed };
+        let seal = CrmfSeal {
+            bcs_canonical,
+            poseidon_seal_valid,
+            dual_signed,
+        };
         if is_constitutional_action_lawful(&seal) {
-            kani::assert(bcs_canonical && poseidon_seal_valid && dual_signed, "lawful ⇒ full seal");
+            kani::assert(
+                bcs_canonical && poseidon_seal_valid && dual_signed,
+                "lawful ⇒ full seal",
+            );
         }
     }
 
@@ -179,7 +218,10 @@ mod kani_proofs {
         kani::assume(bonus <= balance.saturating_mul(4));
         kani::assume(balance <= u64::MAX / 5);
 
-        kani::assert(is_power_within_cap(balance, bonus), "bonus ≤ 4× balance keeps power ≤ 5×");
+        kani::assert(
+            is_power_within_cap(balance, bonus),
+            "bonus ≤ 4× balance keeps power ≤ 5×",
+        );
     }
 
     /// ADR-0026: a valid reputation score never exceeds 100.

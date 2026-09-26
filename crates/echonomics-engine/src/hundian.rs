@@ -74,13 +74,17 @@ pub const fn evaluate_pauli_gate_peq(
             if empty_degenerate_slots > 0 {
                 GateResult::RejTermOrder
             } else {
-                GateResult::OkPair { sigma: SpinTag::Beta }
+                GateResult::OkPair {
+                    sigma: SpinTag::Beta,
+                }
             }
         } else {
             GateResult::OkHierarchy
         }
     } else if is_degenerate {
-        GateResult::OkSingle { sigma: SpinTag::Alpha }
+        GateResult::OkSingle {
+            sigma: SpinTag::Alpha,
+        }
     } else {
         GateResult::OkHierarchy
     }
@@ -124,14 +128,22 @@ impl HundianState {
     pub fn count_empty_degenerate_slots(&self, period_id: &str) -> usize {
         self.registered_slots
             .iter()
-            .filter(|(k, occ)| k.period_id == period_id && self.degenerate_classes.contains(&k.role_class) && occ.is_empty())
+            .filter(|(k, occ)| {
+                k.period_id == period_id
+                    && self.degenerate_classes.contains(&k.role_class)
+                    && occ.is_empty()
+            })
             .count()
     }
 
     pub fn count_unpaired_degenerate_slots(&self, period_id: &str) -> usize {
         self.registered_slots
             .iter()
-            .filter(|(k, occ)| k.period_id == period_id && self.degenerate_classes.contains(&k.role_class) && occ.len() == 1)
+            .filter(|(k, occ)| {
+                k.period_id == period_id
+                    && self.degenerate_classes.contains(&k.role_class)
+                    && occ.len() == 1
+            })
             .count()
     }
 
@@ -150,7 +162,11 @@ impl HundianState {
         period_id: &str,
         waiver_id: Option<&str>,
     ) -> GateResult {
-        let status = self.period_statuses.get(period_id).cloned().unwrap_or(PeriodStatus::Open);
+        let status = self
+            .period_statuses
+            .get(period_id)
+            .cloned()
+            .unwrap_or(PeriodStatus::Open);
         if status != PeriodStatus::Open {
             return GateResult::RejPeriodClosed;
         }
@@ -199,9 +215,13 @@ impl HundianState {
                     return GateResult::RejTermOrder;
                 }
                 if used_waiver {
-                    GateResult::OkDualHatWaiver { sigma: Some(SpinTag::Beta) }
+                    GateResult::OkDualHatWaiver {
+                        sigma: Some(SpinTag::Beta),
+                    }
                 } else {
-                    GateResult::OkPair { sigma: SpinTag::Beta }
+                    GateResult::OkPair {
+                        sigma: SpinTag::Beta,
+                    }
                 }
             } else {
                 if used_waiver {
@@ -212,16 +232,30 @@ impl HundianState {
             }
         } else {
             if used_waiver {
-                GateResult::OkDualHatWaiver { sigma: if is_degenerate { Some(SpinTag::Alpha) } else { None } }
+                GateResult::OkDualHatWaiver {
+                    sigma: if is_degenerate {
+                        Some(SpinTag::Alpha)
+                    } else {
+                        None
+                    },
+                }
             } else if is_degenerate {
-                GateResult::OkSingle { sigma: SpinTag::Alpha }
+                GateResult::OkSingle {
+                    sigma: SpinTag::Alpha,
+                }
             } else {
                 GateResult::OkHierarchy
             }
         };
 
-        self.registered_slots.get_mut(&key).unwrap().push(person_id.to_string());
-        self.person_occupancies.entry((person_id.to_string(), period_id.to_string())).or_default().insert(key);
+        self.registered_slots
+            .get_mut(&key)
+            .unwrap()
+            .push(person_id.to_string());
+        self.person_occupancies
+            .entry((person_id.to_string(), period_id.to_string()))
+            .or_default()
+            .insert(key);
         result
     }
 
@@ -232,7 +266,11 @@ impl HundianState {
         slot_id: &str,
         period_id: &str,
     ) -> GateResult {
-        let status = self.period_statuses.get(period_id).cloned().unwrap_or(PeriodStatus::Open);
+        let status = self
+            .period_statuses
+            .get(period_id)
+            .cloned()
+            .unwrap_or(PeriodStatus::Open);
         if status != PeriodStatus::Open {
             return GateResult::RejPeriodClosed;
         }
@@ -250,7 +288,10 @@ impl HundianState {
         let occupants = self.registered_slots.get_mut(&key).unwrap();
         if let Some(pos) = occupants.iter().position(|p| p == person_id) {
             occupants.remove(pos);
-            if let Some(keys) = self.person_occupancies.get_mut(&(person_id.to_string(), period_id.to_string())) {
+            if let Some(keys) = self
+                .person_occupancies
+                .get_mut(&(person_id.to_string(), period_id.to_string()))
+            {
                 keys.remove(&key);
             }
             GateResult::OkVacate
@@ -270,9 +311,21 @@ mod tests {
         state.set_period_status("P0", PeriodStatus::Open);
         state.register_degenerate_class("facilitation");
 
-        let k1 = PauliKey { role_class: "facilitation".into(), slot_id: "fac-1".into(), period_id: "P0".into() };
-        let k2 = PauliKey { role_class: "facilitation".into(), slot_id: "fac-2".into(), period_id: "P0".into() };
-        let k3 = PauliKey { role_class: "facilitation".into(), slot_id: "fac-3".into(), period_id: "P0".into() };
+        let k1 = PauliKey {
+            role_class: "facilitation".into(),
+            slot_id: "fac-1".into(),
+            period_id: "P0".into(),
+        };
+        let k2 = PauliKey {
+            role_class: "facilitation".into(),
+            slot_id: "fac-2".into(),
+            period_id: "P0".into(),
+        };
+        let k3 = PauliKey {
+            role_class: "facilitation".into(),
+            slot_id: "fac-3".into(),
+            period_id: "P0".into(),
+        };
 
         state.register_slot(k1);
         state.register_slot(k2);
@@ -280,7 +333,12 @@ mod tests {
 
         // 10:00Z alice -> fac-1 OK_SINGLE (M=2)
         let r1 = state.propose_fill("alice", "facilitation", "fac-1", "P0", None);
-        assert_eq!(r1, GateResult::OkSingle { sigma: SpinTag::Alpha });
+        assert_eq!(
+            r1,
+            GateResult::OkSingle {
+                sigma: SpinTag::Alpha
+            }
+        );
         assert_eq!(state.calculate_multiplicity("P0"), (1, 0.5, 2));
 
         // 10:05Z bob -> fac-1 REJ_TERM_ORDER
@@ -289,17 +347,32 @@ mod tests {
 
         // 10:06Z bob -> fac-2 OK_SINGLE (M=3)
         let r3 = state.propose_fill("bob", "facilitation", "fac-2", "P0", None);
-        assert_eq!(r3, GateResult::OkSingle { sigma: SpinTag::Alpha });
+        assert_eq!(
+            r3,
+            GateResult::OkSingle {
+                sigma: SpinTag::Alpha
+            }
+        );
         assert_eq!(state.calculate_multiplicity("P0"), (2, 1.0, 3));
 
         // 10:07Z carol -> fac-3 OK_SINGLE (M=4)
         let r4 = state.propose_fill("carol", "facilitation", "fac-3", "P0", None);
-        assert_eq!(r4, GateResult::OkSingle { sigma: SpinTag::Alpha });
+        assert_eq!(
+            r4,
+            GateResult::OkSingle {
+                sigma: SpinTag::Alpha
+            }
+        );
         assert_eq!(state.calculate_multiplicity("P0"), (3, 1.5, 4));
 
         // 10:08Z dave -> fac-1 OK_PAIR (M=3)
         let r5 = state.propose_fill("dave", "facilitation", "fac-1", "P0", None);
-        assert_eq!(r5, GateResult::OkPair { sigma: SpinTag::Beta });
+        assert_eq!(
+            r5,
+            GateResult::OkPair {
+                sigma: SpinTag::Beta
+            }
+        );
         assert_eq!(state.calculate_multiplicity("P0"), (2, 1.0, 3));
 
         // 10:09Z eve -> fac-1 REJ_PAULI
@@ -317,21 +390,42 @@ mod tests {
         state.set_period_status("P0", PeriodStatus::Open);
         state.register_degenerate_class("facilitation");
 
-        let k1 = PauliKey { role_class: "facilitation".into(), slot_id: "fac-1".into(), period_id: "P0".into() };
+        let k1 = PauliKey {
+            role_class: "facilitation".into(),
+            slot_id: "fac-1".into(),
+            period_id: "P0".into(),
+        };
         state.register_slot(k1);
 
-        assert_eq!(state.propose_fill("alice", "facilitation", "fac-1", "P0", None), GateResult::OkSingle { sigma: SpinTag::Alpha });
+        assert_eq!(
+            state.propose_fill("alice", "facilitation", "fac-1", "P0", None),
+            GateResult::OkSingle {
+                sigma: SpinTag::Alpha
+            }
+        );
 
         // Vacate valid occupant
-        assert_eq!(state.propose_vacate("alice", "facilitation", "fac-1", "P0"), GateResult::OkVacate);
+        assert_eq!(
+            state.propose_vacate("alice", "facilitation", "fac-1", "P0"),
+            GateResult::OkVacate
+        );
 
         // Vacate non-occupant
-        assert_eq!(state.propose_vacate("bob", "facilitation", "fac-1", "P0"), GateResult::RejNotOccupant);
+        assert_eq!(
+            state.propose_vacate("bob", "facilitation", "fac-1", "P0"),
+            GateResult::RejNotOccupant
+        );
 
         // Close period
         state.set_period_status("P0", PeriodStatus::Closed);
-        assert_eq!(state.propose_fill("alice", "facilitation", "fac-1", "P0", None), GateResult::RejPeriodClosed);
-        assert_eq!(state.propose_vacate("alice", "facilitation", "fac-1", "P0"), GateResult::RejPeriodClosed);
+        assert_eq!(
+            state.propose_fill("alice", "facilitation", "fac-1", "P0", None),
+            GateResult::RejPeriodClosed
+        );
+        assert_eq!(
+            state.propose_vacate("alice", "facilitation", "fac-1", "P0"),
+            GateResult::RejPeriodClosed
+        );
     }
 }
 
@@ -349,18 +443,9 @@ mod pure_fn_tests {
 
     #[test]
     fn test_pure_pauli_third_rejection() {
-        assert_eq!(
-            evaluate_pauli_gate_peq(2, 0, true),
-            GateResult::RejPauli
-        );
-        assert_eq!(
-            evaluate_pauli_gate_peq(3, 5, false),
-            GateResult::RejPauli
-        );
-        assert_eq!(
-            evaluate_pauli_gate_peq(7, 1, true),
-            GateResult::RejPauli
-        );
+        assert_eq!(evaluate_pauli_gate_peq(2, 0, true), GateResult::RejPauli);
+        assert_eq!(evaluate_pauli_gate_peq(3, 5, false), GateResult::RejPauli);
+        assert_eq!(evaluate_pauli_gate_peq(7, 1, true), GateResult::RejPauli);
     }
 
     #[test]
@@ -377,7 +462,9 @@ mod pure_fn_tests {
         // U = 0 on degenerate -> OkPair(Beta)
         assert_eq!(
             evaluate_pauli_gate_peq(1, 0, true),
-            GateResult::OkPair { sigma: SpinTag::Beta }
+            GateResult::OkPair {
+                sigma: SpinTag::Beta
+            }
         );
     }
 
@@ -386,7 +473,9 @@ mod pure_fn_tests {
         // empty degenerate -> Alpha
         assert_eq!(
             evaluate_pauli_gate_peq(0, 3, true),
-            GateResult::OkSingle { sigma: SpinTag::Alpha }
+            GateResult::OkSingle {
+                sigma: SpinTag::Alpha
+            }
         );
         // non-degenerate (any occupancy < 2) -> OkHierarchy
         assert_eq!(
@@ -404,13 +493,23 @@ mod pure_fn_tests {
         // The 7-row canonical sequence asserted through the pure core:
         // alice -> empty degenerate slot => OkSingle(Alpha)
         let r1 = evaluate_pauli_gate_peq(0, 2, true);
-        assert_eq!(r1, GateResult::OkSingle { sigma: SpinTag::Alpha });
+        assert_eq!(
+            r1,
+            GateResult::OkSingle {
+                sigma: SpinTag::Alpha
+            }
+        );
         // bob -> half-filled slot while 2 slots remain empty => RejTermOrder
         let r2 = evaluate_pauli_gate_peq(1, 2, true);
         assert_eq!(r2, GateResult::RejTermOrder);
         // dave -> half-filled slot, no empty candidates => OkPair(Beta)
         let r5 = evaluate_pauli_gate_peq(1, 0, true);
-        assert_eq!(r5, GateResult::OkPair { sigma: SpinTag::Beta });
+        assert_eq!(
+            r5,
+            GateResult::OkPair {
+                sigma: SpinTag::Beta
+            }
+        );
         // eve -> full slot => RejPauli
         let r6 = evaluate_pauli_gate_peq(2, 0, true);
         assert_eq!(r6, GateResult::RejPauli);
