@@ -5,20 +5,23 @@ description = "Typed registries parsed from model/*.toml: this repository's sing
 # `repo-conformance`, both `publish = false`, and nothing a consumer of this
 # repository builds reaches it.
 publish = false
-version.workspace = true
-edition.workspace = true
-rust-version.workspace = true
-license.workspace = true
-repository.workspace = true
-homepage.workspace = true
-authors.workspace = true
-keywords.workspace = true
-categories.workspace = true
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/citizengardens/uor-foundry"
+homepage = "https://citizengardens.org"
+authors = ["Phase Mirror Formal Methods Engineering <ryvngldr@gmail.com>"]
+keywords = ["formal-methods", "verification", "multiplicity", "uor", "phase-mirror"]
+categories = ["formal-verification", "mathematics", "cryptography"]
+
+[workspace]
 
 # Build-time and CI only. Not a dependency of any shipped crate; it may use std.
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 toml = "0.8"
 
-[lints]
-workspace = true
+[[bin]]
+name = "gen-conformance"
+path = "src/gen_conformance.rs"

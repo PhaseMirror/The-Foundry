@@ -1,0 +1,80 @@
+[workspace]
+members = [
+    "crates/ace",
+    "crates/air-prime-res",
+    "crates/alp",
+    "crates/automata",
+    "crates/commander-cli",
+    "crates/commander-core",
+    "crates/commons",
+    "crates/digital-twin",
+    "crates/goldilocks",
+    "crates/mcp-server",
+    "crates/mvf",
+    "crates/phase-mirror",
+    "crates/plst",
+    "crates/pro/archemedian",
+    "crates/pro/automorphic",
+    "crates/pro/c-pirtm",
+    "crates/pro/chain-adapter",
+    "crates/pro/client-sdk",
+    "crates/pro/csl",
+    "crates/pro/drmm",
+    "crates/pro/fermat-certifier",
+    "crates/pro/governance",
+    "crates/pro/governor",
+    "crates/pro/hcalc",
+    "crates/pro/hypercompute",
+    "crates/pro/key-vault",
+    "crates/pro/langlands",
+    "crates/pro/m-ode",
+    "crates/pro/mirror-dissonance",
+    "crates/pro/moonshine",
+    "crates/pro/operators",
+    "crates/pro/pirtm",
+    "crates/pro/prime",
+    "crates/pro/q-calculator",
+    "crates/pro/resonance",
+    "crates/pro/security",
+    "crates/pro/sidechain-scalability",
+    "crates/pro/sigma-kernel",
+    "crates/pro/the-genius",
+    "crates/pro/trace-serializer",
+    "crates/pro/universal",
+    "crates/pro/wasserstein",
+    "crates/pro/zeta",
+    "crates/pro/zrsd",
+    "crates/qr-share",
+    "crates/rollback",
+    "crates/shell",
+    "crates/sigma",
+    "crates/verification-sdk",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Multiplicity"]
+edition = "2021"
+license = "MIT"
+rust-version = "1.85"
+
+[workspace.dependencies]
+serde = "1.0"
+serde_json = "1.0"
+tokio = "1.0"
+anyhow = "1.0"
+hex = "0.4"
+thiserror = "1.0"
+tracing = "0.1"
+chrono = "0.4"
+schemars = "0.8"
+yaml-rust2 = "0.8"
+serde_yaml = "0.9"
+sha2 = "0.10"
+ed25519-dalek = "2.0"
+rand = "0.8"
+uuid = "1.0"
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+tempfile = "3.1"
+async-trait = "0.1"

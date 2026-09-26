@@ -1,0 +1,241 @@
+{
+  "timestamp": "2026-05-26T18:05:41Z",
+  "config": {
+    "name": "CIFAR10-G2-Autopilot",
+    "dataset": "cifar10",
+    "primes": [
+      2,
+      3,
+      5
+    ],
+    "hidden_dim": 128,
+    "lambda_zeta": 1.0,
+    "a": 5.0,
+    "safety_threshold": 1.0,
+    "use_lm": true,
+    "max_batches": 20
+  },
+  "final_loss": 121.41671752929688,
+  "telemetry_summary": [
+    {
+      "batch": 0,
+      "loss": 2.314765453338623,
+      "pirtm_norm": 1.4871139526367188,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.4871139526367188,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 1,
+      "loss": 2.6740224361419678,
+      "pirtm_norm": 1.4391674995422363,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.4631407260894775,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 2,
+      "loss": 5.787220001220703,
+      "pirtm_norm": 1.1263474225997925,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.3508762915929158,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 3,
+      "loss": 10.127725601196289,
+      "pirtm_norm": 2.6855318546295166,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.684540182352066,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 4,
+      "loss": 11.610589027404785,
+      "pirtm_norm": 2.634638547897339,
+      "ctrl_status": {
+        "correlation": 0.8591223231030664,
+        "avg_norm": 1.8745598554611207,
+        "phoenix_triggered": true,
+        "steer_action": "dampen_zeta"
+      }
+    },
+    {
+      "batch": 5,
+      "loss": 47.15403747558594,
+      "pirtm_norm": 4.597262859344482,
+      "ctrl_status": {
+        "correlation": 0.9304036098395937,
+        "avg_norm": 2.4965896368026734,
+        "phoenix_triggered": true,
+        "steer_action": "dampen_zeta"
+      }
+    },
+    {
+      "batch": 6,
+      "loss": 44.80156326293945,
+      "pirtm_norm": 3.896308183670044,
+      "ctrl_status": {
+        "correlation": 0.9124931099050493,
+        "avg_norm": 2.988017773628235,
+        "phoenix_triggered": true,
+        "steer_action": "dampen_zeta"
+      }
+    },
+    {
+      "batch": 7,
+      "loss": 71.2337417602539,
+      "pirtm_norm": 1.1590979099273682,
+      "ctrl_status": {
+        "correlation": -0.16083197184107556,
+        "avg_norm": 2.99456787109375,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 8,
+      "loss": 106.29344940185547,
+      "pirtm_norm": 1.2498000860214233,
+      "ctrl_status": {
+        "correlation": -0.5708949738921358,
+        "avg_norm": 2.7074215173721314,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 9,
+      "loss": 81.2096939086914,
+      "pirtm_norm": 4.470304012298584,
+      "ctrl_status": {
+        "correlation": -0.6152921741205493,
+        "avg_norm": 3.07455461025238,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 10,
+      "loss": 103.46935272216797,
+      "pirtm_norm": 2.22636079788208,
+      "ctrl_status": {
+        "correlation": -0.4892918220638211,
+        "avg_norm": 2.6003741979599,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 11,
+      "loss": 169.111328125,
+      "pirtm_norm": 3.783473491668701,
+      "ctrl_status": {
+        "correlation": 0.3466505898504582,
+        "avg_norm": 2.5778072595596315,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 12,
+      "loss": 135.6374969482422,
+      "pirtm_norm": 1.2845160961151123,
+      "ctrl_status": {
+        "correlation": -0.05172170903365672,
+        "avg_norm": 2.60289089679718,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 13,
+      "loss": 128.1558074951172,
+      "pirtm_norm": 4.254973888397217,
+      "ctrl_status": {
+        "correlation": -0.14047190579173263,
+        "avg_norm": 3.2039256572723387,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 14,
+      "loss": 137.51182556152344,
+      "pirtm_norm": 1.840380072593689,
+      "ctrl_status": {
+        "correlation": 0.3169747507367899,
+        "avg_norm": 2.6779408693313598,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 15,
+      "loss": 102.41539001464844,
+      "pirtm_norm": 4.517341613769531,
+      "ctrl_status": {
+        "correlation": -0.24894122750076703,
+        "avg_norm": 3.13613703250885,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 16,
+      "loss": 125.83135986328125,
+      "pirtm_norm": 5.424285888671875,
+      "ctrl_status": {
+        "correlation": -0.6256148191939417,
+        "avg_norm": 3.464299511909485,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 17,
+      "loss": 126.3534927368164,
+      "pirtm_norm": 1.5094735622406006,
+      "ctrl_status": {
+        "correlation": -0.4708763789452599,
+        "avg_norm": 3.5092910051345827,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 18,
+      "loss": 172.10960388183594,
+      "pirtm_norm": 2.4840893745422363,
+      "ctrl_status": {
+        "correlation": -0.45190766969113794,
+        "avg_norm": 3.1551141023635862,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 19,
+      "loss": 121.41671752929688,
+      "pirtm_norm": 2.138324022293091,
+      "ctrl_status": {
+        "correlation": -0.35203704034471084,
+        "avg_norm": 3.2147028923034666,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    }
+  ]
+}

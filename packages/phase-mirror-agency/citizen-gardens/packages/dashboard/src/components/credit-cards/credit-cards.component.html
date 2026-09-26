@@ -1,0 +1,20 @@
+
+<section class="py-16 md:py-24">
+  <!-- Desktop Grid -->
+  <div class="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    @for (card of creditCards(); track card.id) {
+      <app-credit-card [card]="card"></app-credit-card>
+    }
+  </div>
+
+  <!-- Mobile Carousel -->
+  <div class="md:hidden">
+    <div class="flex overflow-x-auto snap-x snap-mandatory scroll-p-6 -mx-4 px-4 pb-8 space-x-6">
+      @for (card of creditCards(); track card.id) {
+        <div class="snap-center flex-shrink-0 w-[85%]">
+           <app-credit-card [card]="card"></app-credit-card>
+        </div>
+      }
+    </div>
+  </div>
+</section>

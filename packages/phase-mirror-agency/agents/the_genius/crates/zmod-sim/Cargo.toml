@@ -1,0 +1,15 @@
+[package]
+name = "zmod-sim"
+version = "1.0.0-alpha"
+edition = "2021"
+
+[dependencies]
+ndarray = { version = "0.15", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+zmod-substrate = { path = "../zmod-substrate" }
+zmod-resonance = { path = "../zmod-resonance" }
+zmod-guardian = { path = "../zmod-guardian" }
+zmod-optim = { path = "../zmod-optim" }
+the_guardian = { path = "../../../the_guardian" }

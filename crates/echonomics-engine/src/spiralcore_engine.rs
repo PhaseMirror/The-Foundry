@@ -37,7 +37,11 @@ impl SpiralcoreStateVector {
     pub fn new(version: SpiralcoreVersion, coordinates: Vec<f64>) -> Self {
         let dimension = coordinates.len();
         let action_scalar = coordinates.iter().map(|x| x * x).sum::<f64>();
-        let persistence_entropy = if dimension > 0 { (dimension as f64).ln() } else { 0.0 };
+        let persistence_entropy = if dimension > 0 {
+            (dimension as f64).ln()
+        } else {
+            0.0
+        };
         let fisher_sharpness = action_scalar / (dimension as f64 + 1.0);
 
         Self {
@@ -98,10 +102,13 @@ pub enum GkMapperStabilityStatus {
     SingularCovariance,
 }
 
-pub fn validate_gk_mapper_stability(cluster_determinant: f64, overlap_ratio: f64) -> GkMapperStabilityStatus {
+pub fn validate_gk_mapper_stability(
+    cluster_determinant: f64,
+    overlap_ratio: f64,
+) -> GkMapperStabilityStatus {
     if cluster_determinant <= 1e-12 {
         GkMapperStabilityStatus::SingularCovariance
-    } else if overlap_ratio < 0.1 || overlap_ratio > 0.9 {
+    } else if !(0.1..=0.9).contains(&overlap_ratio) {
         GkMapperStabilityStatus::UnstableDrift
     } else {
         GkMapperStabilityStatus::Stable
@@ -110,7 +117,8 @@ pub fn validate_gk_mapper_stability(cluster_determinant: f64, overlap_ratio: f64
 
 /// Hodge Spectral Surrogate Projection (ADR-0035).
 pub fn project_hodge_laplacian(laplacian_eigenvalues: &[f64], harmonic_cutoff: f64) -> f64 {
-    laplacian_eigenvalues.iter()
+    laplacian_eigenvalues
+        .iter()
         .filter(|&&λ| λ >= harmonic_cutoff)
         .sum()
 }
@@ -122,7 +130,10 @@ pub enum VertexGuardGateResult {
     RejUncoveredVertex,
 }
 
-pub fn evaluate_vertex_guard_coverage(total_vertices: usize, guarded_vertices: usize) -> VertexGuardGateResult {
+pub fn evaluate_vertex_guard_coverage(
+    total_vertices: usize,
+    guarded_vertices: usize,
+) -> VertexGuardGateResult {
     if guarded_vertices >= total_vertices {
         VertexGuardGateResult::PassCompleteCoverage
     } else {
@@ -151,7 +162,9 @@ pub enum MorseCellType {
 
 pub fn classify_morse_cell(eigenvalues: (f64, f64, f64)) -> MorseCellType {
     let (e1, e2, e3) = eigenvalues;
-    let neg_count = (if e1 < 0.0 { 1 } else { 0 }) + (if e2 < 0.0 { 1 } else { 0 }) + (if e3 < 0.0 { 0 } else { 0 });
+    let neg_count = (if e1 < 0.0 { 1 } else { 0 })
+        + (if e2 < 0.0 { 1 } else { 0 })
+        + (if e3 < 0.0 { 0 } else { 0 });
 
     if e1.abs() < 1e-9 || e2.abs() < 1e-9 || e3.abs() < 1e-9 {
         MorseCellType::Regular
@@ -192,16 +205,31 @@ mod tests {
         assert_eq!(sharpness, 6.0);
 
         assert_eq!(classify_morse_cell((1.0, 2.0, 3.0)), MorseCellType::Minimum);
-        assert_eq!(classify_morse_cell((-1.0, -2.0, -3.0)), MorseCellType::Maximum);
+        assert_eq!(
+            classify_morse_cell((-1.0, -2.0, -3.0)),
+            MorseCellType::Maximum
+        );
     }
 
     #[test]
     fn test_vertex_guard_and_gk_mapper() {
-        assert_eq!(evaluate_vertex_guard_coverage(10, 10), VertexGuardGateResult::PassCompleteCoverage);
-        assert_eq!(evaluate_vertex_guard_coverage(10, 8), VertexGuardGateResult::RejUncoveredVertex);
+        assert_eq!(
+            evaluate_vertex_guard_coverage(10, 10),
+            VertexGuardGateResult::PassCompleteCoverage
+        );
+        assert_eq!(
+            evaluate_vertex_guard_coverage(10, 8),
+            VertexGuardGateResult::RejUncoveredVertex
+        );
 
-        assert_eq!(validate_gk_mapper_stability(1.0, 0.5), GkMapperStabilityStatus::Stable);
-        assert_eq!(validate_gk_mapper_stability(0.0, 0.5), GkMapperStabilityStatus::SingularCovariance);
+        assert_eq!(
+            validate_gk_mapper_stability(1.0, 0.5),
+            GkMapperStabilityStatus::Stable
+        );
+        assert_eq!(
+            validate_gk_mapper_stability(0.0, 0.5),
+            GkMapperStabilityStatus::SingularCovariance
+        );
     }
 }
 
@@ -215,9 +243,15 @@ mod kani_proofs {
         let guarded: usize = kani::any();
         let res = evaluate_vertex_guard_coverage(total, guarded);
         if guarded >= total {
-            kani::assert(res == VertexGuardGateResult::PassCompleteCoverage, "Must pass when guarded >= total");
+            kani::assert(
+                res == VertexGuardGateResult::PassCompleteCoverage,
+                "Must pass when guarded >= total",
+            );
         } else {
-            kani::assert(res == VertexGuardGateResult::RejUncoveredVertex, "Must reject when guarded < total");
+            kani::assert(
+                res == VertexGuardGateResult::RejUncoveredVertex,
+                "Must reject when guarded < total",
+            );
         }
     }
 
@@ -228,6 +262,9 @@ mod kani_proofs {
         kani::assume(det <= 1e-12);
 
         let res = validate_gk_mapper_stability(det, overlap);
-        kani::assert(res == GkMapperStabilityStatus::SingularCovariance, "Must report singular covariance when det <= 1e-12");
+        kani::assert(
+            res == GkMapperStabilityStatus::SingularCovariance,
+            "Must report singular covariance when det <= 1e-12",
+        );
     }
 }

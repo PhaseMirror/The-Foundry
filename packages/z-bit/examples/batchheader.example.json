@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "network_id": 3,
+  "epoch": 123456,
+  "policy_id": "3f7b4c2a1e8d9f6b5c4a3d2e1f0b9c8d7e6f5a4b3c2d1e0f9b8a7c6d5e4f3a2b",
+  "aggregator_xonly": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

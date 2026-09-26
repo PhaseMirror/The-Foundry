@@ -1,0 +1,32 @@
+\section*{ADR-138: Formalization of the Stirling‑Ramanujan Constant in Lean4}
+\label{adr:138}
+\begin{description}
+  \item[Status:] Proposed
+  \item[Context:] The Stirling‑Ramanujan constant $\Omega$ appears in asymptotic expansions of the Gamma function and related combinatorial quantities. A production‑grade formal proof in Lean4 is required for the PhaseMirror‑Legal project, respecting the Zero‑Axiom / Zero‑Mathlib mandate (no use of Mathlib, no \texttt{sorry} placeholders).
+  \item[Decision:] We will develop a self‑contained Lean4 library implementing the necessary number‑theoretic and analytic foundations using only core Lean, \texttt{Nat}, \texttt{Int}, and \texttt{ExactRat}. All definitions and lemmas will be proved from first principles, and the constant will be defined as a limit of a convergent sequence with an explicitly verified error bound.
+  \item[Consequences:]
+    \begin{itemize}
+      \item Guarantees correctness without external dependencies.
+      \item Increases maintenance burden due to more low‑level proofs.
+      \item Enables downstream legal‑risk calculations to rely on a verified engine.
+    \end{itemize}
+  \item[Implementation Plan:]
+    \begin{enumerate}
+      \item \textbf{Foundational Arithmetic:} Ensure availability of \texttt{Nat}, \texttt{Int}, and \texttt{ExactRat} arithmetic lemmas (addition, multiplication, division, bounds).
+      \item \textbf{Series and Limits:} Implement a minimal theory of real sequences using \texttt{ExactRat} to avoid \texttt{Real}. Define Cauchy sequences, limits, and prove convergence of the defining series for $\Omega$.
+      \item \textbf{Stirling Approximation:} Formalize Stirling's formula without \texttt{Real} by encoding the asymptotic expansion as an inequality in \texttt{ExactRat} with explicit error terms.
+      \item \textbf{Ramanujan Identity:} Prove the identity linking $\Omega$ to the limit of $(1+1/n)^{n+1/2} e^{-n}$, providing a constructive definition.
+      \item \textbf{Constant Definition:} Define \texttt{stirlingRamanujanConst : ExactRat} as the limit of the sequence from the previous step, using the limit infrastructure.
+      \item \textbf{Verification Tests:} Write \texttt{#eval} examples comparing the computed constant to known high‑precision decimal values, within a certified error margin.
+      \item \textbf{Documentation:} Add LaTeX commentary (this ADR) and inline Lean documentation, referencing the governing \texttt{CONTRACT.md} for legal usage.
+      \item \textbf{Continuous Integration:} Add a CI job that runs \texttt{lake build} and ensures no \texttt{sorry} statements exist (enforced by a grep check).
+    \end{enumerate}
+  \item[Compliance Checks:]
+    \begin{itemize}
+      \item No \texttt{Mathlib} imports.
+      \item No \texttt{sorry} placeholders.
+      \item All arithmetic stays within \texttt{Nat}, \texttt{Int}, \texttt{ExactRat}.
+      \item The resulting Lean4 module resides under \texttt{models/legalese-scopist/} to keep the engine as the single source of truth.
+    \end{itemize}
+\end{description}
+% End of ADR-138

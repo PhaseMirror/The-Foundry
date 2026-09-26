@@ -14,10 +14,12 @@
 # in the ID, lowercased with underscores (R3, CM-02). There is no "pending"
 # state: a capability that is not built does not get a row, and every row in this
 # file is built.
-#
-# The register is empty. This repository has no claims yet; adding one starts
-# with a row here, in the order `AGENTS.md` sets out.
 
 spec = "template/1"
 
-id = []
+id = [
+  { id = "CG-MS-01", level = "build", suite = "civic-model", statement = "Citizen Gardens Model Specification v1.0 implemented as fail-closed Rust + Kani in echonomics-engine::civic_spec" },
+  { id = "CG-MS-02", level = "build", suite = "civic-model", statement = "DUNA 100-member floor, quorum, dual-control, and credit caps verified by Kani for all inputs" },
+  { id = "CG-MS-03", level = "build", suite = "civic-model", statement = "Mission equation M = 2R + 1, four capital doors, nine L0 invariants, oracle tiers, PMCP gates implemented and Kani-verified" },
+  { id = "CG-MS-04", level = "build", suite = "civic-model", statement = "Dual-seat firewall (equity never mints PMCP), material asset floor, sovereignty node topology implemented and Kani-verified" },
+]

@@ -18,6 +18,15 @@ The three honesty levels (R2):
 `cargo xtask audit-limits` fails if any code path returns an error the
 model does not sanction.
 
+## civic-model
+
+| ID | Level | Statement |
+| --- | --- | --- |
+| `CG-MS-01` | `build` | Citizen Gardens Model Specification v1.0 implemented as fail-closed Rust + Kani in echonomics-engine::civic_spec |
+| `CG-MS-02` | `build` | DUNA 100-member floor, quorum, dual-control, and credit caps verified by Kani for all inputs |
+| `CG-MS-03` | `build` | Mission equation M = 2R + 1, four capital doors, nine L0 invariants, oracle tiers, PMCP gates implemented and Kani-verified |
+| `CG-MS-04` | `build` | Dual-seat firewall (equity never mints PMCP), material asset floor, sovereignty node topology implemented and Kani-verified |
+
 ## Cited authorities
 
 Never re-derived, vendored, or gated on.
@@ -29,3 +38,12 @@ Never re-derived, vendored, or gated on.
 
 | ID | Level | Claim |
 | --- | --- | --- |
+| `homonym-lock-r4-uor-r4` | `open` | R^4 (uor-r4) is the experimental autoregressive geometric language model repository. |
+| `homonym-lock-r4-gate` | `open` | Gate R4 is a set of Behavior-Driven Development (BDD) and conformance rules enforcing that no claimed capability is deferred or stubbed. |
+| `homonym-lock-r4-hologram` | `open` | Hologram v4 is the packaged binary format (HOLO\x04) generated via PrismPM. |
+| `homonym-lock-r4-f4` | `open` | F_4 is the rank-4 exceptional group recovered from the 96-vertex Atlas via a quotient fold. |
+| `homonym-lock-r4-r96` | `open` | R_{96} represents the 96 resonance equivalence classes residing on the 12,288 content-addressed torus. |
+| `CG-MS-01` | `build` | Citizen Gardens Model Specification v1.0 implemented as fail-closed Rust + Kani in echonomics-engine::civic_spec |
+| `CG-MS-02` | `build` | DUNA 100-member floor, quorum, dual-control, and credit caps verified by Kani for all inputs |
+| `CG-MS-03` | `build` | Mission equation M = 2R + 1, four capital doors, nine L0 invariants, oracle tiers, PMCP gates implemented and Kani-verified |
+| `CG-MS-04` | `build` | Dual-seat firewall (equity never mints PMCP), material asset floor, sovereignty node topology implemented and Kani-verified |

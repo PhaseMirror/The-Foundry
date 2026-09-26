@@ -1,0 +1,14 @@
+# Example MCP configuration
+# Adjust paths and certificates as needed for production deployment
+
+[server]
+address = "0.0.0.0:443"
+cert_path = "/etc/mcp/tls/server.crt"
+key_path = "/etc/mcp/tls/server.key"
+
+[security]
+admission_token_path = "/etc/mcp/tokens/admission.token"
+
+[logging]
+level = "info"
+output = "journal"

@@ -1,0 +1,52 @@
+# PhaseMirror workspace root.
+#
+# ADR-003 L344 specifies a single command covering two crates:
+#   cargo check --target wasm32-unknown-unknown -p phase_mirror_wasm -p phase-mirror-extension-host
+# That command is only satisfiable if both crates are members of one workspace.
+# Before this file existed, `phase_mirror_wasm` declared its own `[workspace]`
+# and the other crates inherited the repository-root workspace, so `-p` could
+# not resolve from either side. See ADR-RML-166.
+#
+# The governance chain is the member set: surface is the shared contract, the
+# three surfaces depend on it, and the two binding crates sit on top.
+[workspace]
+resolver = "2"
+members = [
+    "phase-mirror-surface",
+    "archivum-local-first",
+    "phase-mirror-extension-host",
+    "phase-mirror",
+    "phase_mirror_wasm",
+]
+
+# Crates that are not part of the governance chain. Explicit exclusion is
+# required, not cosmetic: a package directory beneath a workspace root that is
+# neither a member nor excluded fails to load with
+# "current package believes it's in a workspace when it's not".
+#
+# phase-mirror-edge is excluded for a dependency reason, not a design one. It
+# declares heapless 0.8 and crc 3.0, neither of which is in the local registry
+# cache, and it has no Cargo.lock, so it has never been resolved in this
+# environment. It rejoins the workspace when those crates are fetchable. Until
+# then no gate can verify ADR-003 L157's claim that l0_edge.rs implements the
+# same predicates as phase-mirror/src/l0_invariants.rs, and ADR-RML-166 records
+# that as unenforced rather than assumed.
+#
+# phase-mirror-mcp and the other excluded crates are deferred, not abandoned.
+# phase-mirror-mcp carries a vendored tree (vendor/pirtm-candle with two nested
+# packages) and its own duplicate of the constants fixed by ADR-RML-159 and
+# ADR-RML-161. It joins the workspace when those land.
+exclude = [
+    "commander-core",
+    "phase-mirror-agency",
+    "phase-mirror-agent",
+    "phase-mirror-automation",
+    "phase-mirror-client",
+    "phase-mirror-dissonance",
+    "phase-mirror-edge",
+    "phase-mirror-gpt",
+    "phase-mirror-mcp",
+    "sedona_spine",
+    "the-commander",
+    "ui-core",
+]

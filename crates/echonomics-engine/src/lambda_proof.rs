@@ -30,7 +30,11 @@ pub struct LambdaIdentityCommitment {
 
 impl LambdaIdentityCommitment {
     pub fn new(identity_id: u64, prime_salt: u64, is_verified: bool) -> Self {
-        Self { identity_id, prime_salt, is_verified }
+        Self {
+            identity_id,
+            prime_salt,
+            is_verified,
+        }
     }
 }
 
@@ -81,7 +85,13 @@ impl LambdaProof {
         seat_log_hash: u64,
         zk_attested: bool,
     ) -> Self {
-        Self { identity, drift_delta, drift_xi, seat_log_hash, zk_attested }
+        Self {
+            identity,
+            drift_delta,
+            drift_xi,
+            seat_log_hash,
+            zk_attested,
+        }
     }
 
     /// Verifies iff the identity is lawful, the drift is bounded, the seat log
@@ -146,7 +156,13 @@ mod tests {
         let base = LambdaProof::new(clean_identity(), 1, 10, 42, true);
         assert!(base.is_verified());
 
-        let unverified = LambdaProof::new(LambdaIdentityCommitment::new(42, 1009, false), 1, 10, 42, true);
+        let unverified = LambdaProof::new(
+            LambdaIdentityCommitment::new(42, 1009, false),
+            1,
+            10,
+            42,
+            true,
+        );
         assert!(!unverified.is_verified());
 
         let drift_violation = LambdaProof::new(clean_identity(), 5, 2, 42, true);
@@ -169,7 +185,10 @@ mod kani_proofs {
     fn verify_prime_candidate_rejects_small() {
         let n: u64 = kani::any();
         kani::assume(n <= 3);
-        kani::assert(!is_prime_candidate(n), "values <= 3 are never prime candidates");
+        kani::assert(
+            !is_prime_candidate(n),
+            "values <= 3 are never prime candidates",
+        );
     }
 
     // PrimeCheck fail-closed: an even value is never a candidate.
@@ -177,7 +196,10 @@ mod kani_proofs {
     fn verify_prime_candidate_rejects_even() {
         let n: u64 = kani::any();
         kani::assume(n % 2 == 0);
-        kani::assert(!is_prime_candidate(n), "even values are never prime candidates");
+        kani::assert(
+            !is_prime_candidate(n),
+            "even values are never prime candidates",
+        );
     }
 
     // PrimeCheck soundness: a passing candidate is odd and greater than three.
@@ -195,7 +217,10 @@ mod kani_proofs {
         let delta: u64 = kani::any();
         let xi: u64 = kani::any();
         kani::assume((3u128 * xi as u128) < (10u128 * delta as u128));
-        kani::assert(!satisfies_drift_bound(delta, xi), "violated drift bound is rejected");
+        kani::assert(
+            !satisfies_drift_bound(delta, xi),
+            "violated drift bound is rejected",
+        );
     }
 
     // DriftBound completeness: an in-bound drift is accepted.
@@ -204,7 +229,10 @@ mod kani_proofs {
         let delta: u64 = kani::any();
         let xi: u64 = kani::any();
         kani::assume(10u128 * delta as u128 <= 3u128 * xi as u128);
-        kani::assert(satisfies_drift_bound(delta, xi), "in-bound drift is accepted");
+        kani::assert(
+            satisfies_drift_bound(delta, xi),
+            "in-bound drift is accepted",
+        );
     }
 
     // Composite proof fail-closed: an unverified identity always denies.
@@ -212,7 +240,10 @@ mod kani_proofs {
     fn verify_lambda_proof_denied_on_unverified_identity() {
         let id = LambdaIdentityCommitment::new(kani::any(), kani::any(), false);
         let pf = LambdaProof::new(id, kani::any(), kani::any(), kani::any(), kani::any());
-        kani::assert(!pf.is_verified(), "unverified identity denies the lambda proof");
+        kani::assert(
+            !pf.is_verified(),
+            "unverified identity denies the lambda proof",
+        );
     }
 
     // Composite proof fail-closed: a missing ZK attestation always denies,
@@ -221,7 +252,10 @@ mod kani_proofs {
     fn verify_lambda_proof_denied_without_zk() {
         let id = LambdaIdentityCommitment::new(kani::any(), kani::any(), kani::any());
         let pf = LambdaProof::new(id, kani::any(), kani::any(), kani::any(), false);
-        kani::assert(!pf.is_verified(), "missing ZK attestation denies the lambda proof");
+        kani::assert(
+            !pf.is_verified(),
+            "missing ZK attestation denies the lambda proof",
+        );
     }
 
     fn clean() -> LambdaIdentityCommitment {

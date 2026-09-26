@@ -1,0 +1,131 @@
+{
+  "timestamp": "2026-05-26T18:05:03Z",
+  "config": {
+    "name": "CIFAR10-G1-Baseline",
+    "dataset": "cifar10",
+    "primes": [
+      2,
+      3,
+      5
+    ],
+    "hidden_dim": 128,
+    "lambda_zeta": 0.1,
+    "a": 2.0,
+    "safety_threshold": 5.0,
+    "use_lm": true,
+    "max_batches": 10
+  },
+  "final_loss": 19.33068084716797,
+  "telemetry_summary": [
+    {
+      "batch": 0,
+      "loss": 2.313607692718506,
+      "pirtm_norm": 1.076841950416565,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.076841950416565,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 1,
+      "loss": 3.6893603801727295,
+      "pirtm_norm": 5.7681779861450195,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 3.4225099682807922,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 2,
+      "loss": 3.5724527835845947,
+      "pirtm_norm": 5.571402072906494,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 4.13880733648936,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 3,
+      "loss": 9.160961151123047,
+      "pirtm_norm": 7.613903522491455,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 5.007581382989883,
+        "phoenix_triggered": false,
+        "steer_action": "tighten_safety"
+      }
+    },
+    {
+      "batch": 4,
+      "loss": 23.368423461914062,
+      "pirtm_norm": 6.431758880615234,
+      "ctrl_status": {
+        "correlation": 0.46884939377346824,
+        "avg_norm": 5.292416882514954,
+        "phoenix_triggered": false,
+        "steer_action": "dampen_zeta"
+      }
+    },
+    {
+      "batch": 5,
+      "loss": 27.38405990600586,
+      "pirtm_norm": 6.973821640014648,
+      "ctrl_status": {
+        "correlation": 0.4597093197724073,
+        "avg_norm": 6.47181282043457,
+        "phoenix_triggered": false,
+        "steer_action": "dampen_zeta"
+      }
+    },
+    {
+      "batch": 6,
+      "loss": 28.424457550048828,
+      "pirtm_norm": 4.21628475189209,
+      "ctrl_status": {
+        "correlation": -0.2600817590334661,
+        "avg_norm": 6.161434173583984,
+        "phoenix_triggered": false,
+        "steer_action": "tighten_safety"
+      }
+    },
+    {
+      "batch": 7,
+      "loss": 41.94122314453125,
+      "pirtm_norm": 5.923229217529297,
+      "ctrl_status": {
+        "correlation": -0.5371854569281961,
+        "avg_norm": 6.231799602508545,
+        "phoenix_triggered": false,
+        "steer_action": "tighten_safety"
+      }
+    },
+    {
+      "batch": 8,
+      "loss": 25.455419540405273,
+      "pirtm_norm": 4.249006748199463,
+      "ctrl_status": {
+        "correlation": 0.07900786053829749,
+        "avg_norm": 5.5588202476501465,
+        "phoenix_triggered": false,
+        "steer_action": "tighten_safety"
+      }
+    },
+    {
+      "batch": 9,
+      "loss": 19.33068084716797,
+      "pirtm_norm": 6.590958118438721,
+      "ctrl_status": {
+        "correlation": -0.047847644326604696,
+        "avg_norm": 5.590660095214844,
+        "phoenix_triggered": false,
+        "steer_action": "tighten_safety"
+      }
+    }
+  ]
+}

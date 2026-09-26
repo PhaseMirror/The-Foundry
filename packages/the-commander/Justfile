@@ -1,0 +1,101 @@
+set dotenv-load := true
+set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
+
+# --- Variables & Defaults ---
+profile   := env_var_or_default('PROFILE', 'dev')
+bin       := env_var_or_default('BIN', 'multiplicity-mcp')
+port      := env_var_or_default('PORT', '8000')
+env       := env_var_or_default('ENV', 'staging')
+image     := env_var_or_default('IMAGE', 'multiplicitycell:latest')
+compose_file := env_var_or_default('COMPOSE_FILE', 'docker-compose.yml')
+
+# --- Default: List Recipes ---
+default:
+    @just --list
+
+# --- Infrastructure ---
+toolchain:
+    @./scripts/resolve_toolchain.sh > .env
+    @echo "Toolchain resolved and exported to .env"
+
+# --- Template 1: Rust Workspace Core ---
+fmt:
+    cargo fmt --all
+
+lint:
+    cargo clippy --workspace --all-targets -- -D warnings
+
+test:
+    cargo test --workspace
+
+docs:
+    cargo doc --workspace --no-deps
+
+build:
+    cargo build --workspace --profile {{if profile == "dev" { "dev" } else { "release" }}}
+
+# --- Template 4: Testing Pipeline ---
+unit:
+    cargo test --workspace --lib
+
+integration:
+    cargo test --workspace --test integration
+
+e2e:
+    cargo test --workspace --test e2e
+
+coverage:
+    cargo llvm-cov --workspace --html
+
+# --- Template 5: Rust Service Operations ---
+run:
+    cargo run -p {{bin}} -- --port {{port}}
+
+run-release:
+    cargo run -p {{bin}} --release -- --port {{port}}
+
+watch:
+    cargo watch -x 'run -p {{bin}} -- --port {{port}}'
+
+# --- Template 9: Security & Compliance ---
+audit:
+    cargo audit
+
+licenses:
+    cargo deny check licenses
+
+supply-chain:
+    cargo deny check advisories bans sources
+
+# --- Template 7: Python Tooling Bridge ---
+# Rebuild the master library index using existing scripts
+lib-index:
+    python3 scripts/library_system.py build-index
+
+# Normalize math expressions in the library
+lib-math:
+    python3 scripts/library_system.py normalize-math
+
+# --- Multiplicity Specific: Governance ---
+# Port governance from Python to Rust (Manual Task Reminder)
+port-governance:
+    @echo "Verifying Rust port of Ξ-Constitution and GitLedger..."
+    cargo test -p multiplicity-common
+
+# --- Template 2: Container Orchestration (Stubs) ---
+up:
+    @echo "Starting services via Docker Compose..."
+    # docker compose -f {{compose_file}} up -d
+
+down:
+    @echo "Stopping services..."
+    # docker compose -f {{compose_file}} down
+
+# --- Combined Workflows ---
+check: fmt lint test docs
+
+verify: fmt audit licenses supply-chain
+
+# Full production check
+ci: check verify
+    @echo "Production readiness verified for {{profile}} environment."

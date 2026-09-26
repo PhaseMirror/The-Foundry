@@ -1,0 +1,20 @@
+[project]
+name = "z-bit"
+version = "0.1.0"
+description = "z-bit: Standalone Bitcoin Research and Anchor Module"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "sympy",
+    "torch",
+]
+
+[tool.setuptools]
+package-dir = {"" = "python"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

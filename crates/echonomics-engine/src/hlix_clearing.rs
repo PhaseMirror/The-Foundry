@@ -103,17 +103,52 @@ mod tests {
 
     #[test]
     fn test_uor_identity() {
-        let ref3_2 = UorReference { prime_index: 3, exponent: 2 };
-        let bad = UorReference { prime_index: 1, exponent: 0 };
+        let ref3_2 = UorReference {
+            prime_index: 3,
+            exponent: 2,
+        };
+        let bad = UorReference {
+            prime_index: 1,
+            exponent: 0,
+        };
 
         assert!(ref3_2.is_valid());
         assert_eq!(ref3_2.uor_root(), Some(9), "3^2 = 9");
-        assert_eq!(UorReference { prime_index: 2, exponent: 8 }.uor_root(), Some(256));
-        assert!(!bad.is_valid(), "unit roots would allow identity collisions");
-        assert!(!UorReference { prime_index: 3, exponent: 9 }.is_valid(), "out-of-domain exponent");
-        assert_eq!(UorReference { prime_index: 3, exponent: 9 }.uor_root(), None, "fail closed");
         assert_eq!(
-            UorReference { prime_index: 65536, exponent: 4 }.uor_root(),
+            UorReference {
+                prime_index: 2,
+                exponent: 8
+            }
+            .uor_root(),
+            Some(256)
+        );
+        assert!(
+            !bad.is_valid(),
+            "unit roots would allow identity collisions"
+        );
+        assert!(
+            !UorReference {
+                prime_index: 3,
+                exponent: 9
+            }
+            .is_valid(),
+            "out-of-domain exponent"
+        );
+        assert_eq!(
+            UorReference {
+                prime_index: 3,
+                exponent: 9
+            }
+            .uor_root(),
+            None,
+            "fail closed"
+        );
+        assert_eq!(
+            UorReference {
+                prime_index: 65536,
+                exponent: 4
+            }
+            .uor_root(),
             None,
             "2^64 overflow fails closed"
         );
@@ -121,8 +156,14 @@ mod tests {
 
     #[test]
     fn test_clearing_gate() {
-        let clears = ClearingState { bid_price: 120, ask_price: 100 };
-        let no_clear = ClearingState { bid_price: 90, ask_price: 100 };
+        let clears = ClearingState {
+            bid_price: 120,
+            ask_price: 100,
+        };
+        let no_clear = ClearingState {
+            bid_price: 90,
+            ask_price: 100,
+        };
 
         assert!(clears.clears());
         assert_eq!(clears.clearing_price(), 100);
@@ -132,7 +173,14 @@ mod tests {
     #[test]
     fn test_exchange_fee() {
         assert_eq!(exchange_fee(100), 10);
-        assert_eq!(ClearingState { bid_price: 120, ask_price: 100 }.exchange_fee(), 10);
+        assert_eq!(
+            ClearingState {
+                bid_price: 120,
+                ask_price: 100
+            }
+            .exchange_fee(),
+            10
+        );
         assert!(exchange_fee(1000) <= 1000, "fee never exceeds price");
     }
 
@@ -156,7 +204,10 @@ mod kani_proofs {
         kani::assume(prime_index >= 2 && exponent >= 1);
         kani::assume(prime_index <= 65536 && exponent <= MAX_UOR_EXPONENT as u64);
 
-        let r = UorReference { prime_index, exponent };
+        let r = UorReference {
+            prime_index,
+            exponent,
+        };
         if let Some(root) = r.uor_root() {
             kani::assert(root > 0, "valid references never root to zero");
             kani::assert(root >= prime_index, "root = p^e ≥ p for e ≥ 1");
@@ -170,9 +221,15 @@ mod kani_proofs {
         let exponent: u64 = kani::any();
         kani::assume(exponent > MAX_UOR_EXPONENT as u64);
 
-        let r = UorReference { prime_index, exponent };
+        let r = UorReference {
+            prime_index,
+            exponent,
+        };
         kani::assert(!r.is_valid(), "out-of-domain exponent is invalid");
-        kani::assert(r.uor_root().is_none(), "out-of-domain exponent fails closed");
+        kani::assert(
+            r.uor_root().is_none(),
+            "out-of-domain exponent fails closed",
+        );
     }
 
     /// ADR-0028: the clearing gate is exactly `bid ≥ ask`.
@@ -180,7 +237,10 @@ mod kani_proofs {
     fn verify_clearing_requires_bid_at_least_ask() {
         let bid_price: u64 = kani::any();
         let ask_price: u64 = kani::any();
-        let st = ClearingState { bid_price, ask_price };
+        let st = ClearingState {
+            bid_price,
+            ask_price,
+        };
         if st.clears() {
             kani::assert(bid_price >= ask_price, "clearing requires bid ≥ ask");
         }
@@ -199,7 +259,10 @@ mod kani_proofs {
         let allocated: u64 = kani::any();
         let total: u64 = kani::any();
         if allocated > total {
-            kani::assert(!is_allocation_within_capacity(allocated, total), "over-capacity rejected");
+            kani::assert(
+                !is_allocation_within_capacity(allocated, total),
+                "over-capacity rejected",
+            );
         }
     }
 }

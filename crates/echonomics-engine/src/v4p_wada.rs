@@ -22,7 +22,12 @@ pub struct V4pAddress {
 
 impl V4pAddress {
     pub const fn new(octet0: u8, octet1: u8, octet2: u8, octet3: u8) -> Self {
-        Self { octet0, octet1, octet2, octet3 }
+        Self {
+            octet0,
+            octet1,
+            octet2,
+            octet3,
+        }
     }
 
     /// Converts 32-bit integer to V4pAddress.
@@ -46,10 +51,14 @@ impl V4pAddress {
     /// Returns the 8 coordinates (0..15) from high and low nibbles of each octet.
     pub fn to_nibbles(&self) -> [u8; 8] {
         [
-            (self.octet0 >> 4) & 0x0F, self.octet0 & 0x0F,
-            (self.octet1 >> 4) & 0x0F, self.octet1 & 0x0F,
-            (self.octet2 >> 4) & 0x0F, self.octet2 & 0x0F,
-            (self.octet3 >> 4) & 0x0F, self.octet3 & 0x0F,
+            (self.octet0 >> 4) & 0x0F,
+            self.octet0 & 0x0F,
+            (self.octet1 >> 4) & 0x0F,
+            self.octet1 & 0x0F,
+            (self.octet2 >> 4) & 0x0F,
+            self.octet2 & 0x0F,
+            (self.octet3 >> 4) & 0x0F,
+            self.octet3 & 0x0F,
         ]
     }
 
@@ -93,7 +102,12 @@ pub struct RootElectionState {
 }
 
 impl RootElectionState {
-    pub fn new(domain_id: impl Into<String>, domain_type: AgentDomainType, root_id: impl Into<String>, priority: u32) -> Self {
+    pub fn new(
+        domain_id: impl Into<String>,
+        domain_type: AgentDomainType,
+        root_id: impl Into<String>,
+        priority: u32,
+    ) -> Self {
         Self {
             domain_id: domain_id.into(),
             domain_type,
@@ -160,15 +174,28 @@ mod tests {
 
     #[test]
     fn test_root_election_and_demarcation_gate() {
-        let mut election = RootElectionState::new("lada-dubai", AgentDomainType::Lada, "hlca-01", 100);
+        let mut election =
+            RootElectionState::new("lada-dubai", AgentDomainType::Lada, "hlca-01", 100);
         assert!(!election.propose_root_candidate("hlca-02", 90));
         assert!(election.propose_root_candidate("hlca-03", 150));
         assert_eq!(election.active_root_id, "hlca-03");
 
-        assert_eq!(evaluate_route_demarcation(true, false, false), RouteDemarcationResult::PassAuthorizedRoute);
-        assert_eq!(evaluate_route_demarcation(false, false, false), RouteDemarcationResult::RejUnsignedRoute);
-        assert_eq!(evaluate_route_demarcation(true, true, false), RouteDemarcationResult::RejLoopDetected);
-        assert_eq!(evaluate_route_demarcation(true, false, true), RouteDemarcationResult::RejQuarantine);
+        assert_eq!(
+            evaluate_route_demarcation(true, false, false),
+            RouteDemarcationResult::PassAuthorizedRoute
+        );
+        assert_eq!(
+            evaluate_route_demarcation(false, false, false),
+            RouteDemarcationResult::RejUnsignedRoute
+        );
+        assert_eq!(
+            evaluate_route_demarcation(true, true, false),
+            RouteDemarcationResult::RejLoopDetected
+        );
+        assert_eq!(
+            evaluate_route_demarcation(true, false, true),
+            RouteDemarcationResult::RejQuarantine
+        );
     }
 }
 
@@ -180,7 +207,10 @@ mod kani_proofs {
     fn verify_v4p_address_u32_roundtrip() {
         let val: u32 = kani::any();
         let addr = V4pAddress::from_u32(val);
-        kani::assert(addr.to_u32() == val, "V4pAddress to_u32 roundtrip must be identity");
+        kani::assert(
+            addr.to_u32() == val,
+            "V4pAddress to_u32 roundtrip must be identity",
+        );
     }
 
     #[kani::proof]
@@ -191,11 +221,20 @@ mod kani_proofs {
 
         let res = evaluate_route_demarcation(signed, loop_det, quar);
         if quar {
-            kani::assert(res == RouteDemarcationResult::RejQuarantine, "Must reject quarantine first");
+            kani::assert(
+                res == RouteDemarcationResult::RejQuarantine,
+                "Must reject quarantine first",
+            );
         } else if loop_det {
-            kani::assert(res == RouteDemarcationResult::RejLoopDetected, "Must reject loop second");
+            kani::assert(
+                res == RouteDemarcationResult::RejLoopDetected,
+                "Must reject loop second",
+            );
         } else if !signed {
-            kani::assert(res == RouteDemarcationResult::RejUnsignedRoute, "Must reject unsigned third");
+            kani::assert(
+                res == RouteDemarcationResult::RejUnsignedRoute,
+                "Must reject unsigned third",
+            );
         }
     }
 }

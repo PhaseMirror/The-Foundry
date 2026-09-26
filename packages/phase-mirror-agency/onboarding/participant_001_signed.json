@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-001-ONBOARD",
+  "name": "Tokamak Control Supervisor Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "3dc2496ffb7fc0bd8d8af2809172896585adaf56c36ae6ac3b51f43e75d7cba8",
+  "effectiveDate": "2026-06-17T17:30:00Z",
+  "signatories": [
+    {
+      "identity": "Tokamak_Control_Supervisor",
+      "role": "Participant",
+      "publicKey": "pAxRpmjFROVCMhIFcVKMfqIUuIXZsc4f5Et6vB4aynk=",
+      "signature": "LwmRbqpVGljL01GkodrEns9jSHFj+SZf6f1t/KYYRqcP+IsPXMn8LH4Uk3yQjiLvb1kxRVl8WeL/Z1AzNJxrAQ=="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "MTPI-Constitutional",
+    "auditStatus": "Approved",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Onboarded and validated under framework MTPI-Constitutional. Signed via Ed25519 system onboarding utility."
+  }
+}

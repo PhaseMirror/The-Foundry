@@ -4,7 +4,9 @@
 //! and dual anchors) can be sealed via mtpi-certifier, yielding a 48-byte BLS
 //! aggregate signature with a valid threshold bitmap under ADR-009 / ADR-0026.
 
-use echonomics_engine::crmf_governor::{CrmfSeal, is_constitutional_action_lawful, POSEIDON_T, POSEIDON_R, POSEIDON_CONSTRAINTS};
+use echonomics_engine::crmf_governor::{
+    is_constitutional_action_lawful, CrmfSeal, POSEIDON_CONSTRAINTS, POSEIDON_R, POSEIDON_T,
+};
 
 /// Simulated certified CRMF Envelope structure containing Poseidon2 anchor & BLS aggregation.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -71,7 +73,8 @@ fn test_certifier_pipeline_sealing_and_bls_aggregation() {
         threshold,
         signer_bitmap,
         oracle_set_id,
-    ).expect("CRMF envelope sealing must succeed when all parameters are valid");
+    )
+    .expect("CRMF envelope sealing must succeed when all parameters are valid");
 
     assert!(is_constitutional_action_lawful(&envelope.seal));
     assert_eq!(envelope.bls_aggregate_signature.len(), 48);
@@ -99,5 +102,8 @@ fn test_certifier_pipeline_fail_closed_on_unsealed_envelope() {
     );
 
     assert!(res.is_err());
-    assert_eq!(res.unwrap_err(), "SIG_GOV_KILL: CRMF envelope sealing failed or incomplete");
+    assert_eq!(
+        res.unwrap_err(),
+        "SIG_GOV_KILL: CRMF envelope sealing failed or incomplete"
+    );
 }

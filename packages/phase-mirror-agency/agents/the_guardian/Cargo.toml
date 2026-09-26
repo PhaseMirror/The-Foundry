@@ -1,0 +1,21 @@
+[package]
+name = "the_guardian"
+version = "1.0.0-alpha"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+thiserror = "1.0"
+anyhow = "1.0"
+tokio = { version = "1", features = ["full"] }
+tokio-util = { version = "0.7", features = ["codec"] }
+futures = "0.3"
+serde_json = "1.0"
+zmod-guardian = { path = "../the_genius/crates/zmod-guardian" }
+zmod-resonance = { path = "../the_genius/crates/zmod-resonance" }
+ndarray = { version = "0.15", features = ["serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+# Added for AST and parsing
+pest = "2.7"
+pest_derive = "2.7"

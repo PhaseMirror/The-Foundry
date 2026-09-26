@@ -1,0 +1,36 @@
+[package]
+name = "multiplicity-commander-core"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+multiplicity-common = { path = "../../substrates/commons" }
+multiplicity-alp = { path = "../../substrates/alp", package = "alp-rs" }
+multiplicity-sigma = { path = "../sigma" }
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+schemars.workspace = true
+yaml-rust2.workspace = true
+chrono.workspace = true
+serde_yaml.workspace = true
+sha2.workspace = true
+hex.workspace = true
+ed25519-dalek.workspace = true
+rand.workspace = true
+uuid.workspace = true
+reqwest = { workspace = true }
+clap = { version = "4.0", features = ["derive"] }
+
+[[bin]]
+name = "sat_e2e_helper"
+path = "src/bin/sat_e2e_helper.rs"
+
+[dev-dependencies]
+tempfile.workspace = true
+mirror-dissonance = { path = "../mirror-dissonance", package = "mirror-dissonance-rs" }

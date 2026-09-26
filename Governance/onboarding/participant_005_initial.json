@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-005-ONBOARD",
+  "name": "Poloidal Field Coil Coordinator Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "be551ee21bf09cf9b6704780a41237e89bc311afb13cda1e157a8e599d5769e2",
+  "effectiveDate": "2026-06-18T10:00:00Z",
+  "signatories": [
+    {
+      "identity": "Poloidal_Field_Coil_Coordinator",
+      "role": "Participant",
+      "publicKey": "ZEd2NTUxOV9QYXJ0aWNpcGFudF9QdWJsaWNfS2V5X1ZhbHVlPT0=",
+      "signature": "ZEd2NTUxOV9QYXJ0aWNpcGFudF9TaWduYXR1cmVfVmFsdWVfV2l0aF9FZEQ1NTE5X0tleV9QcmVzZW50X0hlcmU="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "MTPI-Constitutional",
+    "auditStatus": "Pending",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Pending formal signature linkage under Sedona Spine framework MTPI-Constitutional."
+  }
+}

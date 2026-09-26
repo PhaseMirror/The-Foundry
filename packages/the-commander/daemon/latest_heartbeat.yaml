@@ -1,0 +1,9 @@
+recorded_at: '2026-03-18T23:48:44.983496+00:00'
+status: in_sync
+snapshot_id: wave3-smoke-20260311T154951Z
+diff_score: 0.0
+changed_keys: []
+rollback_status: clear
+trigger: null
+current_epsilon: 0.05
+upgrade_permitted: true

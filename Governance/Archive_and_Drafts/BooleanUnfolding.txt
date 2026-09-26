@@ -1,0 +1,11 @@
+Boolean Unfolding: Logic as a Developmental Structure of Understanding Citizen Gardens/Kara Olivarria/PMD/VanGelder
+
+Abstract
+
+Boolean Unfolding is a philosophical and educational framework proposing that Boolean algebra represents more than a mathematical system; it serves as a developmental pathway through which learners progressively reveal deeper structures of thought, knowledge, and reality. Beginning with simple distinctions such as true and false, same and different, or inclusion and exclusion, students engage with the fundamental acts of categorization that underlie human cognition.
+
+As understanding expands, these elementary logical relationships unfold into increasingly complex forms: pattern recognition, scientific reasoning, mathematical proof, computational systems, and abstract models of the universe. Within this framework, Boolean algebra is not treated merely as symbolic manipulation but as a lens through which learners perceive the architecture of relationships that connect disciplines and experiences.
+
+The unfolding process is simultaneously cognitive, mathematical, and philosophical. Each new layer of understanding emerges from distinctions embedded within previous layers, mirroring both the hierarchical nature of learning and the recursive structure of logical systems themselves. The approach emphasizes discovery, visualization, and conceptual coherence, particularly for neurodiverse learners who often perceive patterns and systems before formal symbolic representations.
+
+Boolean Unfolding suggests that education is not primarily the acquisition of isolated facts but the progressive revelation of underlying logical structures. In this view, Boolean algebra becomes both a practical language of computation and a philosophical model for understanding how complexity emerges from simple distinctions, offering a unified framework that bridges mathematics, science, technology, and human thought.

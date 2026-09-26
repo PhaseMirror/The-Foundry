@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pirtm-mcp": {
+      "command": "/media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/PIRTM/rust/target/debug/pirtm-mcp",
+      "args": []
+    }
+  }
+}

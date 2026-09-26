@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "MD-002": {
+      "total_violations": 100,
+      "user_overrides": 20
+    }
+  }
+}

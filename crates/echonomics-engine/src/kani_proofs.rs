@@ -26,9 +26,7 @@
 
 #![cfg(kani)]
 
-use crate::hundian::{
-    calculate_multiplicity_peq, evaluate_pauli_gate_peq, GateResult, SpinTag,
-};
+use crate::hundian::{calculate_multiplicity_peq, evaluate_pauli_gate_peq, GateResult, SpinTag};
 
 /// Property 1: Multiplicity M = n_unpaired + 1 never exceeds |D| + 1
 /// for any real-domain `n_unpaired <= |D|`.
@@ -53,7 +51,11 @@ pub fn verify_multiplicity_never_exceeds_d_plus_one() {
 /// Property 2: A closed shell (n_unpaired = 0) is a singlet with M = 1.
 #[kani::proof]
 pub fn verify_closed_shell_singlet() {
-    assert_eq!(calculate_multiplicity_peq(0), 1, "Closed shell is a singlet M = 1");
+    assert_eq!(
+        calculate_multiplicity_peq(0),
+        1,
+        "Closed shell is a singlet M = 1"
+    );
 }
 
 /// Property 3: Pauli exclusion — any slot at capacity (>= 2) rejects.
@@ -65,7 +67,11 @@ pub fn verify_pauli_rejects_third() {
     kani::assume(occupants >= 2);
 
     let res = evaluate_pauli_gate_peq(occupants, empty, deg);
-    assert_eq!(res, GateResult::RejPauli, "Slot at capacity must reject third occupant");
+    assert_eq!(
+        res,
+        GateResult::RejPauli,
+        "Slot at capacity must reject third occupant"
+    );
 }
 
 /// Property 4: Term-order gate — with empty degenerate slots (U > 0), pairing
@@ -76,7 +82,11 @@ pub fn verify_term_order_blocks_unpaired_remaining() {
     kani::assume(empty > 0);
 
     let res = evaluate_pauli_gate_peq(1, empty, true);
-    assert_eq!(res, GateResult::RejTermOrder, "U > 0 must block pairing on degenerate slot");
+    assert_eq!(
+        res,
+        GateResult::RejTermOrder,
+        "U > 0 must block pairing on degenerate slot"
+    );
 }
 
 /// Property 5: Term-order gate — with no empty degenerate slots (U = 0),
@@ -84,7 +94,12 @@ pub fn verify_term_order_blocks_unpaired_remaining() {
 #[kani::proof]
 pub fn verify_term_order_allows_full_shell() {
     let res = evaluate_pauli_gate_peq(1, 0, true);
-    assert_eq!(res, GateResult::OkPair { sigma: SpinTag::Beta });
+    assert_eq!(
+        res,
+        GateResult::OkPair {
+            sigma: SpinTag::Beta
+        }
+    );
 }
 
 /// Property 6: The first occupant of a degenerate slot receives Alpha.
@@ -92,7 +107,12 @@ pub fn verify_term_order_allows_full_shell() {
 pub fn verify_first_occupant_alpha() {
     let empty: usize = kani::any();
     let res = evaluate_pauli_gate_peq(0, empty, true);
-    assert_eq!(res, GateResult::OkSingle { sigma: SpinTag::Alpha });
+    assert_eq!(
+        res,
+        GateResult::OkSingle {
+            sigma: SpinTag::Alpha
+        }
+    );
 }
 
 /// Property 7: Non-degenerate slots always grant hierarchy (never pair/single).
@@ -103,7 +123,11 @@ pub fn verify_non_degenerate_hierarchy() {
     kani::assume(occupants < 2);
 
     let res = evaluate_pauli_gate_peq(occupants, empty, false);
-    assert_eq!(res, GateResult::OkHierarchy, "Non-degenerate must return OkHierarchy");
+    assert_eq!(
+        res,
+        GateResult::OkHierarchy,
+        "Non-degenerate must return OkHierarchy"
+    );
 }
 
 /// Property 8: The pure multiplicity function is always positive and strictly
@@ -119,5 +143,8 @@ pub fn verify_multiplicity_positive_and_gt_unpaired() {
 
     let m = calculate_multiplicity_peq(n_unpaired);
     assert!(m >= 1, "Multiplicity is always positive");
-    assert!(m > n_unpaired, "Multiplicity is strictly greater than n_unpaired");
+    assert!(
+        m > n_unpaired,
+        "Multiplicity is strictly greater than n_unpaired"
+    );
 }

@@ -1,0 +1,1 @@
+{"auxiliary_hypergraph":{"hyperedges":[["'u'","'v'"],["'t'","'u'","'w'"],["'t'","'v'","'w'"],["'u'","'v'","'w'"]],"vertices":["'b'","'c'","'t'","'u'","'v'","'w'"]},"fractional_matching_lower_bound":{"denominator":2,"numerator":3,"rational":"3/2"},"integral_matching_number":1}

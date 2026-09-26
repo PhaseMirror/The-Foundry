@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-05-26T18:10:05Z",
+  "config": {
+    "name": "NetworkTest",
+    "dataset": "mnist",
+    "primes": [
+      2,
+      3,
+      5
+    ],
+    "hidden_dim": 64,
+    "lambda_zeta": 0.1,
+    "a": 2.0,
+    "safety_threshold": 5.0,
+    "use_lm": true,
+    "max_batches": 5
+  },
+  "final_loss": 4.9609375,
+  "telemetry_summary": [
+    {
+      "batch": 0,
+      "loss": 2.3214330673217773,
+      "pirtm_norm": 1.3556697368621826,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 1.3556697368621826,
+        "phoenix_triggered": false,
+        "steer_action": "exploit_more"
+      }
+    },
+    {
+      "batch": 1,
+      "loss": 5.212583065032959,
+      "pirtm_norm": 5.241380214691162,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 3.2985249757766724,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 2,
+      "loss": 6.9281721115112305,
+      "pirtm_norm": 4.574805736541748,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 3.7239518960316977,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 3,
+      "loss": 4.210338592529297,
+      "pirtm_norm": 4.675505638122559,
+      "ctrl_status": {
+        "correlation": null,
+        "avg_norm": 3.961840331554413,
+        "phoenix_triggered": false,
+        "steer_action": null
+      }
+    },
+    {
+      "batch": 4,
+      "loss": 4.9609375,
+      "pirtm_norm": 4.927495956420898,
+      "ctrl_status": {
+        "correlation": 0.7631912020875995,
+        "avg_norm": 4.15497145652771,
+        "phoenix_triggered": true,
+        "steer_action": "dampen_zeta"
+      }
+    }
+  ]
+}

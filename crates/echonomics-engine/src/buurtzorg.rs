@@ -143,14 +143,26 @@ mod tests {
 
     #[test]
     fn test_buurtzorg_team_capacity() {
-        let team = BuurtzorgTeamEngine { nurse_count: 8, max_capacity: 12 };
+        let team = BuurtzorgTeamEngine {
+            nurse_count: 8,
+            max_capacity: 12,
+        };
         assert!(team.is_team_size_valid());
 
-        let over = BuurtzorgTeamEngine { nurse_count: 13, max_capacity: 12 };
+        let over = BuurtzorgTeamEngine {
+            nurse_count: 13,
+            max_capacity: 12,
+        };
         assert!(!over.is_team_size_valid(), "13 nurses must split");
 
-        let bad_ceiling = BuurtzorgTeamEngine { nurse_count: 8, max_capacity: 20 };
-        assert!(!bad_ceiling.is_team_size_valid(), "ceiling may never exceed 12");
+        let bad_ceiling = BuurtzorgTeamEngine {
+            nurse_count: 8,
+            max_capacity: 20,
+        };
+        assert!(
+            !bad_ceiling.is_team_size_valid(),
+            "ceiling may never exceed 12"
+        );
     }
 
     #[test]
@@ -161,11 +173,20 @@ mod tests {
 
     #[test]
     fn test_care_team_node_mapping_and_envelope() {
-        let team = CareTeam { team_id: 1, nurse_count: 9 };
-        let node = GovernanceNode { node_id: 1, team_capacity: 12 };
+        let team = CareTeam {
+            team_id: 1,
+            nurse_count: 9,
+        };
+        let node = GovernanceNode {
+            node_id: 1,
+            team_capacity: 12,
+        };
         assert!(node.is_mapping_valid(&team));
 
-        let oversize = CareTeam { team_id: 2, nurse_count: 13 };
+        let oversize = CareTeam {
+            team_id: 2,
+            nurse_count: 13,
+        };
         assert!(!node.is_mapping_valid(&oversize));
 
         assert!(envelope_covers_90_days(9000, 100));
@@ -195,8 +216,14 @@ mod tests {
 
         assert!(good.is_non_coercive());
         assert!(good.is_escalation_allowed());
-        assert!(!no_coaching.is_escalation_allowed(), "no coaching, no escalation");
-        assert!(!coercive.is_escalation_allowed(), "coercive coaching never escalates");
+        assert!(
+            !no_coaching.is_escalation_allowed(),
+            "no coaching, no escalation"
+        );
+        assert!(
+            !coercive.is_escalation_allowed(),
+            "coercive coaching never escalates"
+        );
         assert!(good.is_self_governing());
     }
 }
@@ -211,9 +238,15 @@ mod kani_proofs {
         let nurse_count: u64 = kani::any();
         let max_capacity: u64 = kani::any();
 
-        let team = BuurtzorgTeamEngine { nurse_count, max_capacity };
+        let team = BuurtzorgTeamEngine {
+            nurse_count,
+            max_capacity,
+        };
         if max_capacity > MAX_TEAM_NURSES {
-            kani::assert(!team.is_team_size_valid(), "Buurtzorg teams must not exceed 12 nurses");
+            kani::assert(
+                !team.is_team_size_valid(),
+                "Buurtzorg teams must not exceed 12 nurses",
+            );
         }
     }
 
@@ -232,8 +265,14 @@ mod kani_proofs {
         let team_capacity: u64 = kani::any();
         kani::assume(team_capacity <= MAX_TEAM_NURSES);
 
-        let team = CareTeam { team_id: 0, nurse_count };
-        let node = GovernanceNode { team_capacity, node_id: 0 };
+        let team = CareTeam {
+            team_id: 0,
+            nurse_count,
+        };
+        let node = GovernanceNode {
+            team_capacity,
+            node_id: 0,
+        };
         if node.is_mapping_valid(&team) {
             kani::assert(nurse_count <= team_capacity, "valid mapping fits the team");
         }
@@ -247,7 +286,12 @@ mod kani_proofs {
         let coach_has_command: bool = kani::any();
         let coaching_attempted: bool = kani::any();
 
-        let session = CoachingSession { voluntary, advisory_only, coach_has_command, coaching_attempted };
+        let session = CoachingSession {
+            voluntary,
+            advisory_only,
+            coach_has_command,
+            coaching_attempted,
+        };
         if session.is_escalation_allowed() {
             kani::assert(coaching_attempted, "escalation requires prior coaching");
             kani::assert(!coach_has_command, "escalation never carries coach command");

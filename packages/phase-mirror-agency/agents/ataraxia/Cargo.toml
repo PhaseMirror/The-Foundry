@@ -1,0 +1,65 @@
+[workspace]
+members = [
+    "crates/alp",
+    "crates/commander-core",
+    "crates/common",
+    "crates/mirror-dissonance",
+    "crates/sigma",
+    "crates/digital-twin",
+    "crates/hcalc",
+]
+# This copy of the L0 kernel is a byte-identical fork of
+# packages/PhaseMirror/phase-mirror/src/l0_invariants.rs. It is excluded so it can
+# be checked on its own rather than pulled into the agent workspace, whose
+# [patch.crates-io] below pins cc to a git tag that cannot be fetched offline.
+exclude = [
+    "crates/phase-mirror",
+]
+[patch.crates-io]
+cc = { git = "https://github.com/rust-lang/cc-rs", tag = "cc-v1.2.10" }
+
+[workspace.package]
+version = "1.0.0-alpha"
+edition = "2021"
+rust-version = "1.81.0"
+authors = ["Multiplicity Team"]
+license = "MIT"
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+anyhow = "1.0"
+thiserror = "2.0"
+yaml-rust2 = "0.8"
+axum = "0.7"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+chrono = { version = "0.4", features = ["serde"] }
+schemars = { version = "0.8", features = ["chrono"] }
+serde_yaml = "0.9"
+sha2 = "0.10"
+hex = "0.4"
+ed25519-dalek = "2.1"
+rand = "0.8"
+uuid = { version = "1.0", features = ["v4", "serde"] }
+async-trait = "0.1"
+futures = "0.3"
+tokio-stream = { version = "0.1", features = ["sync"] }
+tempfile = "3.10"
+reqwest = { version = "0.12", features = ["json", "stream"] }
+axum-extra = { version = "0.9", features = ["typed-header"] }
+headers = "0.4"
+num-bigint = "0.4"
+num-integer = "0.1.46"
+num-traits = "0.2.19"
+uint = "0.10"
+sha3 = "0.10"
+bytemuck = { version = "1.21", features = ["derive"] }
+clap = { version = "4.5", features = ["derive"] }
+once_cell = "1"
+regex = "1"
+petgraph = "0.6"
+assert_cmd = "2"
+predicates = "3"
+rayon = "1.10"

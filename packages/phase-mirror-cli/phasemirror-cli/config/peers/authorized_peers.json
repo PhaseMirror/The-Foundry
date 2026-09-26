@@ -1,0 +1,14 @@
+{
+  "authorized_peers": [
+    {
+      "id": "fleet-us-east-1",
+      "url": "https://us-east.agi-os.net",
+      "trust_root": "ed25519:pubkey1..."
+    },
+    {
+      "id": "fleet-eu-west-1",
+      "url": "https://eu-west.agi-os.net",
+      "trust_root": "ed25519:pubkey2..."
+    }
+  ]
+}

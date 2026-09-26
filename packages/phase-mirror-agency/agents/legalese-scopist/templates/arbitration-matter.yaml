@@ -1,0 +1,26 @@
+id: "arbitration-matter-001"
+title: "Consumer Arbitration Election"
+locks:
+  - id: "lock-arb-authority"
+    description: "Statutory authority for arbitration must be preserved."
+    kind: "truth-lock"
+    fields:
+      - "statute_cite"
+      - "forum_name"
+variables:
+  - name: "statute_cite"
+    kind: "string"
+    source: "record"
+  - name: "forum_name"
+    kind: "string"
+    source: "user_input"
+  - name: "agreement_date"
+    kind: "string"
+    source: "record"
+body: |
+  Pursuant to {{statute_cite}} and the Cardmember Agreement dated {{agreement_date}},
+  Defendant hereby elects to resolve this dispute via binding individual arbitration
+  before {{forum_name}}.
+
+  Any proceeding in this Court should be STAYED pending the outcome of arbitration.
+  [CASE LAW HERE]

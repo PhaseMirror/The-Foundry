@@ -1,0 +1,21 @@
+{
+  "name": "@lambda-proof/z-bit",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Bitcoin Taproot anchor system for Lambda-Proof",
+  "scripts": {
+    "test": "node scripts/test-schemas.js",
+    "compute-control-block": "node scripts/compute-control-block.js",
+    "anchor-regtest": "bash scripts/anchor_regtest.sh"
+  },
+  "dependencies": {
+    "tapscript": "*"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

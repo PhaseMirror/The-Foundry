@@ -1,0 +1,21 @@
+{
+  "archetypeId": "LEG-PARTICIPANT-002-ONBOARD",
+  "name": "MHD Profile Auditor Onboarding Manifest",
+  "version": "1.0.0",
+  "contentHash": "4ed8e10e78e5b889f164daeeacbc6a975be73e888d949cc7f322d54d6ddca4b8",
+  "effectiveDate": "2026-06-17T17:30:00Z",
+  "signatories": [
+    {
+      "identity": "MHD_Profile_Auditor",
+      "role": "Participant",
+      "publicKey": "ZEd2NTUxOV9QYXJ0aWNpcGFudF9QdWJsaWNfS2V5X1ZhbHVlPT0=",
+      "signature": "ZEd2NTUxOV9QYXJ0aWNpcGFudF9TaWduYXR1cmVfVmFsdWVfV2l0aF9FZEQ1NTE5X0tleV9QcmVzZW50X0hlcmU="
+    }
+  ],
+  "auditMetadata": {
+    "complianceFramework": "MTPI-Constitutional",
+    "auditStatus": "Pending",
+    "reviewer": "Audit_Officer_01",
+    "notes": "Pending formal signature linkage under Sedona Spine framework MTPI-Constitutional."
+  }
+}

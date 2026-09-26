@@ -1,0 +1,32 @@
+[package]
+name = "multiplicity-commander-core"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+multiplicity-common = { path = "../commons" }
+multiplicity-alp = { path = "../alp" }
+multiplicity-sigma = { path = "../sigma" }
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+schemars.workspace = true
+yaml-rust2.workspace = true
+chrono.workspace = true
+serde_yaml.workspace = true
+sha2.workspace = true
+hex.workspace = true
+ed25519-dalek.workspace = true
+rand.workspace = true
+uuid.workspace = true
+reqwest = { workspace = true }
+clap = { version = "4.0", features = ["derive"] }
+
+[dev-dependencies]
+tempfile.workspace = true
+mirror-dissonance = { path = "../pro/mirror-dissonance" }
