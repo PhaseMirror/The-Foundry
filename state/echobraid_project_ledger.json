@@ -1,0 +1,51 @@
+{
+  "project_name": "echobraid-neural-harness",
+  "adr_id": "ADR-0169",
+  "title": "Neural Harness Stratum: EchoBraid Read-Only Adapter for Recursive Cognitive States",
+  "status": "Proposed",
+  "imported_by_foundations": false,
+  "rows": [
+    {
+      "adr": "ADR/ADR_0169_Echobraid_Neural_Harness.lean",
+      "kind": "LeanDeclaration",
+      "description": "Formal ADR definition and CSL non-expansion proof"
+    },
+    {
+      "adr": "crates/echonomics-engine/src/neuroplasticity.rs",
+      "kind": "SourceFile",
+      "description": "Read-only EchoBraid adapter implementation"
+    },
+    {
+      "adr": "crates/echonomics-engine/tests/neuroplasticity_test.rs",
+      "kind": "SourceFile",
+      "description": "Adversarial plasticity, resonance boundary, CSL veto fixtures"
+    },
+    {
+      "adr": "Governance/ADR/accepted/ADR-0037-Prime-Indexed-Phase-Dissonance.md",
+      "kind": "SpecificationDoc",
+      "description": "Parent ADR-037 being extended"
+    },
+    {
+      "adr": "Governance/ADR/accepted/ADR-0039-Echo-Braid-Floer-Operator-Substrate.md",
+      "kind": "SpecificationDoc",
+      "description": "Secondary reference: Echo-Braid Floer operator"
+    },
+    {
+      "adr": "Governance/ADR/accepted/ADR-0042-Prime-Constitutional-Order-CSL.md",
+      "kind": "SpecificationDoc",
+      "description": "Secondary reference: Two-Layer Contraction Dynamics"
+    }
+  ],
+  "echobraid": {
+    "lean_path": "ADR/ADR_0169_Echobraid_Neural_Harness.lean",
+    "rust_path": "crates/echonomics-engine/src/neuroplasticity.rs",
+    "test_path": "crates/echonomics-engine/tests/neuroplasticity_test.rs"
+  },
+  "claim_table_entry": "Echobraid Model Implementation & Neural Harness Adapter",
+  "claim_table_status": "Partial (adapter wiring and ADR drafting in progress; pending Lean verification + Rust tests + CI gates)",
+  "verification_gates": {
+    "lean_build": false,
+    "rust_tests": false,
+    "ci_pipeline": false
+  }
+}

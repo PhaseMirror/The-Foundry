@@ -14,6 +14,7 @@ on:
       - "lean/**"
       - "lakefile.lean"
       - "lean-toolchain"
+      - "scripts/alp_manifest_gate.sh"
       - "scripts/check_adr_sorry.py"
       - "state/alp_sorry_manifest.json"
       - ".github/workflows/lean-gate.yml"
@@ -26,6 +27,7 @@ on:
       - "lean/**"
       - "lakefile.lean"
       - "lean-toolchain"
+      - "scripts/alp_manifest_gate.sh"
       - "scripts/check_adr_sorry.py"
       - "state/alp_sorry_manifest.json"
       - ".github/workflows/lean-gate.yml"
@@ -68,6 +70,9 @@ jobs:
 
       - name: ADR-0010 sorry manifest check
         run: python3 scripts/check_adr_sorry.py
+
+      - name: ALP Manifest & Invariant Gate (ADR-042)
+        run: bash scripts/alp_manifest_gate.sh
 
       - name: Upload build log on failure
         if: failure()

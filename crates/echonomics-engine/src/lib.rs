@@ -11,6 +11,7 @@ pub mod hundian;
 pub mod hundian_codebook;
 pub mod kani_proofs;
 pub mod lambda_proof;
+pub mod neuroplasticity;
 pub mod riemann_duality;
 pub mod social_physics;
 pub mod spiralcore_engine;
@@ -19,6 +20,8 @@ pub mod uor_geometry;
 pub mod v4p_wada;
 pub mod ward_monitor;
 pub mod xi_constitution;
+
+pub use neuroplasticity::{CognitiveState, CscVerdict, EchoBraidAdapter, PrimeTrace, Read};
 
 pub use amy_mccae::{EmbodiedState, BURNOUT_THRESHOLD, STRESS_INDEX_MAX};
 pub use bushido_mcp::{CCommitment, CError, Witness, WitnessStore};
