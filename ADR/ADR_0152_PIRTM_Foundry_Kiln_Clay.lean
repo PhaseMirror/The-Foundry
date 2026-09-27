@@ -10,7 +10,7 @@ computational L0, not civic bylaws; SIG_GOV_KILL stays with WardMonitor. -/
 open ADR
 
 /-- Helper to create an `ArtifactLink`. -/
-def mkLink (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
+def link_0152 (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
 
 /-- ADR-0152 definition: PIRTM research engine vs Foundry clay. -/
 @[adr]
@@ -26,9 +26,9 @@ def ADR_0152 : ADR :=
                     , "Float in SedonaRiskModel named as continuing defect"
                     , "No Hall of Record until SS-001 split-ESI is built" ]
     supersedes := none
-    links := [ mkLink "Source Document" "papers/PIRTM_and_Foundry_Kiln_and_Clay_v1.0.docx"
-             , mkLink "ADR-0151 OSCAL Mapping" "Governance/ADR/accepted/ADR-0151-OSCAL_PrismPM_Mapping_and_Trac.md"
-             , mkLink "ADR-0153 Five-Step Loop" "Governance/ADR/accepted/ADR-0153-Phase_Mirror_Five_Step_Loop_an.md" ] }
+    links := [ link_0152 "Source Document" "papers/PIRTM_and_Foundry_Kiln_and_Clay_v1.0.docx"
+             , link_0152 "ADR-0151 OSCAL Mapping" "Governance/ADR/accepted/ADR-0151-OSCAL_PrismPM_Mapping_and_Trac.md"
+             , link_0152 "ADR-0153 Five-Step Loop" "Governance/ADR/accepted/ADR-0153-Phase_Mirror_Five_Step_Loop_an.md" ] }
 
 /-- ADR-0152 is Accepted. -/
 @[proof]

@@ -10,7 +10,7 @@ FIPS catalogs are additive imports; prismpm export never emits Certified. -/
 open ADR
 
 /-- Helper to create an `ArtifactLink`. -/
-def mkLink (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
+def link_0155 (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
 
 /-- ADR-0155 definition: PrismPM OSCAL workflow for cryptographic software modules. -/
 @[adr]
@@ -26,9 +26,9 @@ def ADR_0155 : ADR :=
                     , "Economic honesty: Certified does not print from any prismpm verb"
                     , "Node cap integrity: NODE_CAP=12, no raise to 27" ]
     supersedes := none
-    links := [ mkLink "Source Document" "papers/PrismPM_OSCAL_Workflow_Cryptographic_Module_v1.0.docx"
-             , mkLink "Field Binding Doc" "PRISMPM-WF-001"
-             , mkLink "ADR-0151 Mapping" "Governance/ADR/accepted/ADR-0151-OSCAL_PrismPM_Mapping_and_Trac.md" ] }
+    links := [ link_0155 "Source Document" "papers/PrismPM_OSCAL_Workflow_Cryptographic_Module_v1.0.docx"
+             , link_0155 "Field Binding Doc" "PRISMPM-WF-001"
+             , link_0155 "ADR-0151 Mapping" "Governance/ADR/accepted/ADR-0151-OSCAL_PrismPM_Mapping_and_Trac.md" ] }
 
 /-- ADR-0155 is Accepted. -/
 @[proof]

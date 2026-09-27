@@ -1,0 +1,1451 @@
+[
+  {
+    "adr": "001-Project-Structure.md",
+    "status": "missing",
+    "missing_refs": [
+      "PIRTM.Theorems",
+      "Prime/substrates/multiplicity/lean/SpectralStability.lean",
+      "hologram-core/src/spectral.rs",
+      "Prime/substrates/multiplicity/lean/SpectralStability.lean"
+    ]
+  },
+  {
+    "adr": "001-production-deployment.md",
+    "status": "missing",
+    "missing_refs": [
+      "src/config/mod.rs",
+      "models/legalese\u2011scopist/CONTRACT.md",
+      ".github/workflows/ci.yml",
+      "src/config/mod.rs",
+      "template.yaml",
+      "../docs/adr/001-production-deployment.md"
+    ]
+  },
+  {
+    "adr": "002-No-Mathlib-Policy.md",
+    "status": "missing",
+    "missing_refs": [
+      "Init.Data.Nat.Basic",
+      "Init.Data.List.Basic",
+      "Init.Data.Prod",
+      "Init.Logic"
+    ]
+  },
+  {
+    "adr": "ADR-001-Lean4-Proofing-for-ROC-Multiplicity.md",
+    "status": "missing",
+    "missing_refs": [
+      "lam_cauchy_demo.ipynb"
+    ]
+  },
+  {
+    "adr": "ADR-001.md",
+    "status": "missing",
+    "missing_refs": [
+      "PhaseMirror.Care.Scale"
+    ]
+  },
+  {
+    "adr": "ADR-0013.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/papers/UOR Civic Infrastructure_.docx"
+    ]
+  },
+  {
+    "adr": "ADR-0014.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/papers/UCC_Year_One_Roadmap.docx",
+      "docs/adr/accepted/0013-UOR Civic Infrastructure.md"
+    ]
+  },
+  {
+    "adr": "ADR-0015.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/papers/Unified_Civic_Infrastructure_Outline.docx",
+      "docs/adr/completed/0013-UOR Civic Infrastructure.md",
+      "docs/adr/completed/0014-UCC as a Service Year One Roadmap.md"
+    ]
+  },
+  {
+    "adr": "ADR-0016.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/papers/UOR Civic Infrastructure_.docx",
+      "docs/adr/completed/0013-UOR Civic Infrastructure.md",
+      "docs/adr/completed/0015-Unified Civic Infrastructure Outline.md"
+    ]
+  },
+  {
+    "adr": "ADR-0017.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/papers/UOR_Final_90_Day_Operating_Plan_and_Talent_Model.docx",
+      "docs/adr/accepted/0018-Executive Decision Brief.md"
+    ]
+  },
+  {
+    "adr": "ADR-0018.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/papers/UOR_Final_Executive_Decision_Brief.docx",
+      "docs/adr/accepted/0017-90-Day Operating Plan and Talent Model.md"
+    ]
+  },
+  {
+    "adr": "ADR-0019.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/papers/UOR_Final_Technology_Portfolio_Evidence_Risk_and_Feasibility_Appendix.docx",
+      "docs/adr/accepted/0018-Executive Decision Brief.md"
+    ]
+  },
+  {
+    "adr": "ADR-002-Cross-Fiber-Multiplicity.md",
+    "status": "missing",
+    "missing_refs": [
+      "RocEngine/CrossFiber.lean"
+    ]
+  },
+  {
+    "adr": "ADR-002-Kani-Migration.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-002-sovereign-local-first-trajectory.md",
+    "status": "missing",
+    "missing_refs": [
+      "chrome.storage.local",
+      "browser.storage.local",
+      "phase-mirror/src/l0_invariants.rs",
+      "lambda_p * L_p < 1.0",
+      ".github/workflows/esp32.yml",
+      "archivum.jsonl",
+      "chrome.storage.local",
+      "docs/\u039e-Constitution.md",
+      "GEMINI.md",
+      "archives/adr/completed/ADR-001-Combined-Mandate.md",
+      "archives/adr/completed/ADR-011-Sovereign-Boundary-Enforcement.md",
+      "Prime/lean/Core/f1_square/docs/adr/ADR-106-Sovereign-Stack.md",
+      "docs/adr/ADR-0xx-lean-formalization-mandate.md",
+      "docs/adr/ADR-0xx-candle-integration.md",
+      "phase_mirror_wasm/src/lib.rs",
+      "Prime/crates/archivum/spec/PRIME-ABI-v0.md"
+    ]
+  },
+  {
+    "adr": "ADR-002.md",
+    "status": "missing",
+    "missing_refs": [
+      "models/legalese-scopist/CONTRACT.md"
+    ]
+  },
+  {
+    "adr": "ADR-0020.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/papers/UOR Foundation HQ & Sovereign Node Deployment_.docx",
+      "docs/adr/accepted/0015-Unified Civic Infrastructure Outline.md"
+    ]
+  },
+  {
+    "adr": "ADR-0022.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/proposed/Paper1 Symmetry Matched Polarization Analysis in MnF2- Separating Spectral Resolutionfrom Chiral Sensitivity in Altermagnetic Neutron Scattering - JHaines 2026.pdf",
+      "docs/specs/observ_calculus_v1.md"
+    ]
+  },
+  {
+    "adr": "ADR-0023.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/proposed/Paper2 The \u03b4J7 Principle- Symmetry Complement Source Sectors in Altermagnetic MnF2 - JHaines 2026.pdf",
+      "docs/specs/observ_calculus_v1.md"
+    ]
+  },
+  {
+    "adr": "ADR-0024.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/proposed/Paper3 Reversal-Space Tomography of Weak Altermagnetic Exchange in MnF2- Path Validated Signed Readout Engineering - JHaines 2026.pdf",
+      "docs/specs/observ_calculus_v1.md"
+    ]
+  },
+  {
+    "adr": "ADR-0025.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/proposed/Paper4 Static Multipolar Order and Dynamical Chiral Response in MnF2- Probe Tensor Correspondence and Conditional Rank Identifiability - JHaines 2026.pdf",
+      "docs/specs/observ_calculus_v1.md"
+    ]
+  },
+  {
+    "adr": "ADR-0026.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/proposed/Paper5 Symmetry Complement Coordinates Across Altermagnets- Predeclared References and Cross Material Falsification - JHaines 2026.pdf",
+      "docs/specs/observ_calculus_v1.md"
+    ]
+  },
+  {
+    "adr": "ADR-0027.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/proposed/Paper6 When Null Does Not Mean Absent- Measurement Map Geometry, Factorization Boundaries, and Null Witness Duality - JHaines 2026.pdf",
+      "docs/specs/observ_calculus_v1.md"
+    ]
+  },
+  {
+    "adr": "ADR-0028.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/proposed/Paper7 From Hidden Order to Identifiable Physics- A Target First Observability Calculus with Admissible Ambiguity and Dual Obstructions - JHaines 2026.pdf",
+      "docs/specs/observ_calculus_v1.md"
+    ]
+  },
+  {
+    "adr": "ADR-003-sovereign-stack-implementation.md",
+    "status": "missing",
+    "missing_refs": [
+      "l0_invariants.rs",
+      "legislative.rs",
+      "validator.rs",
+      "spec/PRIME-ABI-v0.md",
+      "chrome.storage.local",
+      "navigator.onLine",
+      "archivum.jsonl",
+      "archivum.jsonl",
+      "chrome.storage.local",
+      "l0_edge.rs",
+      "triple_lock_edge.rs",
+      "archivum_nvs.rs",
+      "uart_emitter.rs",
+      "phase-mirror/src/l0_invariants.rs",
+      "esp32-lean-check.yml",
+      "l0_edge.rs",
+      "chrome.storage.local",
+      "archivum.jsonl",
+      "phase-mirror-panel.html",
+      "src/extension.ts",
+      "main.rs",
+      "archivum.jsonl",
+      "phase-mirror/src/l0_invariants.rs",
+      "l0_invariants.rs",
+      "chrome.storage.local",
+      "l0_edge.rs",
+      "phase-mirror/src/l0_invariants.rs",
+      "phase-mirror/src/legislative.rs",
+      "phase-mirror-client/src/lib.rs",
+      "phase_mirror_wasm/src/lib.rs",
+      "phase-mirror-mcp/src/tools/mod.rs",
+      "verification-harness/src/lib.rs",
+      "Prime/crates/archivum/spec/PRIME-ABI-v0.md",
+      "ADR-002-sovereign-local-first-trajectory.md",
+      "archives/adr/completed/ADR-001-Combined-Mandate.md",
+      "Prime/lean/Core/f1_square/docs/adr/ADR-106-Sovereign-Stack.md",
+      "ADR-002-sovereign-local-first-trajectory.md",
+      "archives/adr/completed/ADR-001-Combined-Mandate.md",
+      "Prime/lean/Core/f1_square/docs/adr/ADR-106-Sovereign-Stack.md"
+    ]
+  },
+  {
+    "adr": "ADR-003.md",
+    "status": "ready",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-004.md",
+    "status": "missing",
+    "missing_refs": [
+      "specs/p2c_petc_v12.md",
+      "packages/rust/pirtm-compiler/src/sharding.rs"
+    ]
+  },
+  {
+    "adr": "ADR-005.md",
+    "status": "missing",
+    "missing_refs": [
+      "specs/p2c_petc_v12.md"
+    ]
+  },
+  {
+    "adr": "ADR-006.md",
+    "status": "missing",
+    "missing_refs": [
+      "specs/p2c_petc_v12.md"
+    ]
+  },
+  {
+    "adr": "ADR-007.md",
+    "status": "missing",
+    "missing_refs": [
+      "specs/p2c_petc_v12.md",
+      "lean/Multiplicity/PETC.lean"
+    ]
+  },
+  {
+    "adr": "ADR-008.md",
+    "status": "missing",
+    "missing_refs": [
+      "PhaseMirror.PrimeSignature",
+      "packages/rust/multiplicity/multiplicity-core/src/signature.rs"
+    ]
+  },
+  {
+    "adr": "ADR-009.md",
+    "status": "missing",
+    "missing_refs": [
+      "PhaseMirror.SpectralGovernor"
+    ]
+  },
+  {
+    "adr": "ADR-010.md",
+    "status": "missing",
+    "missing_refs": [
+      ".github/workflows/adr-verify.yml",
+      "docs/CURRENT_TRUTH.md"
+    ]
+  },
+  {
+    "adr": "ADR-0113.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/specs/ucc_sextuple_v1.md",
+      "docs/specs/ucc_sextuple_v1.md"
+    ]
+  },
+  {
+    "adr": "ADR-0119.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/accepted/ADR-0114 R4 RnD Foundry.txt",
+      "docs/geometric_intelligence_programme.md",
+      "r4-app.sh",
+      "r4_worker.js"
+    ]
+  },
+  {
+    "adr": "ADR-0120-Sovereign-Transaction-Protocol.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0120.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/accepted/ADR-0120-Sovereign-Transaction-Protocol.md",
+      "docs/adr/accepted/ADR-0121-Experiment-ZERO-Final-Report.md",
+      "docs/adr/accepted/ADR-0122-Experiment-ZERO-Red-Team-Closure.md"
+    ]
+  },
+  {
+    "adr": "ADR-0121-Experiment-ZERO-Final-Report.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0121-Physics-Calculator-Scope.md",
+    "status": "missing",
+    "missing_refs": [
+      "schemas/calculator-baseline.schema.json",
+      "prism-calculator = 0.1.0",
+      "Calculator.holo",
+      "Calculator.holo"
+    ]
+  },
+  {
+    "adr": "ADR-0122-Experiment-ZERO-Red-Team-Closure.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0122-Physics-Integration-Boundary.md",
+    "status": "missing",
+    "missing_refs": [
+      "Calculator.holo"
+    ]
+  },
+  {
+    "adr": "ADR-0123-UAC-Deployment-Readiness-Criteria.md",
+    "status": "missing",
+    "missing_refs": [
+      "uac_boundary_test_results.txt"
+    ]
+  },
+  {
+    "adr": "ADR-0124-UAC-Hardware-Selection.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0125-UAC-HSEC-Implementation.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0126-UAC-QCFI-Orchestration.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0127-UAC-MA-VQE-Compiler.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0131-Engine_Registry_Reads_Are_Fail_Closed_No_In_Process_Second_Source.md",
+    "status": "missing",
+    "missing_refs": [
+      "FoundryMachineryStatus.source"
+    ]
+  },
+  {
+    "adr": "ADR-0131.md",
+    "status": "missing",
+    "missing_refs": [
+      "FoundryMachineryStatus.source"
+    ]
+  },
+  {
+    "adr": "ADR-0133-Terminal_Execution_Is_Allowlisted_and_Reports_a_Real_Exit_Code.md",
+    "status": "missing",
+    "missing_refs": [
+      "error.message",
+      "data.output",
+      "data.success"
+    ]
+  },
+  {
+    "adr": "ADR-0133.md",
+    "status": "missing",
+    "missing_refs": [
+      "error.message",
+      "data.output",
+      "data.success"
+    ]
+  },
+  {
+    "adr": "ADR-0134-The_ADR_Routes_Are_the_Only_Write_Path_Validated_Against_the_Persisted_Registry.md",
+    "status": "missing",
+    "missing_refs": [
+      "valid = checks.uniqueIds && checks.acyclic && checks.noConflicts"
+    ]
+  },
+  {
+    "adr": "ADR-0134.md",
+    "status": "missing",
+    "missing_refs": [
+      "valid = checks.uniqueIds && checks.acyclic && checks.noConflicts"
+    ]
+  },
+  {
+    "adr": "ADR-0137-Codify_the_Global_Multiplicity.md",
+    "status": "missing",
+    "missing_refs": [
+      "Codify_the_Global_Multiplicity_Specification_v1.0.docx",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/adr/ADR-0122-Global-Multiplicity-Specification.md",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/artifacts/ADR-0122-Global-Multiplicity-Specification.md"
+    ]
+  },
+  {
+    "adr": "ADR-0138-Deployment_Roadmap_Epochs_and_.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0139-Feedback_Is_Not_a_Rekey_Oracle.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0140-Formal_Board_Resolution_100000.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0141-Foundational_Machinery_Identit.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0142-Foundry_Founder_Empowerment_Be.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0143-Foundry_Web_Portal_Founder_Cre.md",
+    "status": "missing",
+    "missing_refs": [
+      "DISSONANCE-REGISTER.json",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/ADR-017-Founder-Creation-Attestation-View.md",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/artifacts/ADR-017-Founder-Creation-Attestation-View.md"
+    ]
+  },
+  {
+    "adr": "ADR-0144-Foundry_Web_Portal_Immutable_R.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0145-Foundry_Web_Portal_User_Docume.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0146-Human_Topology_Zero_Boss_Opera.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0147-Mitosis_Mandate_Node_Split_and.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0148-Multiplicity_Crypto_Pipeline_L.md",
+    "status": "missing",
+    "missing_refs": [
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/ADR-PM-MC-002-Labels-vs-Mechanism.md"
+    ]
+  },
+  {
+    "adr": "ADR-0149-Multiplicity_Native_Hardware_A.md",
+    "status": "missing",
+    "missing_refs": [
+      "pirtm_core/hw_dispatch.py",
+      "Multiplicity_Native_Hardware_Acceleration.pdf"
+    ]
+  },
+  {
+    "adr": "ADR-0150-Multiplicity_Social_Physics_Re.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0151-OSCAL_PrismPM_Mapping_and_Trac.md",
+    "status": "missing",
+    "missing_refs": [
+      "app.uor.foundation",
+      "OSCAL_PrismPM_Mapping_and_Traceability_v1.0.docx",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/adr/ADR-0123-OSCAL-PrismPM-Mapping.md",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/artifacts/adr/ADR-0123-OSCAL-PrismPM-Mapping.md"
+    ]
+  },
+  {
+    "adr": "ADR-0152-PIRTM_and_Foundry_Kiln_and_Cla.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0153-Phase_Mirror_Five_Step_Loop_an.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0154-Phase_Mirror_Honesty_Engine_an.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0155-PrismPM_OSCAL_Workflow_Cryptog.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0156-PrismPM_PIRTM_Adjacent_Compile.md",
+    "status": "missing",
+    "missing_refs": [
+      "python3 scripts/verify_governance_gates.py",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/adr/ADR-PP-PIRTM-001.md",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/artifacts/adr/ADR-PP-PIRTM-001.md"
+    ]
+  },
+  {
+    "adr": "ADR-0157-Ratify_Board_Resolution_and_Ca.md",
+    "status": "missing",
+    "missing_refs": [
+      "Ratify_Board_Resolution_and_Capital_Authorization_v1.0.docx",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/adr/ADR-0121-Resolution-and-Capital-Authorization.md"
+    ]
+  },
+  {
+    "adr": "ADR-0158-Sedona_Spine_Records_Kiln_Priv.md",
+    "status": "missing",
+    "missing_refs": [
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/adr/ADR-0124-Sedona-Spine.md",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/artifacts/adr/ADR-0124-Sedona-Spine.md"
+    ]
+  },
+  {
+    "adr": "ADR-0159-Two_Persons_Not_Present_Tense_.md",
+    "status": "missing",
+    "missing_refs": [
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/ADR-016-Two-Persons-Not-Present-Tense-501c3.md",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/artifacts/ADR-016-Two-Persons-Not-Present-Tense-501c3.md"
+    ]
+  },
+  {
+    "adr": "ADR-0160-UCC_and_Foundry_Kernel_on_the_.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0161-UOR_Final_90_Day_Operating_Pla.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0162-UOR_Final_Executive_Decision_B.md",
+    "status": "missing",
+    "missing_refs": [
+      "ADR-0029.md",
+      "UOR_Final_Executive_Decision_Brief.docx",
+      "file:///media/citizen/b361d448-7c51-413a-aa23-9515cb626930/home/citizen/Multiplicity/packages/uor-foundry-main/docs/adr/ADR-0029.md"
+    ]
+  },
+  {
+    "adr": "ADR-0163-UOR_Final_Technology_Portfolio.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0164-UOR_Foundry_and_Citizen_Garden.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0165-Unified_Civic_Infrastructure_O.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0166-Verified_Action_Lifecycle_RI1_.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0167-schema.org_Import_Discipline_U.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-0168-PM_FORGE_001_Twelve_Card_Workbench.md",
+    "status": "missing",
+    "missing_refs": [
+      "ForgeCard.lean",
+      "forge_card.py",
+      "forge_card.py",
+      "ForgeCard.lean",
+      "artifacts/ForgeCard.lean",
+      "artifacts/forge_card.py"
+    ]
+  },
+  {
+    "adr": "ADR-0xx-candle-integration.md",
+    "status": "missing",
+    "missing_refs": [
+      "lambda_p * L_p >= 1.0",
+      "Porting TinyLlama.md",
+      "docs/adr/Porting TinyLlama.md",
+      "pirtm-candle/src/{lib,contractivity,witness,model}.rs",
+      "Substrates/lean/PIRTM/Core.lean",
+      "phase-mirror-mcp/src/lib.rs"
+    ]
+  },
+  {
+    "adr": "ADR-0xx-lean-formalization-mandate.md",
+    "status": "missing",
+    "missing_refs": [
+      "Substrates/lean/PIRTM/Core.lean",
+      "sedona_spine_ci.yml",
+      "mirror.rs",
+      "validator.rs",
+      "triple_lock.rs",
+      "archivum.rs",
+      "contractivity.rs",
+      "witness.rs",
+      "contractivity.rs",
+      "witness.rs",
+      "contractivity_receipt.json",
+      "Porting TinyLlama.md",
+      "Substrates/lean/PIRTM/Core.lean",
+      "Substrates/lean/lakefile.lean",
+      "Substrates/lean/lake-manifest.json",
+      "pirtm-candle/src/contractivity.rs",
+      "docs/adr/Porting TinyLlama.md"
+    ]
+  },
+  {
+    "adr": "ADR-0xx-pirtm-candle-full-wiring.md",
+    "status": "missing",
+    "missing_refs": [
+      "lib.rs",
+      "contractivity.rs",
+      "witness.rs",
+      "model.rs",
+      "ContractivityReceipt.json",
+      "Prime/crates/core/src/{spectral,recurrence,lambda_bridge,gate,types}.rs",
+      "model.rs",
+      "lib.rs",
+      "lambda_p * L_p < 1.0",
+      "Prime/pirtm-candle/src/math/mod.rs",
+      "Prime/crates/core/src/spectral.rs",
+      "recurrence.rs",
+      "lambda_bridge.rs",
+      "gate.rs",
+      "types.rs",
+      "Prime/pirtm-candle/Cargo.toml",
+      "Prime/pirtm-candle/Cargo.toml",
+      "model.rs",
+      "lib.rs",
+      "tests/governed_generation.rs",
+      "lambda_m = 0.95",
+      "receipt.lambda_trace.lambda_p * receipt.lambda_trace.l_p < 1.0",
+      "ContractivityReceipt.json",
+      "tools/llm_generate.rs",
+      "phase-mirror-mcp/src/tools/llm_generate.rs",
+      "ci-governance.yml",
+      "Prime/pirtm-candle/src/{lib,contractivity,witness,model}.rs",
+      "Prime/crates/core/src/{spectral,recurrence,lambda_bridge,gate,types}.rs",
+      "ContractivityReceipt.json",
+      "docs/adr/ADR-0xx-candle-integration.md",
+      "Substrates/lean/PIRTM/Core.lean"
+    ]
+  },
+  {
+    "adr": "ADR-118-Conscious-Sovereignty-Layer-Zenolock-PIRTM.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-119-ROC-style Research Program.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-121-Spectroscopy to J-Multiplicity.md",
+    "status": "missing",
+    "missing_refs": [
+      "lakefile.toml",
+      "ADR/Core/QuantumNumbers.lean",
+      "ADR/Core/Multiplicity.lean",
+      "ADR/Specifications/TermSymbols.lean",
+      "ADR/Specifications/JMultiplicity.lean",
+      "ADR/Specifications/StructuralInvariants.lean",
+      "ADR/Theorems/MultiplicityRefinement.lean",
+      "ADR/Theorems/HundStability.lean",
+      "ADR/Theorems/JMultiplicityCompleteness.lean",
+      "ADR/Meta/ADR.lean",
+      "Test/Harness.lean",
+      ".github/workflows/build.yml",
+      ".github/workflows/verify.yml",
+      "ADR/Specifications/*.lean",
+      "ADR/Theorems/*.lean",
+      "lakefile.toml",
+      ".github/workflows/build.yml",
+      "ADR/Meta/Axioms.lean",
+      "Test/Harness.lean",
+      "ADR/Meta/ADR.lean"
+    ]
+  },
+  {
+    "adr": "ADR-124 Ensemble Manifest Format + Import Grammar.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-125 Updated PIRTM Compute Language Roadmap.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-126 SpectralGovernor Integration.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-127 MLIR Dialect Integration.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-128 Complete Minimal `pirtm.td` + CMake Setup.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-129 pirtm-translate Tool Skeleton.md",
+    "status": "missing",
+    "missing_refs": [
+      "mlir::PassManager \\&pm"
+    ]
+  },
+  {
+    "adr": "ADR-130 pirtm-translate.cpp - Implementation.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-132 Direct WASM dialect lowering.md",
+    "status": "missing",
+    "missing_refs": [
+      "Type type",
+      "FunctionType funcType",
+      "Type t",
+      "Type t"
+    ]
+  },
+  {
+    "adr": "ADR-133 SPIR-V Backend Integration.md",
+    "status": "missing",
+    "missing_refs": [
+      "Type type",
+      "FunctionType funcType"
+    ]
+  },
+  {
+    "adr": "ADR-134 WASM Target Translation Support.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-135 Multiplicity Theory components.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-136 PWEH + PIRTM.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-137 PWEH-001.md",
+    "status": "missing",
+    "missing_refs": [
+      "substrates/lean/MOC/PWEH.lean",
+      "substrates/tests/python/test_pweh_integration.py",
+      "substrates/lean/MOC/PIRTM.lean"
+    ]
+  },
+  {
+    "adr": "ADR-230 Riemann Zeta Lean.md",
+    "status": "missing",
+    "missing_refs": [
+      "F1.ConstructiveAnalysis",
+      "F1.ConstructiveAnalysis",
+      "Axioms.lean",
+      "ConstructiveAnalysis.Real",
+      "ConstructiveAnalysis.Finset",
+      "FiniteCore.ArakelovHodge",
+      "F1.ConstructiveAnalysis.Real.Exp",
+      "Prime/SchurFinite.lean",
+      "0.96",
+      "data/schur_bound.json",
+      "Prime/SchurTail.lean",
+      "F1.ConstructiveAnalysis.Integrals",
+      "F1.FiniteCore",
+      "Prime/TraceAxiom.lean",
+      "F1.ConstructiveAnalysis.Zeta",
+      "Prime/Axioms.lean",
+      "rust/kani_harnesses/tests/kani_schur.rs",
+      "data/schur_bound.json",
+      "scripts/generate_schur_bounds.py",
+      "SchurFinite.lean",
+      "Channel.lean",
+      "TransferMatrix.lean"
+    ]
+  },
+  {
+    "adr": "ADR-231.md",
+    "status": "missing",
+    "missing_refs": [
+      "Axioms.lean",
+      "alp_sorry_manifest.json",
+      "validate_zero_drift.sh"
+    ]
+  },
+  {
+    "adr": "ADR-232-Recursive-Phase-Mirror-Loop-on-Prime.md",
+    "status": "missing",
+    "missing_refs": [
+      "data/*.json",
+      "ADR-Plan-Recursive-Phase-Mirror-Loop.md",
+      "Governance/adr/accepted/ADR-232-Recursive-Phase-Mirror-Loop-on-Prime.md",
+      "Governance/adr/proposed/ADR-Plan-Recursive-Phase-Mirror-Loop.md",
+      "Governance/adr/proposed/ADR-Plan-Recursive-Phase-Mirror-Loop.backlog.md",
+      "Governance/adr/proposed/ADR-RML-###.md",
+      ".github/workflows/recursive-phase-mirror.yml",
+      "phase_mirror_loop.py",
+      "phase_mirror_loop.py",
+      "ADR-Plan-Recursive-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-AGIOS-001-root-organization.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-ALP-003-lean4-formalization-plan.md",
+    "status": "missing",
+    "missing_refs": [
+      "models/the-commander/crates/common/src/constitution.rs",
+      "AffineCore/PolicyProjector.lean",
+      "AffineCore/UniformContraction.lean",
+      "Foundations/Primes.lean",
+      "L0Invariants/Nonce.lean",
+      "Dissonance/Detection.lean",
+      "FockContraction.lean",
+      "Semantics.lean",
+      "Lawfulness.lean",
+      "Candle/PirtmBridge.lean",
+      "TrustLevel.Internal",
+      "TrustLevel.External",
+      "tests/governance.rs",
+      "Constitution/L0_Invariants.lean",
+      "pirtm-candle/src/math/spectral.rs",
+      "PolicyEngine/Core.lean",
+      "Contracts/NonBypassability.lean",
+      "Candle/PirtmBridge.lean",
+      "Prime/substrates/lean/ALP/Lakefile.lean",
+      "Prime/substrates/lean/ALP/Basic.lean",
+      "Prime/substrates/lean/ALP/Constitution/Model.lean",
+      "Prime/substrates/lean/ALP/Constitution/L0_Invariants.lean",
+      "Prime/substrates/lean/ALP/Constitution/L0_Invariants.lean",
+      "Prime/substrates/lean/ALP/Types/Action.lean",
+      "Prime/substrates/lean/ALP/Types/TrustLevel.lean",
+      "Prime/substrates/lean/ALP/Types/AdmissibilityReport.lean",
+      "Prime/substrates/lean/ALP/Tests/L0_Specs.lean",
+      "Prime/substrates/lean/ALP/PolicyEngine/Core.lean",
+      "Prime/substrates/lean/ALP/PolicyEngine/Admissibility.lean",
+      "PolicyEngine/Admissibility.lean",
+      "Prime/substrates/lean/ALP/Contracts/NonBypassability.lean",
+      "Prime/substrates/lean/ALP/Contracts/TrustArbitration.lean",
+      "Prime/substrates/lean/ALP/MCP/GovernanceBinding.lean",
+      "Prime/substrates/lean/ALP/Archivum/WitnessContract.lean",
+      "models/the-commander/crates/alp/src/lib.rs",
+      "tests/governance.rs",
+      "ADR-ALP-003-08-integration-report.md",
+      "commander-core/src/archivum.rs"
+    ]
+  },
+  {
+    "adr": "ADR-CLI-001-complete.md",
+    "status": "missing",
+    "missing_refs": [
+      "compose.rs",
+      "mirror-dissonance/Cargo.toml"
+    ]
+  },
+  {
+    "adr": "ADR-CLI-001-deprecate-cli-snapshot.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ADR-Citizen_Gardens_Model_Specific.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/PIRTM-axiom-ledger.md"
+    ]
+  },
+  {
+    "adr": "ADR-Composite-Operator-Formalization.md",
+    "status": "missing",
+    "missing_refs": [
+      "CompositeOperator.lean",
+      "CompositeOperator.lean",
+      "substrates/lean/MOC/CompositeOperator.lean",
+      ".github/workflows/pirtm_ci.yml",
+      "docs/adr/ADR-Composite-Operator-Formalization.md",
+      "substrates/lean/MOC/PIRTM.lean",
+      "substrates/lean/MOC/PWEH.lean",
+      "substrates/tests/python/test_pweh_integration.py"
+    ]
+  },
+  {
+    "adr": "ADR-DEPLOY-Deployment-Readiness-Plan.md",
+    "status": "missing",
+    "missing_refs": [
+      "v1.0.0",
+      "/compliance/manifest.json",
+      "sedona_spine_ci.yml",
+      "nl_to_pirtm.py",
+      "substrates/lean/MOC/PIRTM.lean",
+      ".github/workflows/sedona_spine_ci.yml",
+      "test_pirtm_convergence.py",
+      "test_pweh_integration.py",
+      "15.x.y",
+      ".github/workflows/pirtm_ci.yml",
+      "toolchain: 1.85.0",
+      ".github/workflows/sedona_spine_ci.yml",
+      "/compliance/manifest.json",
+      ".github/workflows/verify.yml",
+      "/compliance/manifest.json",
+      "verify.yml",
+      ".github/workflows/publish-images.yml",
+      "verify.yml",
+      "NEXT_STEPS.md",
+      "kill_switch.py",
+      "governance/ledger.json",
+      "/compliance/manifest.json",
+      "NEXT_STEPS.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-052-Predictive-Governance.md",
+    "status": "missing",
+    "missing_refs": [
+      "0.85"
+    ]
+  },
+  {
+    "adr": "ADR-PML-057-Monorepo-Lean-Toolchain-Plane-Unbound.md",
+    "status": "missing",
+    "missing_refs": [
+      "leanprover/lean4:v4.32.1",
+      "Main.lean",
+      "state/toolchain-plane.json",
+      "state/toolchain-plane.json",
+      "check_lake_toolchain.sh",
+      "docs/adr/README.md",
+      "SPEC.md",
+      "docs/adr/ADR-0119.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-058-LexLean-Atlas-Provenance-Plane-Single-Binding.md",
+    "status": "missing",
+    "missing_refs": [
+      "MIGRATION.md",
+      "examples/uor-atlas/src/Atlas.lex.tex",
+      "examples/uor-atlas/MIGRATION.md",
+      "MIGRATION.md",
+      "atlas-s43.toml",
+      "UorAtlas.Scales.S43",
+      "Atlas.lex.tex",
+      "atlas-registers.toml",
+      "MIGRATION.md",
+      "docs/adr/completed/ADR-0037-*\nATLAS_DERIVED_DOMINANCE_THEOREM.md",
+      "Atlas.lex.tex",
+      "atlas-registers.toml",
+      "VerificationVerification.md",
+      "atlas-registers.toml",
+      "examples/uor-atlas/MIGRATION.md",
+      "language/uor/atlas-registers.toml",
+      "language/uor/atlas/entries/atlas-s43.toml",
+      "docs/adr/completed/ADR-0037-ATLAS_DERIVED_DOMINANCE_THEOREM.md",
+      "docs/adr/completed/ADR-0078-UOR_ATLAS_POSITIVITY_COMPLETE_FORMALIZATION (1).md",
+      "docs/adr/ADR-0119.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-059-One-Semantic-Representation-Two-Tracks-Single-Register.md",
+    "status": "missing",
+    "missing_refs": [
+      "lexlean-language/1.0",
+      "lexlean-language/1.1",
+      "language/bootstrap.toml",
+      "language/bootstrap-1.1.toml",
+      "language/std/nat-1.1",
+      "std/nat-1.1",
+      "1.1",
+      "language/bootstrap*.toml",
+      "language/semantics*.toml",
+      "docs/adr/ADR-0119.md",
+      "docs/adr/proposed/ADR-PML-062-Release-Plane-Artifact-Versus-Release-Criterion.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-060-LexLean-Self-Hosting-Audit-Closure-Unnamed-Instrumentation.md",
+    "status": "missing",
+    "missing_refs": [
+      "ids.toml",
+      "errors.toml",
+      "SPEC.md",
+      "\u00a75.1",
+      "SPEC.md",
+      "SPEC.md",
+      "ids.toml",
+      "errors.toml",
+      "SPEC.md",
+      "model/errors.toml",
+      "docs/adr/ADR-0113.md",
+      "docs/adr/proposed/ADR-PML-060-*.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-061-Verification-Evidence-Forward-Portability.md",
+    "status": "missing",
+    "missing_refs": [
+      "SPEC.md",
+      "docs/adr/proposed/ADR-PML-057-Monorepo-Lean-Toolchain-Plane-Unbound.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-062-Release-Plane-Artifact-Versus-Release-Criterion.md",
+    "status": "missing",
+    "missing_refs": [
+      "just release\n  # vv, then the \u00a730 release criterion; refused until 1.0.0",
+      "ghcr.io/afflom/lexlean:0.3.0",
+      "0.3.0",
+      "0.1.0",
+      "1.0.0",
+      "0.3.0",
+      ":0.3.0",
+      ":0.3.0",
+      "release/{tag}.attestation.json",
+      "release/0.3.0.attestation.json",
+      ":0.3.0",
+      "release/{tag}.attestation.json",
+      "docs/adr/proposed/ADR-PML-059-One-Semantic-Representation-Two-Tracks-Single-Register.md",
+      "docs/adr/proposed/ADR-PML-061-Verification-Evidence-Forward-Portability.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-063-Universal-Atomic-Crate-Job-Classification.md",
+    "status": "missing",
+    "missing_refs": [
+      "UAC.ADR",
+      "UAC.ADR",
+      "UAC.ADR"
+    ]
+  },
+  {
+    "adr": "ADR-PML-064-Phase-Mirror-Scanner-Blind-to-Generated-PrismPM-Lean-Plane.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/proposed/ADR-PML-057..063",
+      "SPEC.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md",
+      "docs/adr/proposed/ADR-Plan-PrismPM-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-065-Verification-Report-Receipts-Not-Commit-Bound.md",
+    "status": "missing",
+    "missing_refs": [
+      "SPEC.md",
+      "target/vv-evidence.json",
+      "vv-evidence.json",
+      "target/vv-evidence.json",
+      "vv-evidence.json",
+      "vv-evidence.json",
+      "scripts/vv.sh",
+      "docs/adr/proposed/ADR-PML-061-*.md",
+      "docs/adr/proposed/ADR-Plan-PrismPM-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-066-Published-Crate-Docs-Lack-Parity-Gate.md",
+    "status": "missing",
+    "missing_refs": [
+      "CONTRACTS.md",
+      "crates/prismpm/{SPEC,CONFORMANCE,README,ERRORS}.md",
+      "scripts/*.sh",
+      "CONTRACTS.md",
+      "scripts/check-doc-parity.sh",
+      "{SPEC,CONFORMANCE,README,ERRORS}.md",
+      "release.yml",
+      "check-doc-parity.sh",
+      "scripts/check-doc-parity.sh",
+      "release.yml",
+      "scripts/check-doc-parity.sh",
+      "platform_model/SPEC.md",
+      "platform_model/CONFORMANCE.md",
+      "packages/PrismPM/crates/prismpm/{SPEC,CONFORMANCE,README,ERRORS}.md",
+      "docs/adr/proposed/ADR-Plan-PrismPM-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-067-Operative-Lake-Graph-Is-Harness-Staged.md",
+    "status": "missing",
+    "missing_refs": [
+      "lakefile.toml",
+      "leanprover/lean4:v4.32.1",
+      "examples/Calculator/lakefile.toml",
+      "tests/browser-*/lakefile.toml",
+      "tests/fixtures/{controller,facets,holo}/**/project/lakefile.toml",
+      "project/lakefile.toml",
+      "lakefile.toml",
+      "scripts/check-lake-shape.sh",
+      "tests/golden/README.md",
+      "check-lake-shape.sh",
+      "lakefile.toml",
+      "scripts/check-lake-shape.sh",
+      "lakefile.toml",
+      "check-lake-shape.sh",
+      "tests/golden/README.md",
+      "packages/PrismPM/tests/fixtures/**/project/lakefile.toml",
+      "docs/adr/proposed/ADR-Plan-PrismPM-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-068-Cross-Plane-Calculator-Term-Collision.md",
+    "status": "missing",
+    "missing_refs": [
+      "prism-calculator = 0.1.0",
+      "Calculator.holo",
+      "schemas/calculator-baseline.schema.json",
+      "docs/adr/proposed/ADR-0121-Physics-Calculator-Scope.md",
+      "docs/adr/proposed/ADR-0122-Physics-Integration-Boundary.md",
+      "Calculator.holo",
+      "Calculator.holo",
+      "Calculator.holo",
+      "docs/adr/proposed/ADR-0121-Physics-Calculator-Scope.md",
+      "docs/adr/proposed/ADR-0122-Physics-Integration-Boundary.md",
+      "docs/adr/proposed/ADR-Plan-PrismPM-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-069-ADR-006-Vendor-Policy-Record-Lag.md",
+    "status": "missing",
+    "missing_refs": [
+      "docs/adr/006-lean4-prod-upstream.md",
+      "vendor/lean4-prod/UPSTREAM_STATUS.md",
+      "model/dependencies.toml",
+      "docs/adr/proposed/ADR-Plan-PrismPM-Phase-Mirror-Loop.md"
+    ]
+  },
+  {
+    "adr": "ADR-PML-228 Automated Active Space Selection.md",
+    "status": "missing",
+    "missing_refs": [
+      "qaas_endpoints.rs",
+      "qaas_endpoints.rs",
+      "ActiveSpace.lean",
+      "lean/ADR/Instances.lean",
+      "Registry.lean",
+      "forecast_util > 0.85"
+    ]
+  },
+  {
+    "adr": "ADR-Plan-LexLean-Phase-Mirror-Loop.backlog.md",
+    "status": "missing",
+    "missing_refs": [
+      "ADR-Plan-LexLean-Phase-Mirror-Loop.md",
+      "examples/uor-atlas/MIGRATION.md",
+      "Atlas.lex.tex",
+      "state/toolchain-plane.json",
+      ":0.3.0"
+    ]
+  },
+  {
+    "adr": "ADR-Plan-LexLean-Phase-Mirror-Loop.md",
+    "status": "missing",
+    "missing_refs": [
+      "ADR-Plan-LexLean-Phase-Mirror-Loop.backlog.md",
+      "model/*.toml",
+      "docs/adr/completed/ADR-Plan-Phase-Mirror-Dissonance-Loop.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.backlog.md",
+      "ADR-PML-058-LexLean-Atlas-Provenance-Plane-Single-Binding.md",
+      "ADR-PML-060-LexLean-Self-Hosting-Audit-Closure-Unnamed-Instrumentation.md",
+      "ADR-PML-057-Monorepo-Lean-Toolchain-Plane-Unbound.md",
+      "ADR-PML-059-One-Semantic-Representation-Two-Tracks-Single-Register.md",
+      "ADR-PML-061-Verification-Evidence-Forward-Portability.md",
+      "ADR-PML-062-Release-Plane-Artifact-Versus-Release-Criterion.md"
+    ]
+  },
+  {
+    "adr": "ADR-Plan-PrismPM-Phase-Mirror-Loop.backlog.md",
+    "status": "missing",
+    "missing_refs": [
+      "ADR-Plan-PrismPM-Phase-Mirror-Loop.md",
+      "crates/prismpm/{SPEC,CONFORMANCE,README,ERRORS}.md",
+      "scripts/check-doc-parity.sh",
+      "release.yml",
+      "lakefile.toml",
+      "error: no such file or directory:\n\u2026/PrismPM/PrismPM.lean",
+      "examples/Calculator/lakefile.toml",
+      "tests/browser-*/lakefile.toml",
+      "tests/fixtures/**/project/lakefile.toml",
+      "scripts/check-lake-shape.sh",
+      "tests/golden/README.md",
+      "Calculator.holo",
+      "docs/adr/006-lean4-prod-upstream.md"
+    ]
+  },
+  {
+    "adr": "ADR-Plan-PrismPM-Phase-Mirror-Loop.md",
+    "status": "missing",
+    "missing_refs": [
+      "ADR-Plan-PrismPM-Phase-Mirror-Loop.backlog.md",
+      "docs/adr/completed/ADR-Plan-Phase-Mirror-Dissonance-Loop.md",
+      "docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md",
+      "docs/adr/proposed/ADR-Plan-PrismPM-Phase-Mirror-Loop.backlog.md",
+      "ADR-PML-064-Phase-Mirror-Scanner-Blind-to-Generated-PrismPM-Lean-Plane.md",
+      "ADR-PML-065-Verification-Report-Receipts-Not-Commit-Bound.md",
+      "ADR-PML-066-Published-Crate-Docs-Lack-Parity-Gate.md",
+      "ADR-PML-067-Operative-Lake-Graph-Is-Harness-Staged.md",
+      "ADR-PML-068-Cross-Plane-Calculator-Term-Collision.md",
+      "ADR-PML-069-ADR-006-Vendor-Policy-Record-Lag.md"
+    ]
+  },
+  {
+    "adr": "ADR\u2011231: Formal Verification of the RH\u2013Multiplicity Duality Principle.md",
+    "status": "missing",
+    "missing_refs": [
+      "Axioms.lean",
+      "MainTheorem.lean",
+      "KaniCertificates.lean",
+      "RH_Multiplicity/Axioms.lean",
+      "RH_Multiplicity/KaniCertificates.lean",
+      "RH_Multiplicity/MainTheorem.lean",
+      "Axioms.lean",
+      "MainTheorem.lean",
+      "kani_coherence.rs",
+      "kani_trace.rs"
+    ]
+  },
+  {
+    "adr": "ALP CNL Compiler Discussion 1.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "ALP CNL Compiler Discussion 2.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "Perfect\u2014these directives.md",
+    "status": "missing",
+    "missing_refs": [
+      "crates/sigma/build.rs",
+      "crates/sigma/Cargo.toml",
+      "build.rs",
+      "crates/sigma/build.rs",
+      "src/generated/thresholds.rs",
+      "crates/sigma/src/lib.rs",
+      "crates/sigma/src/kernel.rs",
+      "ExportThresholds.lean",
+      "src/generated/thresholds.rs",
+      "crates/sigma/Cargo.toml",
+      "crates/sigma/build.rs",
+      "crates/sigma/src/lib.rs",
+      "crates/sigma/src/generated/thresholds.rs",
+      "thresholds.rs",
+      "crates/sigma/src/generated/thresholds.rs",
+      "ExportThresholds.lean",
+      "ExportThresholds.lean",
+      "tau_r=47.06998778",
+      "build.rs"
+    ]
+  },
+  {
+    "adr": "Phase mirror dissonance.md",
+    "status": "no_refs",
+    "missing_refs": []
+  },
+  {
+    "adr": "PhaseMirror ALP-CNL Wiring.md",
+    "status": "missing",
+    "missing_refs": [
+      "phaseMirrorAlpCnlBridge.ts",
+      "v1.2.3",
+      "templates/adr-alp-cnl.yaml",
+      "@phasemirror/alp-cnl@1.2.3",
+      "templates/adr-alp-cnl.yaml",
+      "file:///home/multiplicity/Multiplicity/PhaseMirror/models/legalese-scopist/",
+      "file:///home/multiplicity/Multiplicity/PhaseMirror/models/legalese-scopist/CONTRACT.md",
+      "file:///home/multiplicity/Multiplicity/PhaseMirror/ALP/README.md",
+      "file:///home/multiplicity/Multiplicity/PhaseMirror/templates/adr-alp-cnl.yaml"
+    ]
+  },
+  {
+    "adr": "README.md",
+    "status": "missing",
+    "missing_refs": [
+      "ADR-001.md",
+      "ADR-002.md",
+      "ADR-003.md",
+      "ADR-004.md",
+      "ADR-005.md",
+      "ADR-006.md",
+      "ADR-007.md",
+      "ADR-008.md",
+      "ADR-009.md",
+      "ADR-010.md",
+      "ADR-0013.md",
+      "ADR-0014.md",
+      "ADR-0015.md",
+      "ADR-0016.md",
+      "ADR-0017.md",
+      "ADR-0018.md",
+      "ADR-0019.md",
+      "ADR-0020.md",
+      "ADR-0022.md",
+      "ADR-0023.md",
+      "ADR-0024.md",
+      "ADR-0025.md",
+      "ADR-0026.md",
+      "ADR-0027.md",
+      "ADR-0028.md",
+      "ADR-0113.md",
+      "ADR-0119.md",
+      "ADR-0120.md",
+      "ADR-0128-Template_Lock_Integrity_Precedes_Capability_Registration.md",
+      "ADR-0129-The_Conformance_Register_Is_the_Sole_Gate_for_the_Web_Surface.md",
+      "ADR-0130-Suite_Partition_by_Enforcement_Boundary.md",
+      "ADR-0131-Engine_Registry_Reads_Are_Fail_Closed_No_In_Process_Second_Source.md",
+      "ADR-0132-Registry_Invariant_Parity_Is_Layered_and_Split_Source_Rules_Are_Refused.md",
+      "ADR-0133-Terminal_Execution_Is_Allowlisted_and_Reports_a_Real_Exit_Code.md",
+      "ADR-0134-The_ADR_Routes_Are_the_Only_Write_Path_Validated_Against_the_Persisted_Registry.md",
+      "ADR-0135-packages_foundry_web_Is_Tracked_and_Runs_the_Acceptance_Gate_in_CI.md",
+      "ADR-0136.md",
+      "ADR-0137.md",
+      "ADR-0138.md",
+      "ADR-Citizen_Gardens_Model_Specific.md",
+      "ADR-0168-PM_FORGE_001_Twelve_Card_Workbench.md"
+    ]
+  },
+  {
+    "adr": "Seventeen green tests.md",
+    "status": "missing",
+    "missing_refs": [
+      "Execution.lean",
+      "MOC/PellVDF.lean",
+      "Consensus.lean",
+      "c<1.0",
+      "R_sc\u22651.0",
+      "Execution.lean",
+      "pell_vdf.rs"
+    ]
+  },
+  {
+    "adr": "adr_001_alp_cnl_agent_production_readiness.md",
+    "status": "missing",
+    "missing_refs": [
+      "tsx server.ts",
+      "tsx server.ts",
+      "The Phase of Mirror Dissonance.md",
+      "models/legalese-scopist/CONTRACT.md",
+      "phase-mirror-agent/src/index.ts",
+      "file:///home/multiplicity/Multiplicity/Phase%20Mirror/models/legalese-scopist/CONTRACT.md",
+      "file:///home/multiplicity/Multiplicity/Phase%20Mirror/packages/phase-mirror-agent/src/index.ts",
+      "file:///home/multiplicity/Multiplicity/Phase%20Mirror/crates/alp/README.md"
+    ]
+  },
+  {
+    "adr": "adr_production_deployment.md",
+    "status": "missing",
+    "missing_refs": [
+      "src/tools/mod.rs",
+      ".github/workflows/ci.yml",
+      "src/config/template.yaml",
+      "src/config/template.yaml",
+      "models/legalese-scopist/CONTRACT.md",
+      "docs/adr/001-production-deployment.md"
+    ]
+  }
+]

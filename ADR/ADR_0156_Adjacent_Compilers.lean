@@ -9,7 +9,7 @@ compile artifact crosses a trust boundary without an explicit, re-modeled entry.
 
 open ADR
 
-def mkLink (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
+def link_0156 (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
 
 @[adr]
 def ADR_0156 : ADR :=
@@ -24,9 +24,9 @@ def ADR_0156 : ADR :=
                     , "Traceability enforcement: every cross-compile carries an ADR-0151 5-step chain"
                     , "Lean proof surface: boundary predicates are machine-checked, not documented" ]
     supersedes := none
-    links := [ mkLink "Source Document" "papers/Adjacent_Compilers_v1.0.docx"
-             , mkLink "ADR-0155 Workflow" "Governance/ADR/accepted/ADR-0155-PrismPM_OSCAL_Workflow_Cryptog.md"
-             , mkLink "ADR-0153 Five-Step Loop" "Governance/ADR/accepted/ADR-0153-Phase_Mirror_Five_Step_Loop_an.md" ] }
+    links := [ link_0156 "Source Document" "papers/Adjacent_Compilers_v1.0.docx"
+             , link_0156 "ADR-0155 Workflow" "Governance/ADR/accepted/ADR-0155-PrismPM_OSCAL_Workflow_Cryptog.md"
+             , link_0156 "ADR-0153 Five-Step Loop" "Governance/ADR/accepted/ADR-0153-Phase_Mirror_Five_Step_Loop_an.md" ] }
 
 @[proof]
 theorem adr0156_accepted :

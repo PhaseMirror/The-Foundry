@@ -9,7 +9,7 @@ can authorize capital. No four-door variant exists. -/
 
 open ADR
 
-def mkLink (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
+def link_0157 (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
 
 @[adr]
 def ADR_0157 : ADR :=
@@ -24,9 +24,9 @@ def ADR_0157 : ADR :=
                     , "Read-only surface: ratifier never mutates escrow or treasury"
                     , "Audit surface: every capital citation must be a distinct ADR link" ]
     supersedes := none
-    links := [ mkLink "Source Document" "papers/Ratify_Resolution_Capital_Authorization_v1.0.docx"
-             , mkLink "ADR-0156 Boundaries" "Governance/ADR/accepted/ADR-0156-Adjacent_Compilers.md"
-             , mkLink "Field Binding Doc" "PM-RATIFY-001" ] }
+    links := [ link_0157 "Source Document" "papers/Ratify_Resolution_Capital_Authorization_v1.0.docx"
+             , link_0157 "ADR-0156 Boundaries" "Governance/ADR/accepted/ADR-0156-Adjacent_Compilers.md"
+             , link_0157 "Field Binding Doc" "PM-RATIFY-001" ] }
 
 @[proof]
 theorem adr0157_status_is_deprecated :

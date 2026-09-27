@@ -11,7 +11,7 @@ forbidden on the current inventory. -/
 open ADR
 
 /-- Helper to create an `ArtifactLink`. -/
-def mkLink (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
+def link_0151 (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
 
 /-- ADR-0151 definition: OSCAL as filing cabinet, PrismPM as the lock. -/
 @[adr]
@@ -27,9 +27,9 @@ def ADR_0151 : ADR :=
                     , "Restricted Terminology: Certified-by-Prism and FedRAMP-ready are retired"
                     , "Controlled Advancement: advancing above Modeled requires recorded rung-change" ]
     supersedes := none
-    links := [ mkLink "Source Document" "papers/OSCAL_PrismPM_Mapping_and_Traceability_v1.0.docx"
-             , mkLink "ADR-0123 OSCAL Mapping" "artifacts/adr/ADR-0123-OSCAL-PrismPM-Mapping.md"
-             , mkLink "ADR-0155 Workflow" "Governance/ADR/accepted/ADR-0155-PrismPM_OSCAL_Workflow_Cryptog.md" ] }
+    links := [ link_0151 "Source Document" "papers/OSCAL_PrismPM_Mapping_and_Traceability_v1.0.docx"
+             , link_0151 "ADR-0123 OSCAL Mapping" "artifacts/adr/ADR-0123-OSCAL-PrismPM-Mapping.md"
+             , link_0151 "ADR-0155 Workflow" "Governance/ADR/accepted/ADR-0155-PrismPM_OSCAL_Workflow_Cryptog.md" ] }
 
 /-- ADR-0151 is Accepted. -/
 @[proof]

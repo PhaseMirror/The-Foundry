@@ -11,7 +11,7 @@ BN254 + Ed25519 is pre-quantum, labeled as such. -/
 open ADR
 
 /-- Helper to create an `ArtifactLink`. -/
-def mkLink (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
+def link_0153 (desc url : String) : ArtifactLink := ⟨url, .SpecificationDoc, desc⟩
 
 /-- ADR-0153 definition: Five-step Phase Mirror loop and PWEH receipt spine. -/
 @[adr]
@@ -27,9 +27,9 @@ def ADR_0153 : ADR :=
                     , "Contractivity isolation: Mirror does not evaluate Lipschitz"
                     , "UnsignedCrmfEnvelope remains specification draft" ]
     supersedes := none
-    links := [ mkLink "Source Document" "papers/Phase_Mirror_Five_Step_Loop_and_PWEH_v1.0.docx"
-             , mkLink "Field Binding Doc" "PM-PWEH-001"
-             , mkLink "ADR-0154 Honesty Engine" "Governance/ADR/accepted/ADR-0154-Phase_Mirror_Honesty_Engine_an.md" ] }
+    links := [ link_0153 "Source Document" "papers/Phase_Mirror_Five_Step_Loop_and_PWEH_v1.0.docx"
+             , link_0153 "Field Binding Doc" "PM-PWEH-001"
+             , link_0153 "ADR-0154 Honesty Engine" "Governance/ADR/accepted/ADR-0154-Phase_Mirror_Honesty_Engine_an.md" ] }
 
 /-- ADR-0153 is Accepted. -/
 @[proof]
