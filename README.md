@@ -29,6 +29,10 @@ requires `prismpm` and `just`; when those tools are unavailable, the direct
 `cargo` / `lake` commands in [Building & Testing](#building--testing) are the
 working checks.
 
+## Governance & Evidence Posture
+
+All additions to this repository are governed by the strict Scope Freeze, Portfolio Classes (Normative, Reference, Experimental, Historical), and E0-E6 Evidence Posture outlined in `docs/GOVERNANCE.md` (as per ADR-0029).
+
 ## Repository Layout
 
 Toolchains: Rust `1.97.1` (`rust-toolchain.toml`), Lean 4 root project
