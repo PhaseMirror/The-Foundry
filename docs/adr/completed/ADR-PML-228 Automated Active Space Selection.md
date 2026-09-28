@@ -1,6 +1,6 @@
 # ADR-PML-053: Automated Active Space Selection (AEGISS)
 
-**Status:** Proposed  
+**Status:** Integrated - Deployment Ready  
 **Date:** 2026-07-25  
 **Authors:** `the-genius`  
 **Dependencies:** ADR‑PML‑055 (State Anchor), ADR‑PML‑052 (Predictive Governance)  
@@ -63,10 +63,10 @@ All AEGISS decisions (DFT data, selected orbitals) are hashed and anchored via A
 In `lean/ADR/Instances.lean`, add:
 
 ```lean
-def adr053_proposed : ADR := {
+def adr053_Integrated - Deployment Ready : ADR := {
   id := 53,
   title := "Automated Active Space Selection (AEGISS)",
-  status := ADRStatus.Proposed,
+  status := ADRStatus.Integrated - Deployment Ready,
   context := "
     The UAC is locked to FeMoco (69 qubits) to respect the 100‑qudit boundary.
     External demand for other transition metal complexes requires automated
@@ -86,7 +86,7 @@ def adr053_proposed : ADR := {
   ],
   supersedes := none,
   links := [
-    { url := "docs/adr/proposed/ADR-PML-053-AEGISS.md",
+    { url := "docs/adr/Integrated - Deployment Ready/ADR-PML-053-AEGISS.md",
       description := "Full ADR specification" }
   ],
   gates := [
@@ -99,7 +99,7 @@ def adr053_proposed : ADR := {
 }
 ```
 
-Update `Registry.lean` to include `adr053_proposed`.
+Update `Registry.lean` to include `adr053_Integrated - Deployment Ready`.
 
 ---
 
@@ -115,7 +115,7 @@ Below is the **diff** of the publication (new sections added, others preserved).
 
 ### 5. Meta‑Governance: Lean4‑Verified ADRs
 
-The UAC’s governance itself is formalized using Lean4 dependent types. Architecture Decision Records (ADRs) are defined as inductive structures with lifecycle states (Proposed, Accepted, Deprecated, Superseded). A global registry ensures every supersedes reference resolves to an existing ADR. State transitions are machine‑checked, and a build‑time hash (`.adr-proof-hash`) is embedded in the Rust compiler, guaranteeing that governance drift fails the build.
+The UAC’s governance itself is formalized using Lean4 dependent types. Architecture Decision Records (ADRs) are defined as inductive structures with lifecycle states (Integrated - Deployment Ready, Accepted, Deprecated, Superseded). A global registry ensures every supersedes reference resolves to an existing ADR. State transitions are machine‑checked, and a build‑time hash (`.adr-proof-hash`) is embedded in the Rust compiler, guaranteeing that governance drift fails the build.
 
 The ADR framework is axiom‑clean (zero `sorry`) and has been applied to all Phase A–C enhancements.
 
@@ -134,7 +134,7 @@ All predictions are logged to the state anchor (ADR‑PML‑055) and signed with
 
 ### 7. Phase D (Planned): Automated Active Space Selection (AEGISS)
 
-To expand the UAC’s chemical repertoire beyond FeMoco, Phase D will implement AEGISS, using classical DFT to automatically select a CAS(20,20) proxy for any target molecule. This preserves the 100‑qudit hard boundary while achieving chemical accuracy <5 mHa. The reduction error will be empirically validated on a test set and formally bounded in Lean4. This ADR (PML‑053) is currently Proposed.
+To expand the UAC’s chemical repertoire beyond FeMoco, Phase D will implement AEGISS, using classical DFT to automatically select a CAS(20,20) proxy for any target molecule. This preserves the 100‑qudit hard boundary while achieving chemical accuracy <5 mHa. The reduction error will be empirically validated on a test set and formally bounded in Lean4. This ADR (PML‑053) is currently Integrated - Deployment Ready.
 
 ---
 

@@ -49,7 +49,7 @@ std \= \[\]                           \# Feature flags can influence spectral bu
 
 Extend the existing grammar (pest-based) with clear, governed import syntax. This mirrors Rust’s \`use\` but adds explicit governance hooks.
 
-\#\#\#\# Proposed Syntax Examples
+\#\#\#\# Integrated - Deployment Ready Syntax Examples
 
 \`\`\`pirtm  
 // Basic import  

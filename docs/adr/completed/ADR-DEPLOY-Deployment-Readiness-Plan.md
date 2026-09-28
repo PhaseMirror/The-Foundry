@@ -1,6 +1,6 @@
 # ADR-DEPLOY: PIRTM Compute Language Deployment Readiness Plan
 
-**Status:** Proposed
+**Status:** Integrated - Deployment Ready
 **Date:** 2026-06-29
 **Author:** PhaseSpace Commander Coding Agent
 **Horizon:** 30 days to first production binary, 90 days to zero-drift rollout
@@ -9,7 +9,7 @@
 
 ## 1. Context & Tension
 
-The PIRTM compute language has a mathematically sealed substrate (F1Square Lean 4 proofs, Sedona Spine governance, L0 invariants) and a rich ADR corpus (60+ accepted/proposed decisions). However, the path from verified source to production-deployable artifact contains critical gaps:
+The PIRTM compute language has a mathematically sealed substrate (F1Square Lean 4 proofs, Sedona Spine governance, L0 invariants) and a rich ADR corpus (60+ accepted/Integrated - Deployment Ready decisions). However, the path from verified source to production-deployable artifact contains critical gaps:
 
 - **No reproducible build environment exists**: ADR-001 mandates LLVM 15 hermetic prefix, but CI does not enforce it. The Docker images ship LLVM 11.
 - **No release artifacts**: The workspace produces no binary targets. There is no `v1.0.0` tag, no published container, no artifact registry linkage.

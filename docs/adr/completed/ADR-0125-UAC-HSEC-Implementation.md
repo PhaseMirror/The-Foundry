@@ -1,7 +1,7 @@
 # ADR-0125: HSEC (Hyperfine Subspace Error Correction) Boundary
 
 ## Status
-Proposed - Blocked by ADR-0123
+Integrated - Deployment Ready - Blocked by ADR-0123
 
 ## Context
 The UAC plan proposes implementing HSEC via either low-level pulse control APIs or an abstract middleware layer. HSEC relies on unmeasured auxiliary manifolds, creating a tension with the discrete cryptographic state machine in Foundry.

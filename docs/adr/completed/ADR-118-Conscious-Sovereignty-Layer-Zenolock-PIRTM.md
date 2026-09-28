@@ -1,7 +1,7 @@
 # ADR-118: Conscious Sovereignty Layer, Zenolock, and PIRTM
 
 ## Status
-Proposed
+Integrated - Deployment Ready
 
 ## Axis
 sovereignty vs enforcement
@@ -104,7 +104,7 @@ A Defensive Publication on Ethical Cryptographic Governance and Post-Quantum Enf
 
 \author{%
   (Inventor / Author Name Here)\\
-  Multiplicity Foundation \& Citizen Gardens (proposed)\\
+  Multiplicity Foundation \& Citizen Gardens (Integrated - Deployment Ready)\\
   \texttt{contact@example.org}
 }
 
@@ -138,7 +138,7 @@ This creates a gap between formal guarantees (e.g., cryptographic security) and 
 (e.g., sovereignty, non-coercion, lawful behavior).
 As quantum computing and autonomous systems mature, this gap becomes increasingly dangerous.
 
-The \emph{Conscious Sovereignty Layer} (CSL) is proposed as a mathematically enforced ethical membrane:
+The \emph{Conscious Sovereignty Layer} (CSL) is Integrated - Deployment Ready as a mathematically enforced ethical membrane:
 a layer that constrains which computations are allowed to occur based on formal sovereignty and ethical invariants.
 Prime-Indexed Recursive Tensor Mathematics (PIRTM) provides a multiplicity-based dynamical substrate for cognition and control,
 while Zenolock provides a concrete, post-quantum cryptographic deployment of CSL-like constraints,
@@ -571,7 +571,7 @@ The invention explicitly distinguishes between:
     \end{itemize}
 \end{itemize}
 
-This tagging is part of the proposed minimum conditions for treating PIRTM as a cryptographic substrate.
+This tagging is part of the Integrated - Deployment Ready minimum conditions for treating PIRTM as a cryptographic substrate.
 
 \subsection{Trusted Setup and zk Proof Systems}
 
@@ -971,7 +971,7 @@ This lemma justifies verification schemes that interpret admissible operations a
 \subsection{Verification Snapshot and Determinism}
 
 Let $V_{\lambda_k}$ be the eigenspaces of $E^*$ with eigenvalues $\lambda_k$.
-If we require that a proof object $z$ associated with a proposed operation lie in a designated $V_{\lambda_k}$, then verification with respect to $E^*$ is deterministic and reproducible:
+If we require that a proof object $z$ associated with a Integrated - Deployment Ready operation lie in a designated $V_{\lambda_k}$, then verification with respect to $E^*$ is deterministic and reproducible:
 \begin{equation}
   \text{verify}(z) = 1 \iff z \in V_{\lambda_k}.
 \end{equation}

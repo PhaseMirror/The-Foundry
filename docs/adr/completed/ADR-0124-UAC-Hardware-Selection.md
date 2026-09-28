@@ -1,7 +1,7 @@
 # ADR-0124: UAC Quantum Hardware Platform Selection
 
 ## Status
-Proposed - Blocked by ADR-0123
+Integrated - Deployment Ready - Blocked by ADR-0123
 
 ## Context
 Per the UAC ADR Plan, a decision is required between Atom Computing ($^{87}$Sr), Infleqtion ($^{133}$Cs), or Custom M³A platforms. However, the UAC framework currently fails stability tests at `f_hat=9200` and violates ZK-Circom 80-bit limits. Hardware selection is premature when the underlying formal mathematical constraints are violated.

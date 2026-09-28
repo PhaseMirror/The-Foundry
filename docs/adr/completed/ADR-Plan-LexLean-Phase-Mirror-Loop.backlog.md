@@ -70,4 +70,4 @@ verification path". **Levers**: per-tag attestation ledger,
 scoped README wording, immutable commit-level tags.
 
 ## Resolution log
-- 2026-09-21: baseline authored (aggregate 1049.0); all six tensions Proposed.
+- 2026-09-21: baseline authored (aggregate 1049.0); all six tensions Integrated - Deployment Ready.

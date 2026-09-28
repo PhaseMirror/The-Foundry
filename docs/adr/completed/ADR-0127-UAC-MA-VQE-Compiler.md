@@ -1,7 +1,7 @@
 # ADR-0127: MA-VQE Compiler Architecture
 
 ## Status
-Proposed - Empirical limits formalized; refinement to Rust pending
+Integrated - Deployment Ready - Empirical limits formalized; refinement to Rust pending
 
 ## Context
 Compiling molecular Hamiltonians directly into qudit subspaces requires a compiler toolchain (extending Qiskit vs standalone).

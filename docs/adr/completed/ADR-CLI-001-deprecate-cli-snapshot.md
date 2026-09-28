@@ -1,7 +1,7 @@
 # ADR-CLI-001: Deprecate packages/phase-mirror-cli Entire Directory
 
 ## Status
-Proposed
+Integrated - Deployment Ready
 
 ## Context
 The `packages/phase-mirror-cli/` directory contains a snapshot of the CLI that duplicates functionality in `models/the-commander/crates/commander-cli/`. The snapshot:

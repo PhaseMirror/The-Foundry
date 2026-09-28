@@ -80,7 +80,7 @@ annotate the stubs as harness-input; add `scripts/check-lake-shape.sh` to
 **Evidence**: PrismPM normatively defines a mechanical calculator artifact —
 `CONTRACTS.md:35` `prismpm/calculator-baseline/1` (closed, exact-major,
 schema-validated), `SPEC.md:500` `prism-calculator`, `Calculator.holo`,
-calculator-example Pages, CalculatorSystem; Foundry proposed ADR-0121/0122
+calculator-example Pages, CalculatorSystem; Foundry Integrated - Deployment Ready ADR-0121/0122
 re-scope "physics calculator" as an undefined vibe to be eliminated — with
 zero cross-citation between the planes. **Productive contradiction**: one
 token, two disjoint meanings, no disambiguation link on either side; the
@@ -90,21 +90,21 @@ collision fires on the first Foundry/PrismPM integration touchpoint.
 across planes; record the disambiguation in this index.
 
 ### 6. ADR-PML-069 — ADR-006 record lag (Score 24.0)
-**Evidence**: `docs/adr/006-lean4-prod-upstream.md` status = **Proposed**,
+**Evidence**: `docs/adr/006-lean4-prod-upstream.md` status = **Integrated - Deployment Ready**,
 yet its "vendored artifacts are release artifacts" + fork-contingency policy
 is already the operating normativity: CONFORMANCE.md cited authorities bind
 the fork's LEAN-REL-4-32-1/LAKE/LEANCHECKER values; model/dependencies.toml
 pins `ac84a4de…`; RELEASE-STATUS.md declares 0.3.0 acceptance closure;
 README calls 0.3.0 "the accepted production-system release". **Productive
-contradiction**: a governance entry marked Proposed is the binding decision
+contradiction**: a governance entry marked Integrated - Deployment Ready is the binding decision
 for the release — a false-open signal; Phase 1 vs Phase 2 materialization is
 not in the record's status. **Levers**: Promote ADR-006 to Accepted with the
 phase denotation (or Supersede by a maintenance ADR); add the hygiene rule
-"Proposed ADRs may not appear in Cited-authorities/contract tables"; keep
-ADR-002 (crates.io, honestly Proposed, not performed) unchanged but watch.
+"Integrated - Deployment Ready ADRs may not appear in Cited-authorities/contract tables"; keep
+ADR-002 (crates.io, honestly Integrated - Deployment Ready, not performed) unchanged but watch.
 
 ## Watch list (non-tensions, next-run checks)
-- ADR-002 (crates.io bootstrap): Proposed and consistent with reality (not
+- ADR-002 (crates.io bootstrap): Integrated - Deployment Ready and consistent with reality (not
   performed) — verify it flips to Accepted before the first registry publish.
 - SPEC §18 /1+/2 coexistence: explicit and internally consistent — confirm no
   new `/1` contract rows appear without the stated frozen-Holo posture.

@@ -12,7 +12,7 @@
 > qualifier set, a `--lean-subdir` arg, and a `/\.lake/`-only walk skip); the
 > re-run indexes **5923** unique `def`/`theorem` declarations with **0**
 > tensions. The tensions below live in the PrismPM claim/corpus plane and
-> are filed as `docs/adr/proposed/*`. This index is the actionable lever
+> are filed as `docs/adr/Integrated - Deployment Ready/*`. This index is the actionable lever
 > surface for those tensions, ranked by impact x tractability. Each linked
 > `ADR-PML-###` is a lever to resolve the dissonance. Full per-tension detail
 > lives in `ADR-Plan-PrismPM-Phase-Mirror-Loop.backlog.md`.
@@ -28,7 +28,7 @@
   `theorem`; 0 lemma/axiom; 0 sorry; 0 Mathlib; plus 399 top-level
   `class`/`structure`/`inductive`/`def` type decls outside `scan_lean`'s
   declarator-keyword scope — post-ADR-PML-064 re-run, 2026-09-22)
-- Tensions detected: 6  (rolled into 6 proposed plan ADRs)
+- Tensions detected: 6  (rolled into 6 Integrated - Deployment Ready plan ADRs)
 - Leak rows (unmanifested risk): 5 of 6 clusters are leaked (ADR-PML-064,
   065, 066, 068, 069); only ADR-PML-067 is documented behavior, not a leak
 
@@ -70,6 +70,6 @@ paragraph.
 - Corpus: `packages/PrismPM` (SPEC.md, CONFORMANCE.md, VERIFICATION.md,
   CONTRACTS.md, RELEASE-STATUS.md, `docs/adr/`, `tests/golden/`, `model/`)
 - Sibling loop: `docs/adr/completed/ADR-Plan-Phase-Mirror-Dissonance-Loop.md`
-- Sibling audit: `docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.md`
+- Sibling audit: `docs/adr/Integrated - Deployment Ready/ADR-Plan-LexLean-Phase-Mirror-Loop.md`
 - State manifest (Foundry tree): `state/phase_mirror_loop.json`
-- Full backlog: `docs/adr/proposed/ADR-Plan-PrismPM-Phase-Mirror-Loop.backlog.md`
+- Full backlog: `docs/adr/Integrated - Deployment Ready/ADR-Plan-PrismPM-Phase-Mirror-Loop.backlog.md`

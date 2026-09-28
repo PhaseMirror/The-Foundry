@@ -5,7 +5,7 @@
 > claim model and its documented intent, run on 2026-09-21. The associated
 > machine loop (`scripts/phase_mirror_loop.py`) scans the Foundry Lean tree
 > and reports 0 tensions for that corpus; the tensions below live in the
-> adjacent LexLean claim/binary plane and are filed as `docs/adr/proposed/*`.
+> adjacent LexLean claim/binary plane and are filed as `docs/adr/Integrated - Deployment Ready/*`.
 > This index is the actionable lever surface for those tensions, ranked by
 > impact x tractability. Each linked `ADR-PML-###` is a lever to resolve the
 > dissonance. Full per-tension detail lives in
@@ -16,7 +16,7 @@
 - Error model scanned: 50 diagnostic codes (closed)
 - Documents scanned: SPEC.md (§1–§32), CONFORMANCE.md, VERIFICATION.md,
   ERRORS.md, README.md, `model/*.toml`, `language/*`, `examples/uor-atlas/*`
-- Tensions detected: 6  (rolled into 6 proposed plan ADRs)
+- Tensions detected: 6  (rolled into 6 Integrated - Deployment Ready plan ADRs)
 - Leak row (unmanifested risk): none — every tension below is manifested by
   its ADR and this index
 
@@ -52,4 +52,4 @@ run must report the delta from this baseline in this paragraph.
   model/, language/, examples/uor-atlas/)
 - Sibling loop: `docs/adr/completed/ADR-Plan-Phase-Mirror-Dissonance-Loop.md`
 - State manifest (Foundry tree): `state/phase_mirror_loop.json`
-- Full backlog: `docs/adr/proposed/ADR-Plan-LexLean-Phase-Mirror-Loop.backlog.md`
+- Full backlog: `docs/adr/Integrated - Deployment Ready/ADR-Plan-LexLean-Phase-Mirror-Loop.backlog.md`
