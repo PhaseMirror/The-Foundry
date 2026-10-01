@@ -1,9 +1,0 @@
-{
-  "status": "verified",
-  "lineage_prime": 7,
-  "behavioral_compliance": {
-    "status": "passed",
-    "scenarios": [],
-    "message": "CI Stub: Rust runner skipped; behavioral compliance assumed for Phase 1 stabilization."
-  }
-}

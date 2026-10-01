@@ -1,0 +1,45 @@
+{
+  "name": "Calculator PrismPM SDK",
+  "image": "__PRISMPM_SDK_IMAGE__",
+  "containerUser": "root",
+  "initializeCommand": "mkdir -p \"${localEnv:HOME}/.docker\" && if test ! -f \"${localEnv:HOME}/.docker/config.json\"; then printf \"{}\\n\" > \"${localEnv:HOME}/.docker/config.json\"; fi",
+  "remoteUser": "vscode",
+  "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind",
+  "workspaceFolder": "${localWorkspaceFolder}",
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+    "source=${localEnv:HOME}/.docker/config.json,target=/home/vscode/.docker/config.json,type=bind,readonly"
+  ],
+  "overrideCommand": false,
+  "runArgs": [
+    "--init",
+    "--entrypoint",
+    "prismpm-devcontainer-init"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "leanprover.lean4"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "[rust]": {
+          "editor.defaultFormatter": "rust-lang.rust-analyzer"
+        },
+        "rust-analyzer.check.command": "clippy",
+        "rust-analyzer.procMacro.enable": true,
+        "files.watcherExclude": {
+          "**/target/**": true
+        },
+        "rust-analyzer.cargo.allFeatures": true,
+        "search.exclude": {
+          "**/target": true,
+          "**/.prism": true,
+          "**/.lexlean": true
+        }
+      }
+    }
+  },
+  "postCreateCommand": "prismpm template check && prismpm lock check && just setup && just vv"
+}

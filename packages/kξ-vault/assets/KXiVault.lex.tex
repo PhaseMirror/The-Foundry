@@ -1,0 +1,48 @@
+% KXiVault.lex.tex – Specification Skeleton
+
+\\section{ComponentRole for K\textbigcircle{}}\
+\textbf{Purpose}: Define the role of the KΞ vault within the system architecture.\
+\textbf{Required}: K3 directory + CLI providing data‑plane (bytes, CID, pin flags). No persistent remembrance of state.\
+
+\\section{Data Plane}\
+\\begin{itemize}\
+  \\item Bytes – raw payload.\
+  \\item CID – content identifier (IPFS‑style).\
+  \\item Pin flags – durability metadata.\
+\\end{itemize}\
+
+\\section{Control Plane Predicates (KXiVault.lex.tex)}\
+\\begin{itemize}\
+  \\item Refuse export.\
+  \\item Refuse vault‑origin accept.\
+  \\item English‑only law enforcement.\
+\\end{itemize}\
+
+\\section{LexLean}\
+LexLean lowers \texttt{.lex.tex} to generated Lean code. No checkable module is produced; it serves as documentation only.\
+
+\\section{PrismPM SDK}\
+\\begin{itemize}\
+  \\item Compiles the module.\
+  \\item Adapters: digest, sign, store, verify.\
+  \\item No replayable artifacts.\
+\\end{itemize}\
+
+\\section{Receipt Laws}\
+\\subsection{PM‑DIGI‑001}\
+Two‑person receipt law. Can refuse a bind.\
+\\subsection{PM‑TRUST‑001}\
+Packet states: D = unaccepted receipt, C = refused, S = accepted.\
+
+\\section{HMAC‑SHA256 Workshop}\
+KLive MAC while 049c is proposed. Vault does not hold K. No year‑one stamp.\
+
+\\section{ADR‑005 – Wire Provenance}\
+Only hide wire if hide is ever recorded as provenance. Fake hide on the cabinet.\
+
+\\section{Miscellaneous}\
+\begin{itemize}\
+  \\item Planes collapse.\
+  \\item No replayable artifacts.\
+  \\item No year‑one stamp.\
+\\end{itemize}\

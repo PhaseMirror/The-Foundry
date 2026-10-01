@@ -1,6 +1,0 @@
-level raw 0
-level echo 1
-level belief 2
-member raw echo
-member echo belief
-equal belief belief

@@ -1,6 +1,0 @@
-{
-  "name": "Phase Mirror",
-  "description": "The Phase Mirror is a diagnostic tool that surfaces productive contradictions, names hidden assumptions, and converts them into concrete levers. This white paper addresses how Phase Mirror Dissonance applies specifically to agentic domain-specific reasoning—a domain where tensions between autonomy, compliance, probabilistic outputs, and liability create structural friction that organizations must navigate deliberately rather than accidentally.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

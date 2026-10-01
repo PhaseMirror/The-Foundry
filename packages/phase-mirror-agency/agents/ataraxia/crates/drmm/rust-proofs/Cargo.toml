@@ -1,9 +1,0 @@
-[package]
-name = "rust-proofs-771777948531797290" 
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-
-[dev-dependencies]
-kani = "0.48.0"

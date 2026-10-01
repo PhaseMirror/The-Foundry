@@ -1,9 +1,0 @@
-{
-  "signal_id": "peet-sig-0001",
-  "peet_delta": 0.02,
-  "tier": "nominal",
-  "latency_ms": 12,
-  "staleness_budget_ms": 500,
-  "within_budget": true,
-  "session_id": "a1b2c3d4-aaaa-4000-8000-session00482"
-}

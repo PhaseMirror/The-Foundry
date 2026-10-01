@@ -1,0 +1,132 @@
+# model/ids.toml --- the conformance ID register.
+#
+# Every ID this repository claims, in one place, so that nothing is referenced
+# without being defined. `CONFORMANCE.md` is generated from this file. A test
+# whose name ends in an ID not listed here fails `check-model`, and an ID listed
+# here with no scenario and no test fails it too (CM-02).
+#
+# `level` is the honesty level (R2):
+#   some-true  a fact reproduced from an authority; not established here
+#   build      constructed here and validated against its oracle
+#   open       measured and reported, never asserted
+#
+# Every row here has a scenario in `features/suites/` and a test whose name ends
+# in the ID, lowercased with underscores (R3, CM-02). There is no "pending"
+# state: a capability that is not built does not get a row, and every row in this
+# file is built.
+#
+spec = "template/1"
+
+[[id]]
+id = "FW-01"
+level = "build"
+suite = "draft-preview"
+statement = "The LexLean-defined draft preview bounds and validates UTF-8 input and renders an explicitly unpublished response through generated Core-Wasm and portable/browser Views."
+
+[[id]]
+id = "OI-01"
+level = "build"
+suite = "owner-inputs"
+statement = "Owner-controlled acceptance inputs are approved, bound to cryptographic evidence, and validated across identity, authority quorums, standards, operational approvals, and availability bounds."
+
+[[id]]
+id = "KB-01"
+level = "build"
+suite = "kappa-service"
+statement = "The browser object-space service retains inbound transport receiver semantics and executes verified blob reconciliation, rejecting partial, unverified, or disconnected state updates."
+
+[[id]]
+id = "OL-01"
+level = "build"
+suite = "organization-lifecycle"
+statement = "Organization lifecycle enforces open creation, provisional creator grants, policy-compliant activation, distinct-user quorum coverage, and cross-organization isolation."
+
+[[id]]
+id = "AM-01"
+level = "build"
+suite = "authority-model"
+statement = "The authority model replaces single-owner operations with scoped multi-administrator policies, enforcing distinct-user quorums, atomic post-change coverage, and concurrent lockout protection."
+
+[[id]]
+id = "EC-01"
+level = "build"
+suite = "email-continuity"
+statement = "The UOR-native verified email identity continuity protocol enforces browser-native challenge-response enrollment, login, and recovery, rejecting replay, unverified mailbox control, revoked-grant restoration, and unauthorized authority creation."
+
+[[id]]
+id = "BC-01"
+level = "build"
+suite = "backup-codes"
+statement = "The saved backup-code recovery protocol enforces NIST SP 800-63B-4 compliant protected issuance, account/revision binding, single-use redemption, rotation, session invalidation, and replay/rollback rejection."
+
+[[id]]
+id = "ST-01"
+level = "build"
+suite = "standards-oscal"
+statement = "The standards boundary implements complete OSCAL catalogs, profile resolution, component and system implementation records, inheritance tracking, and authenticated assessment coverage across all adopted standards."
+
+[[id]]
+id = "OS-01"
+level = "build"
+suite = "organization-sites"
+statement = "The organization and sites boundary enforces complete lifecycle management, multi-admin activation quorums, physical and accessibility assessments, and cross-organization isolation without seeded privileges."
+
+[[id]]
+id = "SV-01"
+level = "build"
+suite = "services-views"
+statement = "Services and Views enforce SPEC-defined stakeholder journeys, explicit state machines, permissions, effects, resource bounds, failure recovery, and independent raw-request boundary verification without mock or draft-preview substitutes."
+
+[[id]]
+id = "BO-01"
+level = "build"
+suite = "browser-object-space"
+statement = "Browser object space implements authenticated membership, confidentiality, storage queries, inbound dispatch, verified blob transfer, conflict resolution, revocation, retention, replication, repair, and recovery without server-hosted substitutes."
+
+[[id]]
+id = "NA-01"
+level = "build"
+suite = "network-acceptance"
+statement = "Network acceptance exercises independent browser participants under real discovery constraints, network partitions, browser suspensions, replica loss, hostile inputs, authenticated bootstrap routing, and measured availability targets without server-hosted proxies."
+
+[[id]]
+id = "PR-01"
+level = "build"
+suite = "producer-release"
+statement = "Producer release generates all artifacts twice reproducibly, verifies complete service, control, dependency, and assessment coverage, and binds exact producer identity, artifact tree, and pre-publication evidence with only deployment-dependent checks outstanding."
+
+[[id]]
+id = "PS-01"
+level = "build"
+suite = "publication-sdk"
+statement = "The publication SDK boundary enforces source-free acquisition, producer readiness verification, target authorization, confined atomic artifact export, live post-deployment verification, and accepted-release rollback without server proxies or byte substitution."
+
+[[id]]
+id = "VB-01"
+level = "build"
+suite = "veilid-bootstrap"
+statement = "The Veilid external boundary enforces authenticated secure bootstrap routing, browser transport integration, relay public-key verification, outbound-relay limitation mitigations, and network discovery under adverse conditions without feature-flag-only or unauthenticated proxy substitutes."
+
+[[id]]
+id = "HB-01"
+level = "build"
+suite = "holospaces-boundary"
+statement = "The Holospaces external boundary revalidates threat-model assumptions against participant/faculty session realities, requiring private-key possession proofs, in-band authenticated discovery, and replica quorum durability under browser churn while rejecting native-relay and local-witness proxy assumptions."
+
+[[id]]
+id = "SB-01"
+level = "build"
+suite = "sdk-boundary"
+statement = "The SDK boundary enforces immutable multi-architecture OCI SDK verification across linux/amd64 and linux/arm64, complete offline dependency closure from Cargo.lock, digest-bound authoritative oracle inputs, and the strict rule that source integration is not consumer acceptance."
+
+[[id]]
+id = "FC-01"
+level = "build"
+suite = "functional-core"
+statement = "The authorized first-release functional core implements identity, roles, shared workspaces, persistence, and messaging as a single accepted stage without preview substitutions or seeded privileges, proving normal account/organization creation, multi-user interaction, permission enforcement, persisted state recovery, and message delivery with resilient fault recovery."
+
+[[id]]
+id = "IC-01"
+level = "build"
+suite = "implementation-closure"
+statement = "The implementation closure model verifies complete remaining-work closure across all product requirements and boundaries, zero deferred or narrowed scope, exact producer release identity binding, and handoff readiness for foundry-web consumption without draft preview or handwritten substitutes."

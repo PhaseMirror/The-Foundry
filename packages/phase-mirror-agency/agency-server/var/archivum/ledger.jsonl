@@ -1,4 +1,0 @@
-{"id": "QmX7...9a2", "timestamp": "2026-06-10 14:02", "type": "Site.Registration", "metadata": {"domain": "citizengardens.org"}, "drift": 0.12, "status": "Archived"}
-{"id": "QmY8...b31", "timestamp": "2026-06-10 13:45", "type": "Site.Registration", "metadata": {"domain": "theory.citizengardens.org"}, "drift": 0.05, "status": "Archived"}
-{"id": "QmZ9...c44", "timestamp": "2026-06-11 09:30", "type": "Audit.Compliance", "metadata": {"node": "gardens-01"}, "drift": 0.18, "status": "Archived"}
-{"id":"QmPublishersxkv2kro43n","timestamp":"2026-06-16 16:42:03","type":"Governance.Publish","metadata":{"file_path":"/home/multiplicity/Multiplicity/tmp/test-artifact.txt","recursion_hash":"6249c4252538d96c4ed446cbe64cdf719188544ab9bb36368994db2164343bb4"},"status":"Archived"}

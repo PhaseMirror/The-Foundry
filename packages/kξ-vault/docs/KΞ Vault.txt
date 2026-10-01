@@ -1,0 +1,481 @@
+Reframe accepted. The vault is not downstream of the seat. It is the surface the seat signs on. Without a directory, a digest, and an export path, seat two has nothing to refuse. Build the vault first. The seat is a user of the vault, not a precondition for it.
+
+Here is the app.
+
+Directory layout
+text
+k3-vault/
+├── vault.json              # index of entries
+├── blobs/
+│   └── <sha256>            # raw document bytes, content-addressed
+├── preimages/
+│   └── <entryId>.bin       # exported Accept preimages, unsigned
+├── receipts/
+│   └── <entryId>.json      # recorded signatures over preimages
+├── shards.json             # cold storage index
+├── pins/
+│   └── <entryId>.adr       # ADR that froze the canonical bytes
+└── bin/
+    └── k3                  # CLI entry point
+No hidden files. No database. A stranger copies the directory and has everything.
+
+Data model
+json
+// vault.json
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "e_7f3a...",
+      "label": "049c text",
+      "cid": "sha256:4050d4c4...d0b9",
+      "blob": "blobs/4050d4c4...d0b9",
+      "created": "2026-09-27T14:02:11Z",
+      "acceptPath": "049c",
+      "pinned": false,
+      "pinAdr": null,
+      "architect": "UNCLEAR",
+      "exports": []
+    }
+  ]
+}
+json
+// shards.json
+{
+  "version": 1,
+  "shards": [
+    {
+      "id": "s_01",
+      "entryId": "e_7f3a...",
+      "location": "steel plate, safe, shelf 2",
+      "digest": "sha256:...",
+      "verified": "2026-09-27T14:20:00Z",
+      "method": "manual-recompute"
+    }
+  ]
+}
+json
+// receipts/<entryId>.json
+{
+  "entryId": "e_7f3a...",
+  "preimage": "preimages/e_7f3a....bin",
+  "preimageDigest": "sha256:...",
+  "signatures": [
+    {
+      "role": "architect",
+      "pubkey": "ed25519:...",
+      "sig": "base64...",
+      "algorithm": "ed25519",
+      "signedAt": "2026-09-27T15:00:00Z"
+    }
+  ],
+  "accept": false,
+  "note": "second signature required"
+}
+accept: true only when two distinct public keys have signed the same preimage digest.
+
+CLI surface
+text
+k3 init <dir>
+k3 add <file> --label "<label>" [--accept-path 049c|none]
+k3 show <entryId>
+k3 list [--accept-path 049c]
+k3 verify <entryId>
+k3 pin <entryId> --adr <adr-file> --architect-sig <sig-file> --architect-pub <pub-file>
+k3 export-preimage <entryId> --envelope-id <id>
+k3 record-signature <entryId> --role architect|k2 --pub <f> --sig <f>
+k3 accept-status <entryId>
+k3 shard add --entry <entryId> --location "<text>"
+k3 shard verify <shardId>
+k3 freeze <entryId> --as 049c_text_v1.txt
+freeze is the extraction step: from a source document, produce canonical bytes (UTF-8, LF, NFC, no trailing whitespace), store as a blob, mark as the signable artifact. The source .docx is recorded as provenance, not as the pin.
+
+Key functions
+python
+# k3_container.py — stdlib only
+
+import hashlib, json, os, struct, argparse, datetime
+from pathlib import Path
+
+DOMAIN = b"PM-K2-ACCEPT-v1"
+
+def sha256_bytes(b: bytes) -> str:
+    return "sha256:" + hashlib.sha256(b).hexdigest()
+
+def store_blob(vault: Path, b: bytes) -> str:
+    cid = sha256_bytes(b)
+    hexdigest = cid.split(":", 1)[1]
+    p = vault / "blobs" / hexdigest
+    if not p.exists():
+        p.write_bytes(b)
+    return cid
+
+def accept_preimage(envelope_id: str, timestamp: int, doc_digest_hex: str) -> bytes:
+    eid = envelope_id.encode("utf-8")
+    digest = bytes.fromhex(doc_digest_hex)
+    if len(digest) != 32:
+        raise ValueError("doc_digest must be 32 bytes")
+    return (
+        DOMAIN
+        + struct.pack("<I", len(eid))
+        + eid
+        + struct.pack("<Q", timestamp)
+        + digest
+    )
+The export gate
+The vault refuses to export a preimage unless all three hold:
+
+python
+def may_export_preimage(entry: dict) -> bool:
+    return (
+        entry["acceptPath"] == "049c"
+        and entry["pinned"] is True
+        and entry.get("pinAdr") is not None
+    )
+acceptPath == "049c" — the entry was added with an Accept path.
+
+pinned is True — a frozen canonical artifact exists.
+
+pinAdr — the ADR that froze it is recorded.
+
+No seat required for the gate itself. The gate is local. The seat signs after the gate opens.
+
+python
+def cmd_export_preimage(vault, entry_id, envelope_id, timestamp=None):
+    entry = load_entry(vault, entry_id)
+    if not may_export_preimage(entry):
+        raise SystemExit(
+            "refused: bytes_pinned=false or acceptPath != 049c. "
+            "Pin the canonical bytes first."
+        )
+    ts = timestamp or int(datetime.datetime.utcnow().timestamp())
+    pre = accept_preimage(envelope_id, ts, entry["cid"].split(":", 1)[1])
+    out = vault / "preimages" / f"{entry_id}.bin"
+    out.write_bytes(pre)
+    entry["exports"].append({
+        "envelopeId": envelope_id,
+        "timestamp": ts,
+        "preimageDigest": sha256_bytes(pre),
+        "exportedAt": datetime.datetime.utcnow().isoformat() + "Z"
+    })
+    save_entry(vault, entry)
+    return out
+The preimage is unsigned at export. Signing is a separate step by a separate door.
+
+Recording signatures
+python
+def cmd_record_signature(vault, entry_id, role, pub_path, sig_path):
+    entry = load_entry(vault, entry_id)
+    pub = Path(pub_path).read_bytes()
+    sig = Path(sig_path).read_bytes()
+    # verify against the preimage bytes before recording
+    pre_path = vault / "preimages" / f"{entry_id}.bin"
+    if not pre_path.exists():
+        raise SystemExit("refused: no exported preimage for this entry")
+    if not verify_ed25519(pub, pre_path.read_bytes(), sig):
+        raise SystemExit("refused: signature does not verify")
+    receipts = load_receipts(vault, entry_id)
+    if any(s["pubkey"] == pub.hex() for s in receipts["signatures"]):
+        raise SystemExit("refused: this key already signed")
+    receipts["signatures"].append({
+        "role": role,
+        "pubkey": pub.hex(),
+        "sig": sig.hex(),
+        "signedAt": datetime.datetime.utcnow().isoformat() + "Z"
+    })
+    # accept only when two DISTINCT pubkeys signed the SAME preimage digest
+    distinct = {s["pubkey"] for s in receipts["signatures"]}
+    receipts["accept"] = len(distinct) >= 2
+    save_receipts(vault, entry_id, receipts)
+    return receipts
+Two distinct keys, same preimage digest. That is Accept. One key is a proposal.
+
+verify_ed25519 uses a stdlib fallback or an optional pure-Python verifier. No liboqs. No Poseidon2. No HMAC 
+K
+K.
+
+Freeze: producing canonical bytes
+python
+def cmd_freeze(vault, entry_id, out_name, source_docx=None):
+    entry = load_entry(vault, entry_id)
+    src = vault / "blobs" / entry["cid"].split(":", 1)[1]
+    raw = src.read_bytes()
+    # canonical form: UTF-8, NFC, LF, no trailing whitespace
+    import unicodedata
+    text = raw.decode("utf-8")
+    text = unicodedata.normalize("NFC", text)
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = "\n".join(line.rstrip() for line in text.split("\n"))
+    canonical = text.encode("utf-8")
+    cid = store_blob(vault, canonical)
+    entry["canonicalCid"] = cid
+    entry["canonicalName"] = out_name
+    entry["provenance"] = {
+        "sourceCid": entry["cid"],
+        "sourceDocx": source_docx,
+        "frozenAt": datetime.datetime.utcnow().isoformat() + "Z"
+    }
+    save_entry(vault, entry)
+    return cid
+pin is a separate command that records the ADR and flips pinned=true. Freeze produces bytes; pin asserts they are the canonical 049c text. Two distinct acts.
+
+Refusal predicates, enforced
+python
+assert shipped_vault("files_cli", gui_required=False) is True
+assert shipped_vault("files_cli", gui_required=True)  is False
+assert may_export_preimage({"acceptPath": "none", "pinned": True})  is False
+assert may_export_preimage({"acceptPath": "049c", "pinned": False}) is False
+assert may_export_preimage({"acceptPath": "049c", "pinned": True, "pinAdr": "x"}) is True
+assert layer_holds("vault",   "HMAC_K") is False
+assert layer_holds("view",    "HMAC_K") is False
+assert wrapper_ok("nix")      is False   # before K2
+assert wrapper_ok("snap")     is False   # always
+assert "liboqs" not in deps()
+assert "poseidon2" not in primitives()
+Verification procedure (for a stranger)
+Copy k3-vault/ to any machine with Python 3.11+.
+
+python3 bin/k3 verify <entryId> — recomputes SHA-256 of the blob, compares to cid.
+
+Open vault.json — read the entry.
+
+Open preimages/<entryId>.bin — read the preimage.
+
+Recompute DOMAIN || LE32(len) || envelopeId || LE64(ts) || digest — matches preimage bytes.
+
+Open receipts/<entryId>.json — verify each signature over the preimage with its public key.
+
+Count distinct keys. Two = Accept. One = proposal.
+
+No network. No store. No vendor. No wrapper needed.
+
+What ships in v0.1
+Component	Status	Deps
+k3_container.py	ships	stdlib only
+k3 CLI	ships	stdlib only
+vault.json schema	frozen	JSON
+shards.json schema	frozen	JSON
+receipts/*.json schema	frozen	JSON
+Ed25519 verify	optional pure-Python module	stdlib only
+HMAC 
+K
+K	not in vault	workshop
+Poseidon2	not in vault	L0-Q
+ML-DSA-44	not in vault	L0-Q
+ML-KEM-512	not in vault	L0-Q
+liboqs	not in vault	0 crates
+GUI	optional view	v0.2
+Nix/AppImage/Flatpak	deferred until K2 seats	v0.3
+v0.2 candidates (views, not ship conditions)
+Tauri app that reads vault.json read-only.
+
+Localhost web UI served by k3 serve --read-only.
+
+QR display of preimages/<entryId>.bin for air-gapped transfer.
+
+All optional. All disposable. None hold secrets. None required for the vault to work.
+
+v0.3 candidates (wrappers, after K2)
+flake.nix pinning Python version and the single file.
+
+AppImage built from that.
+
+Flatpak manifest with --unshare=network.
+
+Deferred until PM-K2-001 is non-vacant.
+
+Levers
+Owner	Lever	Metric	Horizon
+You / K1	k3 add + k3 freeze produce a canonical blob for the 049c text	One directory, one vault.json, one frozen blob	7 days
+You / K1	k3 pin records the ADR and flips pinned=true	pinned=true, pinAdr non-null	7 days
+You / K1	k3 export-preimage produces a preimage	Preimage verifies against the domain formula	7 days
+Architect door	Signature over the preimage	One signature recorded, role=architect	14 days
+Named second person	Signature over the same preimage	Two distinct keys, accept=true	14 days
+Cold steward	k3 shard add for at least one shard	One shard recorded, one verified	14 days
+Release engineer	flake.nix drafted but not shipped	One expression, zero wrapper artifacts shipped	after K2
+What this does not do
+Does not name K2. PM-K2-001 stays non-vacant until a legal person signs a receipt.
+
+Does not Accept 049c. The vault records; the second hand accepts.
+
+Does not open Week 1. A vault init is not a clock.
+
+Does not move funds. G=0.
+
+Does not put Poseidon2 live. Zero live-seal sites.
+
+Does not put ML-DSA-44 or ML-KEM-512 on the fuse. Zero crates.
+
+Does not ship a wrapper before K2.
+
+Precision question
+Does k3 freeze run on the .docx body extracted to text — producing a canonical file the architect then pins by ADR — or does k3 add take a plain-text file you author directly as the canonical 049c text, with the .docx recorded only as provenance?
+
+Because the first requires an extraction procedure that strangers must trust, and the second requires you to produce the canonical text once, freeze it, and let the ADR pin it. Both produce signable bytes. Only the second keeps the vault free of a document converter.
+
+This response is AI-generated, for reference only.
+Vault built. Seat is a user of it, not a precondition.
+
+**Answer to the precision question.** `k3 add` takes a plain-text file you already authored. The `.docx` is provenance only. Freeze of a `.docx` blob is refused. A document converter does not live in the vault.
+
+**What exists.**
+
+| Path | Fact |
+|---|---|
+| `k3-vault/bin/k3` | stdlib CLI |
+| `e_683c4e3b1e0b` | label `049c text`, cid `sha256:9cd23b2b…d877ef` |
+| `pinned` | false |
+| `export-preimage` | refused |
+| freeze on `.docx` | refused (`e_7dd82904d84f`) |
+
+**Gates that held.** Export needs `acceptPath=049c` and `pinned=true` and `pinAdr`. One key is a proposal. Two verified distinct keys on one preimage is Accept. No verifier installed → `accept` stays false. HMAC K, Poseidon2, liboqs are not in this tree.
+
+**What this does not do.** Name K2. Pin the candidate. Open Week 1. Move funds. Ship a wrapper or GUI.
+
+**Next lever that is still a person, not a program.** Canonicalization authority signs the pin ADR against `049c_text_v1.txt`, or rejects the candidate. Until that signature exists, the vault remembers and refuses to export.
+The user has delivered a state report. They've built the vault. They've locked the design decision: k3 add takes an authored plain-text file. .docx is provenance. Freeze on .docx is refused. Export is gated on pin. Two distinct keys on one preimage is Accept.
+
+They're asking me implicitly: what next? The lever they name is a person — the canonicalization authority signing the pin ADR.
+
+I should:
+
+Acknowledge the lock briefly
+
+Sharpen the remaining blocker: the pin ADR signer is a person, and that person must be distinct from K2
+
+Maybe propose the pin ADR's shape so the signature has something to land on
+
+Not over-elaborate — they've done the work, they want precision on the next lever
+
+Let me think about what's actually needed. The vault is built. The candidate is e_683c4e3b1e0b, cid sha256:9cd23b2b…d877ef, pinned=false. Export refused. Freeze on .docx refused.
+
+The remaining blocker: pinned=true requires pinAdr non-null, which requires a signature from a canonicalization authority.
+
+Two questions:
+
+Who is the canonicalization authority?
+
+What does the pin ADR actually attest?
+
+The pin ADR should attest: "These bytes — the file at blobs/9cd23b2b…d877ef, labeled 049c text — are the canonical 049c text." It should NOT attest "I agree with the content." It's a canonicalization act, not an endorsement.
+
+Distinctness: the canonicalization authority must be distinct from K2? Actually, let me think. The architect door is UNCLEAR. The canonicalization authority could be the architect, or a separate person. But the key constraint from the refuse-a-bind logic is: K2 must be able to refuse what it signs. If the canonicalization authority is also K2, then K2 chose the offer it disposes of — which collapses the two-person receipt control plane.
+
+So: canonicalization authority ≠ K2. Distinct seats.
+
+Also: is the architect door the canonicalization door? They're "UNCLEAR" on architect. The pin ADR signature could seat the architect door OR a separate canonicalization door. Either way, it's a person, not a program.
+
+Let me draft what the pin ADR should contain so the signature has a target. Keep it tight. The user has been working in a very specific register — terse, tabular, precise, with a "precision question" at the end. I should match that.
+
+I'll:
+
+Confirm the lock
+
+Name the next lever precisely: the pin ADR's shape + who signs
+
+Propose the ADR's minimal content
+
+Note the distinctness constraint (canonicalizer ≠ K2)
+
+Offer the precision question
+
+Don't repeat all the tables they already have. Be economical. Match their register.
+
+Let me draft the pin ADR shape:
+
+text
+ADR_PM_049C_PIN_001
+- Candidate: e_683c4e3b1e0b
+- Blob: sha256:9cd23b2b…d877ef
+- Canonical name: 049c_text_v1.txt
+- Attests: "these bytes are the canonical 049c text"
+- Does not attest: agreement with content, acceptance of terms, opening Week 1
+- Signed by: canonicalization authority
+- Distinct from: K2 seat, HMAC K holder
+- On signature: pinned=true, pinAdr set, export gate opens
+Good. Now the precision question at the end. What's the genuinely open question?
+
+The open question: is the canonicalization authority the architect (seating that UNCLEAR door) or a separately named person? And if the architect, does that collapse the two-door structure by making the same person propose the bytes AND (potentially) be one of the two signers?
+
+Actually wait — the two signers of the preimage are architect + K2. If the canonicalization authority is the architect, then architect signs the pin ADR AND signs the preimage. That's fine — they're different acts. The pin ADR is "these bytes are canonical." The preimage signature is "I accept this envelope." Different roles, different documents.
+
+But if the canonicalization authority is K2, that's a collapse: K2 chose the bytes and then accepts them. Refused.
+
+So the precision question: who signs the pin ADR, and is that door distinct from K2?
+
+Let me write it.
+
+Length: medium-short. They've done the work. I don't need to re-explain the vault. Just name the next lever and its shape.
+
+Format: a few tight tables, the ADR shape, the precision question. Match their register.
+
+Lock accepted. Vault is the surface. Seat is a user. k3 add takes authored plain text. .docx is provenance. Freeze on .docx refused. Export gated on pin. Two distinct keys on one preimage is Accept. No verifier installed → accept stays false.
+
+What remains
+The vault holds a candidate. The candidate is not yet the canonical 049c text. That is a person act, not a program act. The vault remembers; it refuses to export; it waits.
+
+Object	State	Gate
+e_683c4e3b1e0b	label 049c text, cid sha256:9cd23b2b…d877ef	Exists
+pinned	false	Blocks export
+pinAdr	null	Blocks pin
+export-preimage	refused	Correct
+accept	false	Correct — no verifier, one key at most
+The next lever is a signature on a pin ADR
+The pin ADR is not the Accept. It is the act that says “these frozen bytes are the canonical 049c text.” It does not say “I agree with the content.” It does not open Week 1. It does not sign the Accept preimage.
+
+Minimal shape:
+
+text
+ADR_PM_049C_PIN_001
+  candidate:        e_683c4e3b1e0b
+  blob:             sha256:9cd23b2b…d877ef
+  canonical name:   049c_text_v1.txt
+  attests:          "these bytes are the canonical 049c text"
+  does not attest:  agreement with content, acceptance of terms,
+                    opening Week 1, movement of funds
+  signed by:        canonicalization authority
+  distinct from:    K2 seat, HMAC K holder, vault display key
+  on signature:     pinned=true, pinAdr set, export gate opens
+Distinctness constraint
+Door	May sign pin ADR?	May sign Accept preimage?
+Canonicalization authority	Yes	Only if also architect
+Architect	Yes, if that is the named seat	Yes — step 4
+K2	No	Yes — step 5
+HMAC 
+K
+K holder	No	No
+Vault display key	No	No
+If the canonicalization authority is K2, the structure collapses: K2 chose the offer it disposes of. Refused. If the canonicalization authority is the architect, that seats the UNCLEAR door and the architect then signs two documents — the pin ADR and the preimage — which are different acts and do not collapse.
+
+After the pin signature lands
+python
+assert pinned is True
+assert pinAdr is not None
+assert may_export_preimage(entry) is True
+Then, and only then:
+
+k3 export-preimage e_683c4e3b1e0b --envelope-id <id> produces the unsigned preimage.
+
+Architect signs the preimage → one receipt recorded.
+
+Named second person signs the same preimage → second distinct key.
+
+Verifier installed → accept=true.
+
+049c becomes a reality with two signatures on one digest.
+
+Until step 1, the vault refuses. That refusal is the lever.
+
+Levers
+Owner	Lever	Metric	Horizon
+Canonicalization authority	Sign ADR_PM_049C_PIN_001 against 049c_text_v1.txt	pinned=true, pinAdr non-null, export gate opens	7 days
+Architect door	Declare seated or vacant	Named holder, distinct from HMAC 
+K
+K and K2	7 days
+You / K1	Install a verifier (pure-Python Ed25519 or libsodium)	verify_ed25519 callable, no liboqs	7 days
+Named second person	Legal name of the K2 seat	PM-K2-001 non-vacant	7 days
+Release engineer	Wrapper deferred	Zero wrapper artifacts	until K2
+Precision question
+Who signs ADR_PM_049C_PIN_001 — the architect (seating the UNCLEAR door, and then also signing the Accept preimage as step 4), or a separately named canonicalization authority who signs only the pin and does not sign the preimage?
+
+Because the first gives you one person doing two acts on two documents, and the second gives you three doors: canonicalizer pins, architect proposes, K2 disposes. Both are honest. Only the second makes the pin itself refusable by someone who is not also a signer.

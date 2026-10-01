@@ -1,9 +1,0 @@
-{
-  "adrs": [
-    {"id": 1, "title": "Use Rust Engine for ESI retention", "status": "Proposed"},
-    {"id": 2, "title": "Enable ALP/CNL engine integration", "status": "Accepted"},
-    {"id": 3, "title": "Deprecated legacy API", "status": "Superseded"},
-    {"id": 4, "title": "ALP/CNL Oracle Integration for hologram-ai", "status": "Proposed"},
-    {"id": 5, "title": "Unified Sovereign Governance Pipeline & Phase 7 GA Promotion", "status": "Proposed"}
-  ]
-}

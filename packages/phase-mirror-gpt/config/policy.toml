@@ -1,2 +1,0 @@
-[semantic_policy]
-forbidden_patterns = ["public", "s3://", "DROP TABLE", "chmod 777"]

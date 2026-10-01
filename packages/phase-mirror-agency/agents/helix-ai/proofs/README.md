@@ -1,1 +1,0 @@
-# knot_in_time_proof
