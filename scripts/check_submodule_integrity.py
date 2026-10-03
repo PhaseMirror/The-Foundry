@@ -313,11 +313,23 @@ def main() -> int:
         help="contact each remote to grade its pin (requires network)",
     )
     ap.add_argument(
+        "--root",
+        type=Path,
+        default=None,
+        help="repository to check; defaults to this script's repository. One copy of "
+             "this gate serves both The-Foundry and the nested Packages repository, "
+             "so the two cannot drift apart.",
+    )
+    ap.add_argument(
         "--strict",
         action="store_true",
         help="treat UNVOUCHED pins as errors rather than warnings",
     )
     args = ap.parse_args()
+
+    if args.root is not None:
+        global ROOT
+        ROOT = args.root.resolve()
 
     gitlinks = read_gitlinks()
     declared = read_gitmodules()
@@ -331,6 +343,7 @@ def main() -> int:
     ack_errors = check_acknowledgements(gitlinks, lockstep, args.probe_remote)
 
     lake = sum(1 for p, _ in gitlinks if exempt(p))
+    print(f"repository: {ROOT}")
     print(f"gitlinks in HEAD: {len(gitlinks)} ({lake} Lake-exempt)")
     print(f".gitmodules entries: {len(declared)}")
     print(f"lockstep record: {LOCKSTEP_FILE} ({'found' if lockstep else 'MISSING'})")

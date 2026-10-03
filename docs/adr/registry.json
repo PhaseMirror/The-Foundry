@@ -1523,6 +1523,240 @@
           "description": "\u2014 fixed the LexLean pin of the same class and established the gate that found these two"
         }
       ]
+    },
+    {
+      "id": "ADR-0141",
+      "title": "Every Gate This Change Added Reaches the Developer Who Has to Run It",
+      "status": " Proposed",
+      "context": "ADR-0139 added `scripts/check_submodule_integrity.py`, which grades every pinned commit `ADVERTISED`, `UNVOUCHED` or `GONE`, and wired it into `.github/workflows/submodule-gate.yml`. Applying the Phase Mirror axes to that implementation finds the tension the record did not address: it is not that the gate is wrong, it is that almost nobody will run it. `control desired vs available` is the axis here, and the gap is concrete. The gate is reachable from three surfaces: the GitHub Actions workflow, a manual `python3 scripts/check_submodule_integrity.py`, and a manual `--root packages` invocation for the nested repository. It is absent from the root `Justfile`, whose `vv` recipe is the acceptance gate this repository already documents and which runs `lean-sorry-check` but nothing about submodules; it is absent from the `Makefile`, whose `adr-sorry-check` and `adr-index` targets establish that local gate entry points are the convention here; and it is absent from `scripts/verify_governance_gates.py`, the one script that aggregates governance checks and the surface `compliance/governance/DISSONANCE-REGISTER.json` names as its own `enforcement` field. A gate that lives only in CI can be green locally and red remotely, which means the person best placed to prevent the defect is the person not running it. `packages/` is worse: it is a separate repository with no workflow at all, so the only way to check its pins is to remember a flag on a script in its parent. This is the same class of finding `docs/adr/proposed/ADR-PML-072.md` already recorded for the Phase Mirror loop itself, which runs above the formal ADR model rather than inside it. A new gate that repeats the pattern is not a new gate in the governance sense; it is a second ungoverned control surface. The register now carries this as `D-20`, severity High, because a named tension that nothing enforces is exactly what the Phase Mirror loop's own `some-true` rows forbid.",
+      "decision": "The submodule gate joins the surfaces a developer already runs, rather than adding a fifth place to remember. A `submodule-check` recipe is added to the root `Justfile` and a `submodule-check` target to the `Makefile`, both invoking `scripts/check_submodule_integrity.py`, and `vv` gains the recipe so the documented acceptance gate covers it. `scripts/verify_governance_gates.py` gains the submodule gate as a tenth enumerated gate, reported in the same `N/10 gates passed` line as the nine it already aggregates, so a failure surfaces in the single command the dissonance register points at. `--probe-remote` is used in the aggregate gate, because the stranded-pin class it exists to catch is invisible offline, and the remote probe is what makes `GONE` distinguishable from a local checkout that merely has not run yet. One copy of the gate serves both repositories. `packages/` receives no copy of the script and no second lockstep reader; the `--root` flag added by ADR-0139 is what checks it, and the aggregate gate invokes it for both roots. Two copies of a control surface is the failure this whole line of work exists to close, so duplicating the gate into the nested repository would reintroduce it in the shape of the fix. The gate stays fail-closed and stays advisory where ADR-0139 and ADR-0140 made it so: `GONE` is an error unless an acknowledgement naming a tracking ADR exists, an acknowledgement goes stale \u2014 and therefore red \u2014 the moment its condition resolves, and `UNVOUCHED` is a warning that `--strict` promotes. Wiring the gate into more surfaces does not grant it more authority than it already has.",
+      "consequences": [
+        "A developer running `just vv` or `make submodule-check` now runs the submodule gate, so the stranded-pin class is caught before a push rather than after it",
+        "`verify_governance_gates.py` reports the submodule gate as one of its enumerated gates, so the dissonance register's `enforcement` field becomes true for `D-20` rather than aspirational",
+        "`packages/` becomes checkable from a single command instead of a remembered flag, and the two repositories cannot disagree about a pin because one implementation reads both",
+        "The aggregate gate now requires network access to grade pins, so a fully offline `verify_governance_gates.py` run cannot grade `GONE` versus merely-unchecked; the offline path is retained and reports pins as unverified warnings rather than silently passing, which keeps an air-gapped run honest about what it did not check",
+        "`vv` grows by one recipe, so its wall-clock time grows by the remote probe latency for four submodules; the probe is network-bound and this is accepted rather than cached, because a cached pin grade is a stale pin grade",
+        "`D-20` moves from `open` to `resolved` only when `verify_governance_gates.py` itself reports the submodule gate passing, which is the proof the register's `proves` field will name",
+        "Packages still has no CI of its own, so its pins are checked only when The-Foundry's aggregate gate runs against it; a future independent check for that repository remains open and is not closed by this record"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "Justfile",
+          "kind": "SpecificationDoc",
+          "description": "\u2014 gains `submodule-check`, and `vv` gains the recipe, so the documented acceptance gate covers submodule integrity"
+        },
+        {
+          "uri": "Makefile",
+          "kind": "SpecificationDoc",
+          "description": "\u2014 gains `submodule-check` alongside the existing `adr-index` and `adr-sorry-check` entry points"
+        },
+        {
+          "uri": "scripts/verify_governance_gates.py",
+          "kind": "SourceFile",
+          "description": "\u2014 gains the submodule gate as a tenth enumerated gate, invoked for both repository roots with `--probe-remote`"
+        },
+        {
+          "uri": "scripts/check_submodule_integrity.py",
+          "kind": "SourceFile",
+          "description": "\u2014 the single implementation both surfaces invoke; the `--root` flag is what lets one copy check `packages/`"
+        },
+        {
+          "uri": "compliance/governance/DISSONANCE-REGISTER.json",
+          "kind": "SourceFile",
+          "description": "\u2014 `D-20` records this tension and names the command that closes it"
+        },
+        {
+          "uri": "docs/adr/proposed/ADR-0139.md",
+          "kind": "ADR",
+          "description": "\u2014 added the gate and the workflow this record brings into the surfaces a developer already runs"
+        },
+        {
+          "uri": "docs/adr/proposed/ADR-PML-072.md",
+          "kind": "ADR",
+          "description": "\u2014 the earlier finding that a loop running outside the formal ADR model is ungoverned; this record applies the same correction to a gate"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0142",
+      "title": "Give the Phase Mirror Loop the Scanner's Scan Scope Before Running It Again",
+      "status": " Proposed",
+      "context": "Running the canonical Phase Mirror loop over this tree on 2026-10-03 produced two tensions, and reading them against their evidence shows the loop cannot be trusted as a coverage instrument on this repository. This is `risk claimed vs risk owned`, and the risk is claimed by the tool's own docstring, which claims to \"compare stated intent vs implementation reality\" across \"the Lean 4 corpus\". The measured disagreement is exact. `scripts/phase_mirror_loop.py` hardcodes `LEAN_SUBDIR = \"lean\"` and reports `lean_decls=156 sorry=0`. `scripts/check_adr_sorry.py`, after the D-15 fix, scans `['ADR', 'Foundations', 'pirtm/lean', 'lean']` and reports **13** manifest-authorised sorry sites, every one of them under `Foundations/Kappa/`. `lake build` agrees with the scanner. So the loop evaluates the repository's sorry-free purity claims against a corpus that excludes every sorry site it exists to police, and reports the plane clean. D-15 gave the scanner the wider scope and did not give the loop the same treatment; the register already logged the symptom as `D-13` at severity Low, describing a stale snapshot rather than a structural blindness, which understates it. The loop's own top-ranked tension, score 150.0, is an artefact of the same mismatch: `alp_sorry_manifest.json permits 13 sorry(s) not present in lean`. That is not a governance defect in the manifest. It is the loop observing a corpus in which the manifest's permissions necessarily appear unused. Ranking it first means the highest-priority item the methodology surfaces is a measurement error, which is the specific way a reporting tool that always exits 0 corrodes trust in the reports it does produce. The second tension, score 32.0, is real and actionable: two documents \u2014 `docs/adr/PM_FORGE_001_Twelve_Card_Workbench_v1.0.md:111` and `docs/adr/Porting TinyLlama.md:215` \u2014 claim sorry-free proofs while thirteen sorries are manifested. A second hazard blocks the obvious remedy. `phase_mirror_loop.py`'s `next_plan_number()` scans `existing_plan_ids()` with a non-recursive `os.listdir` of `docs/adr/`, finds `ADR-PML-001` through `ADR-PML-011`, and returns 12. The `proposed/` directory holds a 227-file `ADR-PML-001`..`ADR-PML-227` series with different content under the same numbers. So a non-dry run today would mint `ADR-PML-012` and write it into `docs/adr/` top level, colliding with a series that already resolves one id to three files in three directories. Any run must be dry until numbering is unified.",
+      "decision": "`phase_mirror_loop.py` adopts `check_adr_sorry.py`'s `SCAN_DIRS` rather than a single `LEAN_SUBDIR`, reusing that module's `scan_lean()` the way `honesty_audit.sh` already reuses it, so the loop and the honesty audit can never again disagree about what is counted. The honesty audit's existing parity check \u2014 \"loop tally == independent strip-and-count\" \u2014 is extended to compare against the sorry scanner's scope rather than only against a strip-and-count over the same narrow root, because a parity check between two measurements of the same wrong corpus is not a parity check. `next_plan_number()` stops consulting only `docs/adr/` and instead scans all ADR directories, so a new plan ADR cannot collide with an existing number; until that lands, the loop is not run without `--dry-run`, and this is recorded rather than left to memory. The tension ranking is corrected only as a consequence of the scope fix, never by hand: the score-150 artefact must disappear on its own once the loop can see `Foundations/Kappa/`. If it does not disappear, the manifest is genuinely stale and a separate decision is required. No tension is deleted, suppressed or renumbered to make the loop's output look clean, which is the `D-03` precedent: weakening an assertion to match an observed value converts a false claim into a passing test. The two real tensions are recorded rather than resolved. The score-32 purity-claim tension becomes a `D-22` register entry with the two documents cited by path and line, because a document claiming a sorry-free proof while thirteen sorries are manifested is a claim about the repository's honesty boundary, and the honest disposition is either to complete the proofs or to downgrade the wording \u2014 an editorial decision with a named owner, not a scanner fix.",
+      "consequences": [
+        "The loop stops ranking a measurement error as its highest-priority finding, so its output becomes usable as evidence for governance decisions instead of something every reader must re-derive",
+        "Two tools that both count sorries can no longer disagree about the corpus, because they will read the same scope by construction rather than by two edits staying in sync",
+        "The parity check in `honesty_audit.sh` gains teeth: it will catch a scope regression in either tool rather than confirming that both are wrong together",
+        "Plan-ADR numbering stops silently colliding with the 227-file `proposed/` series, which is a prerequisite for ever running the loop non-dry without minting a duplicate id",
+        "A non-dry loop run rewrites `docs/adr/ADR-Plan-Phase-Mirror-Dissonance-Loop.md` and its `.backlog.md`, both machine-generated; this record does not authorise that run, and the files are regenerated output that must not be hand-edited",
+        "`D-13` should be re-scoped from a stale snapshot to a structural scope defect and its severity raised, because \"the authoritative count is the 13 the scanner reports\" is only true for a tool that reads the scanner's scope",
+        "The tension backlog this methodology maintains stays empty and machine-generated, so the hand-authored per-tension detail lives in the register entries and the ADRs instead; that split is recorded here because it is the only durable form the tension detail currently has",
+        "Fixing the scanner without also fixing the loop has now happened once. The parity check above is what makes a second occurrence visible instead of silent"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "scripts/phase_mirror_loop.py",
+          "kind": "SourceFile",
+          "description": "\u2014 `LEAN_SUBDIR` at line 60 restricts the corpus to `lean/`; `next_plan_number()` and `existing_plan_ids()` scan only `docs/adr/` non-recursively"
+        },
+        {
+          "uri": "scripts/check_adr_sorry.py",
+          "kind": "SourceFile",
+          "description": "\u2014 `SCAN_DIRS = ['ADR', 'Foundations', 'pirtm/lean', 'lean']`, the scope the loop must adopt per D-15"
+        },
+        {
+          "uri": "scripts/honesty_audit.sh",
+          "kind": "SourceFile",
+          "description": "\u2014 already imports `scan_lean` and `load_sorry_manifest` from the loop; its parity check is the one to extend"
+        },
+        {
+          "uri": "docs/adr/PM_FORGE_001_Twelve_Card_Workbench_v1.0.md:111",
+          "kind": "SpecificationDoc",
+          "description": "\u2014 claims \"No sorry\" for the formal-methods steward row while thirteen sorries are manifested"
+        },
+        {
+          "uri": "docs/adr/Porting TinyLlama.md:215",
+          "kind": "SpecificationDoc",
+          "description": "\u2014 claims a \"Concrete contractivity theorem (complete proof, no sorry)\""
+        },
+        {
+          "uri": "state/alp_sorry_manifest.json",
+          "kind": "SourceFile",
+          "description": "\u2014 the manifest whose 13 permissions the loop misreads as stale, at tension score 150.0"
+        },
+        {
+          "uri": "compliance/governance/DISSONANCE-REGISTER.json",
+          "kind": "SourceFile",
+          "description": "\u2014 `D-13` understates this as a stale snapshot; `D-15` fixed the scanner without the loop"
+        },
+        {
+          "uri": "Governance/docs/Phase_Mirror_Loop_Goal.md",
+          "kind": "ADR",
+          "description": "\u2014 the normative five-step goal this loop implements and this record holds to"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0143",
+      "title": "One ADR Namespace, One Index, and a Plan Registry That Can See Every Record",
+      "status": " Proposed",
+      "context": "Three measured facts about this repository's ADR surface disagree with each other, and all three are `intent vs operating incentives`: documents present themselves as authoritative indexes while disagreeing with the data they index. First, `docs/adr/README.md` calls itself the ADR Ledger and states `Total ADRs: 28`. `docs/adr/registry.json` holds **43** records. The README's table stops at ADR-0120 and omits ADR-0128 through ADR-0138 entirely, so the two surfaces are not off by a rounding error; a reader consulting the README cannot discover thirteen accepted records, including ADR-0131 and ADR-0138, both of which other records cite as governing. The README is a generated artifact of `scripts/generate_adr_index.py`, and regenerating it is a one-command fix nobody has run. Second, `ADR-PML-NNN` numbering is already triplicated with different content under the same id. `ADR-PML-005` exists in `docs/adr/`, in `docs/adr/proposed/` and in `docs/adr/completed/`, as three different documents. The research that located the Phase Mirror methodology found `proposed/ADR-PML-058.md` to be a control-surfaces tension while `completed/ADR-PML-064-*.md` asserts that `058`..`063` are the LexLean plane \u2014 a claim the files themselves contradict. Those LexLean records turned out to live only in the retired `packages/LexLean` clone and are now preserved at `docs/adr/lexlean/`, a fourth location, chosen precisely because the numbers were taken. Third, and worst for enforcement, `phase_mirror_loop.py`'s `export_plan_registry()` enumerates ADR records with a non-recursive `os.listdir` of `docs/adr/`. Every record under `proposed/`, `completed/` and the new `lexlean/` namespace is therefore invisible to `state/adr_plan_registry.json` \u2014 and that file is `include_str!`-compiled into `packages/rust/adr-verifier/src/lib.rs`, which enforces the boundary rules `RequiredAdrNotAccepted` and `LeakedClosedAdr` against it. The 227-file `proposed/` series has never been subject to a single one of those rules. This record's own `ADR-0139`, `ADR-0140` and `ADR-0141` are in `proposed/` and are equally unenforced. The incentive that produced this is legible: writing a record into a subdirectory is frictionless, indexing it is not, and nothing fails when a record is unindexed. A record that no tool can reach is not governed, and the repository's own `ADR-PML-072` already recorded the general form \u2014 \"generates ADRs without formal governance\" \u2014 without connecting it to the indexing failure that causes it.",
+      "decision": "`docs/adr/README.md` is regenerated from `docs/adr/registry.json` rather than maintained by hand, and a gate asserts the two agree on both record count and id set, so the ledger cannot drift again. `registry.json` becomes the single source for non-PML records and the README a rendered view of it. `ADR-PML-NNN` numbering is unified. The three existing numbers are resolved by directory precedence \u2014 `proposed/` is the live series, `completed/` records the disposition in a `## Resolution` section rather than in the filename, and the top-level `ADR-PML-001`..`011` files generated by the loop are retired into `proposed/` \u2014 after which `next_plan_number()` scans every ADR directory and returns `229`, above the highest number in use anywhere. The collision is resolved by renaming, not by deleting: no record is dropped to make the numbering tidy, because a duplicate id resolved by discarding one copy is indistinguishable from a record lost. The plan registry enumerates recursively. `export_plan_registry()` walks the ADR directories rather than one, so every `ADR-PML` record reaches `state/adr_plan_registry.json` and therefore the Rust boundary rules. Because that file is compiled into a binary by `include_str!`, the registry is regenerated and the consuming crates rebuilt in the same change, and the record states plainly that a stale registry means the binary enforces rules against months-old data \u2014 which is a `some-true` claim about enforcement that must not be made while a stale file is committed. Finally, `docs/adr/lexlean/` is kept as a distinct namespace with its `PROVENANCE.md` rather than folded into `proposed/`, because folding it in would recreate under `ADR-PML-058`..`062` the exact collision that namespace exists to avoid. The five recovered LexLean records are registered in `registry.json` with their real paths so they are reachable by the same tooling as everything else, even though their numbers are shared with another series; the shared number is recorded in the record's `supersedes`-adjacent metadata rather than hidden.",
+      "consequences": [
+        "`docs/adr/README.md` stops under-reporting by thirteen records, and a gate fails if it ever disagrees with `registry.json` again",
+        "Every `ADR-PML` record becomes visible to the Rust `adr-verifier` boundary rules for the first time, which will surface pre-existing violations that were previously impossible to detect \u2014 the gate is expected to go red on first run and those findings are real, not regressions introduced here",
+        "`next_plan_number()` returning 229 removes the collision hazard that made a non-dry Phase Mirror run unsafe, which is the precondition ADR-0142 needs",
+        "The ADR-PML series is renumbered across three directories, producing a large, mechanical diff whose review value is low; it is deliberately isolated in its own change so it can be reviewed for completeness of renames rather than for content",
+        "`state/adr_plan_registry.json` and the compiled consumers must be rebuilt together, and a committed stale registry is a silent enforcement gap that no existing gate detects; the rebuild is therefore part of this decision, not a follow-up",
+        "`ADR-0131` and `ADR-0138` become discoverable from the README, so records that cite them as governing stop citing something a reader cannot find",
+        "`docs/adr/lexlean/` remains a fourth namespace, which is honest about a genuine historical split but leaves four directories to search; collapsing it is deferred rather than faked, since the alternative is reintroducing a duplicate number",
+        "The untracked `accepted/` to `completed/` migration visible in the working tree during this work is the same incentive acting on status directories; this record does not resolve that migration and it must not be committed alongside the renames"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/README.md",
+          "kind": "SpecificationDoc",
+          "description": "\u2014 states 28 records against the registry's 43 and omits ADR-0128 through ADR-0138"
+        },
+        {
+          "uri": "scripts/generate_adr_index.py",
+          "kind": "BuildConfig",
+          "description": "\u2014 the generator that produces the README; it is the mechanism the count-drift gate must wrap"
+        },
+        {
+          "uri": "scripts/phase_mirror_loop.py",
+          "kind": "SourceFile",
+          "description": "\u2014 `export_plan_registry()` uses a non-recursive `os.listdir`, which is why 227 records are unenforced"
+        },
+        {
+          "uri": "state/adr_plan_registry.json",
+          "kind": "SourceFile",
+          "description": "\u2014 the registry the Rust boundary rules consume, and which currently omits every record outside `docs/adr/` top level"
+        },
+        {
+          "uri": "packages/rust/adr-verifier/src/lib.rs",
+          "kind": "SourceFile",
+          "description": "\u2014 `include_str!`s the registry, so a stale file means the binary enforces months-old rules"
+        },
+        {
+          "uri": "docs/adr/registry.json",
+          "kind": "SourceFile",
+          "description": "\u2014 the 43-record source of truth this record makes authoritative for non-PML records"
+        },
+        {
+          "uri": "docs/adr/lexlean/PROVENANCE.md",
+          "kind": "SpecificationDoc",
+          "description": "\u2014 the namespace and its reason, kept distinct rather than folded into `proposed/`"
+        },
+        {
+          "uri": "docs/adr/proposed/ADR-PML-072.md",
+          "kind": "ADR",
+          "description": "\u2014 the general finding that generated records escape the formal ADR model; this record identifies the indexing failure that causes it"
+        }
+      ]
+    },
+    {
+      "id": "ADR-0144",
+      "title": "Ratify ADR-0139 Through ADR-0143, and Stop the Governance Tree Moving Unattended",
+      "status": " Proposed",
+      "context": "Five records now exist to govern the submodule and Phase Mirror work, and applying the remaining Phase Mirror axes to them finds two things they share and neither addresses. The first is `urgency vs capacity`. `ADR-0139`, `ADR-0140`, `ADR-0141`, `ADR-0142` and `ADR-0143` are all `Proposed`, and nothing in this repository ratifies a proposal. The status vocabulary spans `Proposed`, `Accepted`, `Completed`, `Superseded` and `Deprecated` across four different directories and three different registries, and the only machine-checked transition is a Rust rule that fails when a *leaked* record is not `Proposed` \u2014 there is no rule that promotes a proposal, and no gate that fails because a proposal has sat unratified. Meanwhile the two acknowledgements in `submodule-lockstep.json` point at `ADR-0140`, an unratified record, and `D-21` escalates to a named question about who holds push access. A governance mechanism whose own records are unratified is asking for ratification it has not obtained. The second is `control desired vs available`, and it is concrete. During this work the working tree acquired an uncommitted migration of roughly sixty files from `docs/adr/accepted/` to `docs/adr/completed/`, plus five new PDFs in `docs/adr/accepted/`. Those files carry September mtimes, so the move is older than this session, yet the tree was clean of it at the start and dirty of it hours later, and no watcher process, no Phase Mirror run and no script this work invoked explains it. Nothing in the repository prevents it recurring: `scripts/check_and_move.py` and `scripts/process_adrs.py` exist to move ADR files between status directories, neither is wired into a gate, and either can rewrite the governance tree with no commit, no review and no notification. The gate this work added, `scripts/check_submodule_integrity.py`, is fail-closed about pins and completely silent about the tree it lives in.",
+      "decision": "Ratification becomes an explicit, checked step rather than an assumption. `ADR-0139` is the only record in this set proposed for `Accepted` on the strength of its own evidence: it is implemented, its gate is armed with 24 unit tests that plant each defect it claims to catch, both repositories pass it, and its residual risk is enumerated rather than assumed away. `ADR-0140` stays `Proposed` because it cannot be executed without push access to two upstream repositories, and `ADR-0141`, `ADR-0142` and `ADR-0143` stay `Proposed` because each describes work not yet performed. A record that describes unperformed work and claims `Accepted` is the exact simulation-masquerading-as-proof failure `D-03` refuses, so status tracks execution rather than intent. A new gate reports ratification debt rather than hiding it. It enumerates `Proposed` records in the ADR surface, and for each one requires either a `tracked_by` acknowledgement, a register entry, or an age bound after which it is reported as stalled. This is an anti-vacuity check on the register rather than an assertion about the register: \"there are no proposed records\" is true on an empty repository and uninformative, so the gate reports the count, the oldest age, and the set of records with no tracker, which is false in both an empty and a populated repository in the informative direction. The ADR-moving scripts stop being able to rewrite the tree unattended. `scripts/check_and_move.py` and `scripts/process_adrs.py` gain a dry-run default and require an explicit `--apply`, so a governance-tree migration is something a person does and reviews rather than something a script does on import or on a timer. The uncommitted `accepted/` to `completed/` migration found during this work is **not** committed by this change and is not resolved by it: it belongs to whoever performed it, and folding an unexplained sixty-file governance migration into a submodule-hygiene pull request would make the pull request unreviewable and would ratify a change nobody here can account for.",
+      "consequences": [
+        "`ADR-0139` becomes the one record of this set that claims `Accepted`, and it does so on evidence a gate re-checks rather than on assertion",
+        "`ADR-0140` through `ADR-0143` remain honestly `Proposed`, so the repository stops presenting unperformed work as decided",
+        "Ratification debt becomes visible as a number and an age rather than as an accumulating pile of proposals nobody has read",
+        "A proposal can no longer sit indefinitely without either a tracker or a stall report, which is the difference between a governance process and a filing cabinet",
+        "`check_and_move.py` and `process_adrs.py` become safe to leave installed: a dry-run default means the sixty-file migration observed here cannot recur unnoticed",
+        "The unexplained migration stays uncommitted and unexplained in this change, which leaves the working tree dirty. That is deliberate: committing it would launder an unaccounted change, and reverting it would destroy whatever produced it. It is reported here instead",
+        "If the migration turns out to be another agent's in-flight work, this repository now has two agents editing `docs/adr/` with no coordination, which is a larger problem than either change in this set and is named rather than resolved",
+        "The ratification gate depends on `ADR-0143`'s work to have a single ADR namespace to enumerate; until then it must tolerate the existing four-directory layout rather than assume one"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "docs/adr/proposed/ADR-0139.md",
+          "kind": "SpecificationDoc",
+          "description": "\u2014 the only record of this set proposed for `Accepted`, on the strength of an armed gate and two green repositories"
+        },
+        {
+          "uri": "docs/adr/proposed/ADR-0140.md",
+          "kind": "SpecificationDoc",
+          "description": "\u2014 stays `Proposed` because closing it needs push access this change does not have"
+        },
+        {
+          "uri": "submodule-lockstep.json",
+          "kind": "SourceFile",
+          "description": "\u2014 both acknowledgements name `ADR-0140`; this record makes an unratified tracker a reportable condition"
+        },
+        {
+          "uri": "scripts/check_and_move.py",
+          "kind": "SourceFile",
+          "description": "\u2014 moves ADR files between status directories with no dry-run default and no gate, which is the mechanism that can rewrite the governance tree unattended"
+        },
+        {
+          "uri": "scripts/process_adrs.py",
+          "kind": "SourceFile",
+          "description": "\u2014 the same class of unguarded ADR-tree mutation"
+        },
+        {
+          "uri": "compliance/governance/DISSONANCE-REGISTER.json",
+          "kind": "SourceFile",
+          "description": "\u2014 `D-21` escalates the push-access question this record's ratification step is designed to route to a human"
+        },
+        {
+          "uri": "docs/adr/registry.json",
+          "kind": "SourceFile",
+          "description": "\u2014 the status vocabulary this record makes execution-tracking rather than intent-tracking"
+        },
+        {
+          "uri": "scripts/check_submodule_integrity.py",
+          "kind": "SourceFile",
+          "description": "\u2014 fail-closed about pins and silent about the tree containing it, which is the gap this record names"
+        }
+      ]
     }
   ]
 }
