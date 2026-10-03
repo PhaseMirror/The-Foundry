@@ -1392,6 +1392,84 @@
           "description": "ALL_FOUNDRY_ADRS: the thirteen hand-maintained records no longer used as research governance context"
         }
       ]
+    },
+    {
+      "id": "ADR-0139",
+      "title": "LexLean Is One Declared Submodule Pinned to a Reachable Commit, and Two Working Copies May Not Both Claim 0.3.0",
+      "status": "Proposed",
+      "context": "Two git repositories sit inside one another here, and both of them pin LexLean. `PhaseMirror/The-Foundry` is the outer repository, on branch `main`, and owns `docs/adr/`. `PhaseMirror/Packages` is a separate repository nested at `packages/`. Both track a gitlink at the LexLean path, and both record two of them: `packages/LexLean` and `packages/lexlean` in The-Foundry, `LexLean` and `lexlean` in Packages, all four mode `160000`, all four pinned to `b54cd15b9d2894f9bcf851f14f179f112d428e35`. Neither repository contains a `.gitmodules`, so neither can give any of those paths a URL. `git submodule status` does not report them as undeclared one at a time, it aborts on the first: `fatal: no submodule mapping found in .gitmodules for path 'LexLean'`. A fresh clone therefore materializes empty directories at both LexLean paths, and because the abort is total rather than per-path, no submodule operation against either repository completes at all. The tree looks complete and is not, which is the worst shape for this failure: it is silent at clone time and fatal at first use. The absence is not LexLean-specific. The-Foundry's five gitlinks and Packages' thirteen are all undeclared. Eight of Packages' thirteen, however, are Lake-managed vendored dependencies under `z-bit/lean4/.lake/packages/` \u2014 Cli, LeanSearchClient, Qq, aesop, batteries, importGraph, mathlib, plausible \u2014 which Lake records as gitlinks for reproducibility and which are intentionally not given `.gitmodules` entries. So the tempting rule, declare every gitlink, is the wrong rule, and any gate written to it would fail permanently and be disabled within a week. This record therefore draws the line at declared-by-intent rather than at gitlink-ness, and the gate below is written to that line. The pin is separately unsound. `https://github.com/PhaseMirror/LexLean.git` advertises exactly one ref, `refs/heads/main` at `1c3e166581347f6d8c66e7ff12e2e7bdaff9b454`; upstream force-rewrote history to reach it, and `git merge-base --is-ancestor b54cd15 origin/main` fails. A full clone of upstream does not contain `b54cd15` at all. The commit is still fetchable by SHA only because the object has not yet been garbage-collected, so the pin names an object no ref vouches for, and its survival is a property of someone else's retention schedule rather than of anything recorded in either repository. Adding `.gitmodules` alone would convert an undeclared dependency into a declared one that still cannot be trusted to resolve, which is why the repointing below is part of this decision and not a follow-up. The local working tree matches neither pin and holds three copies. `packages/lexlean` is 4.3G at `b54cd15`, permanently dirty because `packages/LexLean-main` was dropped inside it, so `git -C packages/lexlean status` reports `?? LexLean-main/`; most of that 4.3G is a regenerable `target/` cache. `packages/LexLean` is 178M, clean, also at `b54cd15`. `packages/LexLean-main` is 345M, is not a git repository, and is tracked by nothing in either repository. The apparent emergency in that third copy does not survive checking, and the correction matters. `packages/LexLean-main` is byte-identical to upstream `main` at `1c3e166`: a recursive diff of the two trees, excluding `.git`, `target/`, and `.lexlean/` build roots, reports 0 differing paths. The untracked directory holds no work at risk. It is a working copy of current upstream that no index names. That reframes this from a rescue into a reconciliation and is why the decision needs no merge: the 150 paths unique to `LexLean-main` and the 2 unique to `LexLean` are both already reconciled upstream. What the two pinned clones do hold is a compiler upstream has moved 68 commits past, from 2026-09-22 to 2026-10-02, across the language-1.2 production-eligibility, named-root extraction, realization-calculus, and GNAF work. The old pin has no `language/core-1.2` and no `compiler/`; `1c3e166` has both. Both trees declare `version = \"0.3.0\"` and both changelogs describe 0.3.0, while the two changelogs disagree about which language versions it supports: one lists `1.0` and `1.1`, the other `1.0`, `1.1`, and `1.2`. So `cargo install --path crates/lexlean` from `packages/lexlean` or `packages/LexLean` and the same command from `packages/LexLean-main` all report `lexlean 0.3.0` and print different `compiler-semantics` digests underneath. A version string that does not identify a build is not a version, and a repository that pins by gitlink has no other way to name the compiler it depends on.",
+      "decision": "`packages/lexlean` is the single canonical LexLean path, lowercase, matching every other package directory and the spelling the existing `.gitignore` rules and build references already assume. The capitalized `packages/LexLean` gitlink is removed rather than declared, in both repositories. One upstream reached through two paths is the condition that let the two copies drift apart unnoticed, and a second alias would restore exactly the ambiguity this record closes. Each repository gains the `.gitmodules` it lacks, naming only the paths it means to declare: The-Foundry declares `packages/lexlean`, Packages declares `lexlean`, both to `https://github.com/PhaseMirror/LexLean.git` on branch `main`. The eight Lake-managed gitlinks under `z-bit/lean4/.lake/packages/` are deliberately left undeclared, because Lake owns them and a hand-written entry would be overwritten by the next `lake update`. Both gitlinks are repointed to `1c3e166581347f6d8c66e7ff12e2e7bdaff9b454` in the same change. This cannot be deferred: the alternative is committing a `.gitmodules` that names a commit upstream has stopped advertising. Because upstream publishes no tag and no branch other than `main`, a commit pin is the strongest available reference and is what this record adopts; it is still weaker than a tag, and that residual weakness is recorded below rather than papered over. `packages/LexLean` and `packages/LexLean-main` are removed from the working tree only after the repointed gitlinks are committed, and their removal is licensed by the byte-identity finding above rather than by inspection. No content is merged, because none needed merging. The regenerable `target/` cache in the old `packages/lexlean` checkout is deleted as part of the change; it is the largest single disk consumer under `packages/` and `.gitignore` already excludes `/target/` and `**/target/`, so nothing tracked depends on it. Two gates are added, and both are scoped so that they can pass on a healthy tree. The first enumerates every mode-`160000` path in `HEAD`, discards those under a `.lake/packages/` directory, and fails if any survivor lacks a `.gitmodules` entry naming a URL. It fails today on the two LexLean paths in each repository, and it will not fire on Lake's vendored trees. The second is the one that would have caught this class directly: after a fresh `submodule update --init`, for each declared submodule it asserts the pinned commit resolves, so a pin that no advertised ref vouches for fails the build rather than surviving on object-retention luck. Neither gate can prevent a future force-push; what they buy is that the next occurrence surfaces in CI rather than in someone's `rm -rf`. The lockstep record in each repository names the pinned commit and the `compiler-semantics` digest that commit's `lexlean --version` reports, not the SemVer string alone. LexLean is a project that separates its honesty levels by content digest, and a monorepo record that identifies its dependency by SemVer reintroduces at the boundary the ambiguity the project removes internally. This record does not decide the drift between `docs/adr/README.md` and `docs/adr/registry.json`, which already disagree at 28 records against 41, with the README omitting ADR-0128 through ADR-0138. That is pre-existing and independent of the submodule defect; it is named here so the next reader does not attribute it to this change. Nor does it decide the anomalous nesting by which Packages is a full repository living inside The-Foundry while The-Foundry's index also tracks individual files beneath it; that is a larger structural question than this defect and is out of scope.",
+      "consequences": [
+        "A fresh `git clone --recursive` of either repository yields a working LexLean at a commit upstream still advertises, instead of empty directories and an abort",
+        "The 68-commit gap closes, so the language-1.2, named-root extraction, realization-calculus, and GNAF capability set becomes reachable from the pinned dependency rather than only from an untracked directory",
+        "No work is recovered, because none was lost: the 150-path delta was already upstream at `1c3e166`, and removing the duplicate trees is licensed by a 0-differing-path diff rather than by a judgement call",
+        "`lexlean 0.3.0` stops naming two different compilers; a record carrying the `compiler-semantics` digest distinguishes them where SemVer cannot",
+        "Roughly 4.5G is reclaimed under `packages/`, almost all of it a `target/` cache that `.gitignore` already excludes",
+        "The fix spans two repositories and therefore two pull requests: this record lands in The-Foundry, and the Packages half \u2014 its own `.gitmodules`, its own gitlink removal and repointing, and its half of each gate \u2014 is a separate change against `PhaseMirror/Packages` that must land for the declared state to be consistent end to end",
+        "Declaring a submodule for the first time makes these repositories perform network fetches at checkout, and the second gate makes CI perform one deliberately to prove the pin resolves",
+        "Every build or script compiled against `b54cd15` must be re-verified, because the 68 intervening commits include schema renames such as `schemas/project-v2.schema.json` and `schemas/lock-v2.schema.json` that break consumers reading the old names",
+        "A commit pin remains weaker than a tag against a force-push, and upstream publishes no tag to pin; this record adopts the commit pin as the strongest available reference and accepts that residual risk explicitly",
+        "The first gate deliberately exempts `.lake/packages/` gitlinks, so a future genuinely-missing declaration under a Lake-managed path would pass; the exemption is the price of a gate that passes on a healthy tree, and it is recorded so the next reader knows where the gate is blind",
+        "Deleting the capitalized path removes a name other tooling may still use; this is a mechanical follow-up in the same change, not a separate migration, and it must be done in both repositories to avoid recreating the two-path condition"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "packages/.gitmodules",
+          "kind": "BuildConfig",
+          "description": "to be added in Packages: the missing declaration whose absence makes `git submodule status` abort with `fatal: no submodule mapping found in .gitmodules for path 'LexLean'`"
+        },
+        {
+          "uri": ".gitmodules",
+          "kind": "BuildConfig",
+          "description": "to be added at the root of The-Foundry, which owns `docs/adr/` and therefore this record, declaring `packages/lexlean` and no other gitlink"
+        },
+        {
+          "uri": "packages/lexlean",
+          "kind": "SourceFile",
+          "description": "the retained canonical path, to be repointed in both repositories from `b54cd15b9d2894f9bcf851f14f179f112d428e35` to `1c3e166581347f6d8c66e7ff12e2e7bdaff9b454`"
+        },
+        {
+          "uri": "packages/LexLean",
+          "kind": "SourceFile",
+          "description": "the duplicate gitlink to be removed in both repositories, mode `160000` at the same stale pin, holding a 178M clone of the same upstream"
+        },
+        {
+          "uri": "packages/LexLean-main",
+          "kind": "SourceFile",
+          "description": "the 345M untracked working copy, byte-identical to upstream `main` at `1c3e166` across 0 differing paths, and the reason `packages/lexlean` cannot report a clean status"
+        },
+        {
+          "uri": "packages/LexLean-main/Cargo.toml",
+          "kind": "SourceFile",
+          "description": "`version = \"0.3.0\"`, the string shared with `packages/LexLean/Cargo.toml` while the two trees implement different language version sets"
+        },
+        {
+          "uri": "packages/LexLean-main/CHANGELOG.md",
+          "kind": "SourceFile",
+          "description": "lists `1.0`, `1.1`, and `1.2` as supported at 0.3.0, where `packages/LexLean/CHANGELOG.md` lists only `1.0` and `1.1`"
+        },
+        {
+          "uri": "packages/LexLean-main/lexlean.toml",
+          "kind": "SourceFile",
+          "description": "declares `lean_toolchain = \"leanprover/lean4:v4.32.1\"`, the pin that lets `lexlean verify` reach real Lean elaboration rather than claiming it"
+        },
+        {
+          "uri": "packages/z-bit/lean4/.lake/packages/mathlib",
+          "kind": "SourceFile",
+          "description": "representative of the eight Lake-managed gitlinks that stay undeclared, and the reason the first gate filters `.lake/packages/` instead of failing on them"
+        },
+        {
+          "uri": "1c3e166581347f6d8c66e7ff12e2e7bdaff9b454",
+          "kind": "GitCommit",
+          "description": "`refs/heads/main` of `https://github.com/PhaseMirror/LexLean.git`, the only ref that repository advertises; `b54cd15` is reachable from no ref and absent from a full clone, fetchable by SHA only until the object is collected"
+        },
+        {
+          "uri": "docs/adr/registry.json",
+          "kind": "ADR",
+          "description": "carries this record; its records already disagree with `docs/adr/README.md`, a drift this record names and does not fix"
+        }
+      ]
     }
   ]
 }
