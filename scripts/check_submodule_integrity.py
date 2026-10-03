@@ -297,9 +297,9 @@ def check_acknowledgements(gitlinks, lockstep, probe: bool) -> list[str]:
             continue
         if path in declared and declared[path]["url"] and probe:
             grade, _ = probe_remote(declared[path]["url"], pin)
-            if grade != GONE:
+            if grade == ADVERTISED:
                 errors.append(
-                    f"{label} is stale: the pin now grades {grade}, so the "
+                    f"{label} is stale: the pin now grades ADVERTISED, so the "
                     f"acknowledgement should be removed"
                 )
     return errors

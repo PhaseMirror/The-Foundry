@@ -1470,6 +1470,59 @@
           "description": "carries this record; its records already disagree with `docs/adr/README.md`, a drift this record names and does not fix"
         }
       ]
+    },
+    {
+      "id": "ADR-0140",
+      "title": "Two Dependency Pins Are Stranded, and One of Them Holds Twelve Unpublished Commits That Exist Only Here",
+      "status": " Proposed",
+      "context": "ADR-0139 fixed the declaration and repointing defects on the LexLean gitlink and added `scripts/check_submodule_integrity.py` to measure the rest. The gate then reported a class of defect ADR-0139 never scoped, on two dependencies it never mentioned, and measuring them inverted the obvious remedy. `packages/multiplicity-crypto` is pinned at `616f1f9c2d746fa372df309b8108dbabe77f84db`. That commit is not reachable from any ref `https://github.com/PhaseMirror/multiplicity-crypto.git` advertises, and it cannot be fetched at all: the remote answers `fatal: remote error: upload-pack: not our ref`. The object is not on the remote. What makes this worse than a stale pointer is the direction of the divergence. The remote's only ref, `refs/heads/main` at `3d49da5f1ba1b30426d67bba6aa17dc9bc104d82`, is the **merge base** of the pin, so the pin is a strict descendant: twelve commits exist in the pin that upstream `main` does not have. Their subjects are `9993912 ADR-084: protocol family conformance vectors and diff-vectors gate`, `98990a8 ADR-087: prove Lean proof surface, ratchet sorries to zero, register lean/`, `ca24d47 ADR-088: wire HardwareQKDBackend (Option b) with honest key-source labels`, `7b00783 ADR-091: conformance rule \u2014 contradiction requires amendment or revert`, `c7ea22e ADR-090: PROVENANCE register \u2014 every claim pinned to a commit`, `65fd862 round-3 hardening: delete D-14 scratch file, untrack 1380 build artifacts, widen gate, add source-inventory meta-probe`, `6dba90b register pin: cite round-3 hardening commit 65fd862 in all resolution rows`, `c7e9744 round-4: governance probe (inventory ADR citations must be Accepted), wasm existence row, denylist-by-design escapes, commit-genealogy section H`, and `616f1f9 register: pin round-4 governance commit c7e9744 into the H genealogy`. Moving the pin to `3d49da5` would therefore delete twelve commits of conformance gates, a PROVENANCE register, and a protocol conformance vector set, and would do so silently, as a side effect of making a gate quiet. A filesystem search found no other clone on this machine holding `616f1f9c`: those twelve commits exist in exactly one directory, `packages/multiplicity-crypto`, with no remote copy of any kind. `packages/prism` is the milder instance of the same class. Its pin `eea3ec8ea9e5fb395970cd933a11a6251032f587` is an ancestor of the remote's `refs/heads/main` at `4aba0ca1`, so it is fetchable and no work is at risk, but no ref names it, which means it survives only on the remote's object-retention schedule. This is precisely the stranded-pin condition ADR-0139 was written about, on a dependency that record did not scope. Advancing it to `4aba0ca1` is 136 commits across 552 files, +70,199/-4,984, touching `xtask` and the browser-application compiler closure, so it is a dependency upgrade rather than a hygiene fix.",
+      "decision": "Neither pin moves in this change, and the reason is different in each case. `packages/multiplicity-crypto` is republished, not repointed: the twelve commits are pushed so the pin becomes fetchable again and upstream `main` advances to include them. Pushing requires write access to `PhaseMirror/multiplicity-crypto`, which this change does not have and does not seek, so the recovery route is recorded rather than executed. Until those commits are published, `packages/multiplicity-crypto` is not deletable, not cleanable and not re-cloneable, and this record is the reason: it is the only copy. `packages/prism` is left at its current pin and advanced in a separate change, once the dependency's own verification passes against `4aba0ca1`; a 136-commit move is not smuggled in under a hygiene record. Interim control is the fail-closed acknowledgement already built into `scripts/check_submodule_integrity.py`. Both pins appear in `submodule-lockstep.json` under `acknowledged_unresolved`, each naming this record as its tracker and each carrying its measured grade \u2014 `GONE` for multiplicity-crypto, `UNVOUCHED` for prism. The gate reports both as warnings on every run rather than staying silent, exits non-zero if either acknowledgement stops describing reality (the pin becomes `ADVERTISED`, or HEAD stops pinning that commit), and exits non-zero if an acknowledgement names no tracking ADR. The gate is green on the two healthy pins and loud on the two broken ones, which is the only arrangement in which a green result means something. The twelve at-risk commit SHAs are recorded in the lockstep file so the loss is nameable rather than anecdotal: if the clone is lost, the record states exactly which twelve commits are gone and which ones matter most, and a future `git push` from any surviving copy restores them.",
+      "consequences": [
+        "The single-copy exposure is named rather than resolved, which is strictly better than the state ADR-0139 inherited and strictly worse than a published pin; only a push to the upstream repository closes it",
+        "Repointing `packages/multiplicity-crypto` to `3d49da5`, the obvious mechanical fix a well-meaning maintainer would reach for, is now explicitly forbidden by this record, with the twelve commits it would delete enumerated",
+        "`packages/prism` stays unvouched and will grade `UNVOUCHED` on every gate run until it is advanced deliberately; the warning is expected output, not a regression",
+        "The gate is green only because two acknowledgements are present and correct. Removing either one turns the gate red, which is the intended direction of failure",
+        "Both remedies require push access to two upstream repositories, one of them under the `UOR-Foundation` organisation for prism. Neither is performed here, so this record closes as far as local action allows and stays `Proposed` until a maintainer with that access acts",
+        "No clean-up of `packages/multiplicity-crypto` is authorised while this record is open, including `git gc`, which would discard the unreferenced objects the twelve commits depend on"
+      ],
+      "supersedes": null,
+      "links": [
+        {
+          "uri": "submodule-lockstep.json",
+          "kind": "SourceFile",
+          "description": "\u2014 carries both grades and the twelve at-risk SHAs, and the `acknowledged_unresolved` entries that keep the gate armed rather than quiet"
+        },
+        {
+          "uri": "scripts/check_submodule_integrity.py",
+          "kind": "SourceFile",
+          "description": "\u2014 `probe_remote` produces the `GONE` and `UNVOUCHED` grades; `check_acknowledgements` makes both acknowledgements fail closed"
+        },
+        {
+          "uri": "packages/multiplicity-crypto",
+          "kind": "SourceFile",
+          "description": "\u2014 the only copy of the twelve commits; its pin `616f1f9c` is what the remote refuses with `upload-pack: not our ref`"
+        },
+        {
+          "uri": "616f1f9c2d746fa372df309b8108dbabe77f84db",
+          "kind": "GitCommit",
+          "description": "\u2014 the stranded pin, twelve commits ahead of upstream `main`, unrecoverable from any remote"
+        },
+        {
+          "uri": "3d49da5f1ba1b30426d67bba6aa17dc9bc104d82",
+          "kind": "GitCommit",
+          "description": "\u2014 upstream `main`, and the merge base of the pin; the commit a naive repoint would fall back to and silently lose twelve commits"
+        },
+        {
+          "uri": "eea3ec8ea9e5fb395970cd933a11a6251032f587",
+          "kind": "GitCommit",
+          "description": "\u2014 the `packages/prism` pin, an ancestor of `4aba0ca1` that no ref names"
+        },
+        {
+          "uri": "docs/adr/proposed/ADR-0139.md",
+          "kind": "ADR",
+          "description": "\u2014 fixed the LexLean pin of the same class and established the gate that found these two"
+        }
+      ]
     }
   ]
 }

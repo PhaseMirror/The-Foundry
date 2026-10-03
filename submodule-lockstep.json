@@ -18,14 +18,14 @@
       "url": "https://github.com/PhaseMirror/PIRTM.git",
       "commit": "ea5ba264879ff5cfc9dd00686c226c04771614b2",
       "grade": "ADVERTISED",
-      "note": "Pin equals the current remote main head."
+      "note": "Pin equals the current remote main head, so a ref names it: ADVERTISED."
     },
     {
       "path": "packages/prism",
       "url": "https://github.com/UOR-Foundation/PrismPM.git",
       "commit": "eea3ec8ea9e5fb395970cd933a11a6251032f587",
-      "grade": "ADVERTISED",
-      "note": "Pin is an ancestor of the remote main head, behind it. Upstream lives under the UOR-Foundation organisation, not PhaseMirror."
+      "grade": "UNVOUCHED",
+      "note": "Corrected from ADVERTISED after the gate measured it: the pin is an ancestor of the remote main head but is named by no ref tip, so it grades UNVOUCHED, the same stranded class ADR-0139 describes. It is still fetchable by SHA. Acknowledged under ADR-0140 and moved to the current main tip only by that record's decision, not to quiet a gate. Upstream lives under the UOR-Foundation organisation, not PhaseMirror."
     },
     {
       "path": "packages/multiplicity-crypto",
@@ -35,6 +35,20 @@
       "note": "UNRESOLVED, AND DELIBERATELY NOT REPOINTED BY ADR-0139. This pin is absent from every advertised ref and cannot be fetched at all: the remote answers 'upload-pack: not our ref'. The object has been garbage-collected upstream, so no fresh clone can reproduce it and a recursive clone of this repository fails on this path. Repointing to the current main (3d49da5) would silently substitute different cryptographic source for a pinned revision, which is a governed decision this record does not make. Tracked as ADR-0140. Until it is resolved, scripts/check_submodule_integrity.py reports this pin as GONE."
     }
   ],
+  "at_risk_commits": [
+    "616f1f9c2d746fa372df309b8108dbabe77f84db",
+    "c7e974423352909bb3eae3c681e0e875fb85a81b",
+    "6dba90bcfa35eb5a07f1c157d6d65c8e754fed94",
+    "65fd862baeb4b28830c3ede18d8fd03839108471",
+    "7b00783ed405e2be91bd5c8e1f4978fd62564f64",
+    "c7ea22ed4aa464ae9a0fa8aa31552b18ca5d99ad",
+    "7832f42f7c559b380c8cdcc5470c7f22a9a181d1",
+    "ca24d47fbd3b4014355231cc6aa5bcb74f765020",
+    "98990a88b6b851f7c4c777923430431353724721",
+    "9993912d0e54df835a0e9c0add151ce23097fafa",
+    "a3d91d1560e5c24a4a9ccba93e0e63f6d9e024da",
+    "660fc3d987ecb964485833ccf6525ca758a5d46c"
+  ],
   "acknowledged_unresolved": [
     {
       "path": "packages/multiplicity-crypto",
@@ -42,6 +56,13 @@
       "condition": "GONE",
       "tracked_by": "ADR-0140",
       "reason": "The pinned object has been garbage-collected upstream and cannot be refetched. Acknowledged so the gate stays armed and green on the three healthy pins while the condition is loud and named rather than hidden. This entry is deliberately fail-closed: scripts/check_submodule_integrity.py reports it as an error if the pin becomes fetchable again or if HEAD stops pinning this commit, so the acknowledgement cannot outlive the condition it excuses. Repointing is governed by ADR-0140 and must not be done to make this gate quiet."
+    },
+    {
+      "path": "packages/prism",
+      "commit": "eea3ec8ea9e5fb395970cd933a11a6251032f587",
+      "condition": "UNVOUCHED",
+      "tracked_by": "ADR-0140",
+      "reason": "The pin is an ancestor of the remote main head but is named by no ref, so it survives only on the remote's object-retention schedule. Same stranded class as the LexLean pin ADR-0139 fixed, on a dependency that record did not scope. Fail-closed: the gate reports this as an error if the pin becomes ADVERTISED or if HEAD stops pinning this commit."
     }
   ]
 }
