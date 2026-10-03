@@ -1,0 +1,47 @@
+{
+  "comment": "Submodule lockstep record (ADR-0139). LexLean separates its honesty levels by content digest, so identifying a pinned dependency by SemVer alone reintroduces at the repository boundary the ambiguity the project removes internally. Both the commit and the digest are recorded; the digest is what distinguishes two compilers that both report 0.3.0. `lexlean --version` prints key=value lines, not JSON, so read the digest with: lexlean --version | awk '/^compiler-semantics /{print $2}'. scripts/check_submodule_integrity.py cross-checks every commit here against the gitlink recorded in HEAD, so this file cannot drift from the pins it describes.",
+  "record_version": "1.0.0",
+  "generated": "2026-10-03",
+  "submodules": [
+    {
+      "path": "packages/lexlean",
+      "url": "https://github.com/PhaseMirror/LexLean.git",
+      "commit": "1c3e166581347f6d8c66e7ff12e2e7bdaff9b454",
+      "grade": "ADVERTISED",
+      "lexlean_version": "0.3.0",
+      "lexlean_language": "1.0",
+      "compiler_semantics": "95deb33a8d416d7bf60f02a36e251a71c3ee6f046b7e475d7bae2fc5ddc3767d",
+      "note": "Repointed from b54cd15, which upstream no longer advertises. This digest was read from the 0.3.0 binary built from packages/LexLean-main, which is byte-identical to this commit."
+    },
+    {
+      "path": "packages/PIRTM",
+      "url": "https://github.com/PhaseMirror/PIRTM.git",
+      "commit": "ea5ba264879ff5cfc9dd00686c226c04771614b2",
+      "grade": "ADVERTISED",
+      "note": "Pin equals the current remote main head."
+    },
+    {
+      "path": "packages/prism",
+      "url": "https://github.com/UOR-Foundation/PrismPM.git",
+      "commit": "eea3ec8ea9e5fb395970cd933a11a6251032f587",
+      "grade": "ADVERTISED",
+      "note": "Pin is an ancestor of the remote main head, behind it. Upstream lives under the UOR-Foundation organisation, not PhaseMirror."
+    },
+    {
+      "path": "packages/multiplicity-crypto",
+      "url": "https://github.com/PhaseMirror/multiplicity-crypto.git",
+      "commit": "616f1f9c2d746fa372df309b8108dbabe77f84db",
+      "grade": "GONE",
+      "note": "UNRESOLVED, AND DELIBERATELY NOT REPOINTED BY ADR-0139. This pin is absent from every advertised ref and cannot be fetched at all: the remote answers 'upload-pack: not our ref'. The object has been garbage-collected upstream, so no fresh clone can reproduce it and a recursive clone of this repository fails on this path. Repointing to the current main (3d49da5) would silently substitute different cryptographic source for a pinned revision, which is a governed decision this record does not make. Tracked as ADR-0140. Until it is resolved, scripts/check_submodule_integrity.py reports this pin as GONE."
+    }
+  ],
+  "acknowledged_unresolved": [
+    {
+      "path": "packages/multiplicity-crypto",
+      "commit": "616f1f9c2d746fa372df309b8108dbabe77f84db",
+      "condition": "GONE",
+      "tracked_by": "ADR-0140",
+      "reason": "The pinned object has been garbage-collected upstream and cannot be refetched. Acknowledged so the gate stays armed and green on the three healthy pins while the condition is loud and named rather than hidden. This entry is deliberately fail-closed: scripts/check_submodule_integrity.py reports it as an error if the pin becomes fetchable again or if HEAD stops pinning this commit, so the acknowledgement cannot outlive the condition it excuses. Repointing is governed by ADR-0140 and must not be done to make this gate quiet."
+    }
+  ]
+}

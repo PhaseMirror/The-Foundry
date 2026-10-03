@@ -1,0 +1,33 @@
+name: Submodule Integrity
+
+# ADR-0139. Fails when a gitlink in HEAD is undeclared, when a pinned commit is
+# no longer obtainable from its remote, or when the lockstep record drifts from
+# the pins it describes.
+#
+# Submodules are deliberately NOT checked out here. One pinned commit
+# (packages/multiplicity-crypto) is unrecoverable, so `submodules: recursive`
+# would fail the job for a reason this gate is supposed to *report*, not hide.
+# The gate grades each pin against its remote instead, which needs no checkout.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submodule-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Submodule integrity gate
+        run: python3 scripts/check_submodule_integrity.py --probe-remote
+
+      - name: Unit tests for the gate itself
+        run: python3 -m unittest discover -s scripts/tests -p 'test_submodule*.py' -v
