@@ -26,6 +26,24 @@ That is the present condition. The only prose describing this gate is the doc co
 
 **Discipline.** Where this tree does not determine an answer, this spec records the gap and marks it blocking. It does **not** substitute a plausible value. In particular §5 declines to state a value for `C_MAX`, because the only candidate values on tree are unsourced literals and laundering one of them into a normative requirement would convert an undocumented constant into a documented error.
 
+### 0.1 Claim scope by tree
+
+Findings in this spec differ in whether they travel. `main`'s tip is `c7187410`. Every path cited below was checked with `git ls-tree main -- <path>`.
+
+| Finding | Path scope | Travels? |
+|---|---|---|
+| Two `certify_constants.rs` copies enforcing `4.0` and `2.71` | `packages/rust/pirtm-monitor/`, `packages/rust/monitor/` | **yes — on `main`** |
+| Two manifests both declaring package and binary `pirtm-monitor` | as above | **yes — on `main`** |
+| `cargo` cannot load the `packages/` workspace; member `phase-mirror-surface` absent | `packages/Cargo.toml` on `main`, directory absent | **yes — on `main`** |
+| Frobenius at L131 vs spectral at L126; non-strict gate at L132 | `packages/rust/pirtm-monitor/` | **yes — on `main`** |
+| Core gate strict: `c < 1` | `Governance/docs/Ξ-Constitutional-Core.md` | **yes — on `main`** |
+| Core discharge `κ < 1/M` ⟹ `c ≤ κM < 1` | `Governance/multiplicity/Multiplicity_Lawful_Recursion.tex` | **yes — on `main`** |
+| No Lean specification of the gate | `Foundations/UOR/Structures.lean` | **yes — on `main`** |
+| A **third** `certify_constants.rs` copy | `packages/PIRTM/rust/pirtm-monitor/` | **no — local-tree only** |
+| A **third** gate G3 (ADR-073, TS `contractivity_score`) | `packages/multiplicity-crypto/` | **no — local-tree only** |
+
+A finding marked *local-tree only* is a claim about branch `adr/0139-lexlean-declared-submodule` and is not checkable from `main`. It is recorded so a reader holding that branch can verify it, and it carries no weight for a reader who is not.
+
 ---
 
 ## 1. Scope
@@ -94,6 +112,8 @@ Three values exist on tree for the same constant:
 | `packages/PIRTM/rust/pirtm-monitor/src/certify_constants.rs:26` | `4.0` | `C ≤ 2.71` (L8) |
 | `packages/rust/monitor/src/certify_constants.rs:26` | `2.71` | `C ≤ 2.71` (L8) |
 
+**On `main` the count is two, not three.** The two rows above `packages/PIRTM/…` are present on `main` (`git ls-tree main -- packages/rust/monitor/src/certify_constants.rs` resolves; `packages/PIRTM/rust/pirtm-monitor/…` does not). The third copy is a **local-tree claim** on branch `adr/0139-lexlean-declared-submodule`, the same class as `8a0b6d9a`, and is recorded here only so a reader holding that branch can check it. The portable finding is two directories, one binary name, two enforced bounds.
+
 **No derivation for either value exists on tree.** A search across `.rs`, `.md`, `.tex`, `.toml`, `.json`, and `.lean` for `2.71` returns the doc comments above and nothing else that is on topic; the remaining hits are coincidences (a sync statistic `492.718`, `exp 1 ≈ 2.7182818283` in a vendored Mathlib file, a substring of an npm integrity hash). `4.0` likewise has no derivation.
 
 This resolves the question of whether the divergence is a transcription error or a substantive disagreement: **neither.** There is no common source to be a transcription of. Both values are unsourced literals, and one copy silently ships a bound 47.6% wider than another copy of the same file, under an identical comment naming the narrower figure.
@@ -104,7 +124,7 @@ The closest governance analogue on tree is a different mechanism and a different
 
 ---
 
-## 6. Relationship to the Core's `c` — DETERMINED: three independent conditions
+## 6. Relationship to the Core's `c` — DETERMINED: independent conditions (two on `main`)
 
 Three gates exist:
 
@@ -112,13 +132,13 @@ Three gates exist:
 |---|---|---|---|
 | G1 | Core contraction | `Ξ-Constitutional-Core.md:34` | $\sup_p \lambda_p (L_{A,p}+L_{B,p}+L_{E,p}) = c < 1$ — **strict** |
 | G2 | This gate | `certify_constants.rs:132` | $\lVert[D,H_m]\rVert_F \le C_{\max}$ — **non-strict** |
-| G3 | L0-5 contractivity score | `ts/src/feedback.ts:36–57`, per `packages/multiplicity-crypto/docs/ADR-073-Contractivity-Gate.md` (Accepted) | `contractivity_score > 0 && contractivity_score <= 1.0` |
+| G3 | L0-5 contractivity score | `ts/src/feedback.ts:36–57`, per `packages/multiplicity-crypto/docs/ADR-073-Contractivity-Gate.md` (Accepted) — **local-tree only, absent from `main`** | `contractivity_score > 0 && contractivity_score <= 1.0` |
 
-**These are three independent safety properties, not three implementations of one condition.** Evidence:
+**These are independent safety properties, not implementations of one condition. On `main` there are two (G1, G2); G3 exists only on this working tree.** Evidence:
 
-- `certify_commutator`'s output has no consumer. Its only call sites are `run_certification()` (L218), which `println!`s it, and the test at L233.
+- `certify_commutator`'s output has no consumer. Its only call sites are `run_certification()` (L218), which `println!`s it, and the test at L233. `run_certification` is invoked from each crate's `src/main.rs:6` and is therefore a **binary entry point, not a ledger wire** — it prints a number and exits; nothing records it.
 - No artifact on tree derives G1's $c$ from G2's `norm` — not as $c = \kappa\cdot\text{norm}$, not as $c = \text{norm}/C_{\max}$, not in any form. A search for any such derivation across `packages/`, `crates/`, and `src/` returns nothing.
-- ADR-073 records "No per-channel ledger" logging $(\lambda_p, L_p, \lambda_p L_p, ACE_p, projector\_status)$, and orders that documentation referencing "c < 1 enforcement" be removed or qualified as "inequality implemented, not wired to Core ledger" absent tests. That is the ADR's own characterisation of G3, not an inference from it.
+- ADR-073 records "No per-channel ledger" logging $(\lambda_p, L_p, \lambda_p L_p, ACE_p, projector\_status)$, and orders that documentation referencing "c < 1 enforcement" be removed or qualified as "inequality implemented, not wired to Core ledger" absent tests. That is the ADR's own characterisation of G3, not an inference from it. **Both the ADR and the TypeScript it governs are absent from `main`** (`git ls-tree main` resolves neither), so on `main` this citation is unavailable and the gate count is two.
 
 **Consequence.** Satisfying any one gate says nothing about the others. G2 passing does not discharge G1; G1's holding does not imply G2 passes. The reconciling artifact — a derivation relating them — does not exist.
 
@@ -128,15 +148,15 @@ Three gates exist:
 
 ## 7. Build determinism
 
-### 7.1 Three copies, three manifests, one binary name
+### 7.1 Two copies and two manifests on `main`; one binary name
 
-`certify_constants.rs` exists at three paths with the divergent constants of §5. Separately, **three** `Cargo.toml` files declare the package name `pirtm-monitor` and the binary name `pirtm-monitor`:
+`certify_constants.rs` exists at three paths on this tree, **two of them on `main`** (§5). Separately, **three** `Cargo.toml` files declare the package name `pirtm-monitor` and the binary name `pirtm-monitor`, **two of them on `main`**:
 
 | Manifest | Package | Binary |
 |---|---|---|
 | `packages/rust/pirtm-monitor/Cargo.toml` | `pirtm-monitor` | `pirtm-monitor` |
 | `packages/rust/monitor/Cargo.toml` | `pirtm-monitor` | `pirtm-monitor` |
-| `packages/PIRTM/rust/pirtm-monitor/Cargo.toml` | `pirtm-monitor` | `pirtm-monitor` |
+| `packages/PIRTM/rust/pirtm-monitor/Cargo.toml` *(local-tree only)* | `pirtm-monitor` | `pirtm-monitor` |
 
 A build therefore produces a binary called `pirtm-monitor` whose certified bound is determined by **which directory the build was invoked from**, silently, with no diagnostic distinguishing 2.71 from 4.0.
 
@@ -153,7 +173,7 @@ Caused by: failed to read `.../packages/phase-mirror-surface/Cargo.toml`
 Caused by: No such file or directory (os error 2)
 ```
 
-`packages/Cargo.toml` is a second workspace root (declared, with a member list and an explicit `exclude` list) whose member `phase-mirror-surface` **does not exist on disk**. Because `packages/rust/pirtm-monitor` lies beneath that root, every cargo invocation from it fails to load the workspace. `cargo metadata --offline --no-deps` fails identically.
+`packages/Cargo.toml` is a second workspace root (declared, with a member list and an explicit `exclude` list) whose member `phase-mirror-surface` **does not exist on disk**. Unlike the other findings in this spec, this one is **on `main`** — the manifest is on `main` and the directory is absent there too, so the defect is portable rather than branch-local. Because `packages/rust/pirtm-monitor` lies beneath that root, every cargo invocation from it fails to load the workspace. `cargo metadata --offline --no-deps` fails identically.
 
 So the link-time resolution question is not merely unanswered — it is currently **unaskable**, and the binary's provenance cannot be established by cargo at all.
 
@@ -173,7 +193,7 @@ fn test_certify_commutator() {
 }
 ```
 
-and one production caller, `run_certification()`, whose comment reads `// Example parameters that satisfy the ledger thresholds.` (L213) and which invokes `certify_commutator(64)`.
+and one production caller, `run_certification()`, whose comment reads `// Example parameters that satisfy the ledger thresholds.` (L214) and which invokes `certify_commutator(64)`.
 
 Both invocations are asserted to **pass**. Consequently:
 
@@ -199,7 +219,7 @@ This gate cannot be specified normatively, and no harness should be written, unt
 | 1 | What derivation produces the commutator bound, and what is `C_MAX`? Neither 2.71 nor 4.0 has one on tree (§5). | **open — blocking** |
 | 2 | Was the intent a spectral-norm certificate or a Frobenius bound? The doc comment says spectral, the code computes Frobenius, and no third artifact records the intent (§3, N-2). | **open — blocking** |
 | 3 | Should the gate be strict or non-strict, and should it match the Core's strict gate? (§4, N-3) | **open** |
-| 4 | Are G1, G2, G3 one condition or three? Determined to be three independent conditions (§6); a derivation relating them would supersede that finding. | **answered — three, pending N-4** |
+| 4 | Are the gates one condition or several? Determined: **two independent conditions on `main`** (G1, G2); **three** on this working tree, G3 being local-only. A derivation relating them would supersede that finding (§6). | **answered — two on `main`, three local, pending N-4** |
 | 5 | Which of the three package copies is canonical? (§7) | **open — blocking** |
 | 6 | Does the binary's provenance need to be recoverable at all, given §7.2 makes it currently unaskable? | **open** |
 

@@ -200,7 +200,7 @@ The gate is `norm <= C_MAX` at L132 — **non-strict**, on a Frobenius value. No
 - Any crate depending on `pirtm-monitor` **as a library** receives `WardMonitor`, `ZenoController`, and `MonitorConfig`, and **never receives the gate**. A Cell linking the library ships with the κ schedule of §4 and without the only certified bound in the crate.
 - The sole production entry is `main.rs:6` → `run_certification()` (L212–221), which `std::process::exit(1)`s on `Err`. Nothing else calls `certify_commutator`; the only other caller is the test at L233.
 
-`run_certification`'s own comment reads `// Example parameters that satisfy the ledger thresholds.` (L213), with `certify_alpha(32, 10.0, 0.95)` and `certify_commutator(64)` — that is, the inputs are *selected* to pass rather than derived from the system being certified.
+`run_certification`'s own comment reads `// Example parameters that satisfy the ledger thresholds.` (L214), with `certify_alpha(32, 10.0, 0.95)` and `certify_commutator(64)` — that is, the inputs are *selected* to pass rather than derived from the system being certified.
 
 ### 5.3 There is no formal specification
 
@@ -208,7 +208,7 @@ No Lean statement of this gate exists. `Foundations/UOR/Structures.lean` declare
 
 This changes the character of DEFECT-7. It is **not** a spec-versus-implementation mismatch — there is no spec to violate. It is a doc-comment-versus-implementation mismatch with no formal specification on either side, which means the class of checker that would ordinarily catch it (Kani, or a Lean statement written separately from the code) has nothing to check against. The precondition your track call names is unmet on the spec side, not the implementation side.
 
-A third, unrelated contractivity gate is documented at `packages/multiplicity-crypto/docs/ADR-073-Contractivity-Gate.md` (Status: Accepted), over `ts/src/feedback.ts:36–57`, gating on `contractivity_score > 0 && contractivity_score <= 1.0`. That ADR also records "No per-channel ledger" logging $(\lambda_p, L_p, \lambda_p L_p, ACE_p, projector\_status)$, and orders that documentation referencing "c < 1 enforcement" be removed or qualified as "inequality implemented, not wired to Core ledger" absent tests. So three distinct gates are in play — the Core's strict `sup_p λ_p L_p < 1`, this Rust Frobenius `norm <= C_MAX`, and a TypeScript score predicate — with no artifact reconciling them.
+A third, unrelated contractivity gate is documented at `packages/multiplicity-crypto/docs/ADR-073-Contractivity-Gate.md` (Status: Accepted), over `ts/src/feedback.ts:36–57`, gating on `contractivity_score > 0 && contractivity_score <= 1.0`. **Both that ADR and the TypeScript it governs are absent from `main`** — the gate count is two there, three only on this working tree. That ADR also records "No per-channel ledger" logging $(\lambda_p, L_p, \lambda_p L_p, ACE_p, projector\_status)$, and orders that documentation referencing "c < 1 enforcement" be removed or qualified as "inequality implemented, not wired to Core ledger" absent tests. So three distinct gates are in play — the Core's strict `sup_p λ_p L_p < 1`, this Rust Frobenius `norm <= C_MAX`, and a TypeScript score predicate — with no artifact reconciling them.
 
 ---
 
@@ -254,7 +254,7 @@ Adoption of any decaying κ requires **all** of the following, none of which thi
 
 - `Governance/docs/MOC.md:2, 11, 12` claims `LawfulRecursionHash: 099c79aa1d5f5435c93d3dcd0c2bc83264c9da488861258a47b8feb73648c194`. The actual digest of `Governance/docs/Ξ-Constitutional-Core.md` is `8167719f6b1d7b9ca6f0d463e9c8da4de84a5a1b5b9a5c15df684860b1d5b6e3`. **MOC's anchor does not verify.**
 - MOC's anchor command `cat multiplicity/Ξ-Constitutional-Core.md | sha256sum` names a path that does not exist on tree.
-- `Governance/docs/Ξ-Constitutional-Core.md:5` and its byte-identical copy `Governance/Archive_and_Drafts/Ξ-Constitutional-Core.md:5` both carry `**LawfulRecursionHash:** [computed on commit]`, a placeholder `packages/multiplicity-crypto/docs/ADR-074-LawfulRecursionHash.md:30` (Status: Accepted) forbids shipping.
+- `Governance/docs/Ξ-Constitutional-Core.md:5` and its byte-identical copy `Governance/Archive_and_Drafts/Ξ-Constitutional-Core.md:5` both carry `**LawfulRecursionHash:** [computed on commit]`, a placeholder `packages/multiplicity-crypto/docs/ADR-074-LawfulRecursionHash.md:30` (Status: Accepted) forbids shipping. That ADR is **absent from `main`**, so the prohibition is checkable only on this working tree; the placeholders themselves are on `main`.
 - A third byte-identical copy exists at `packages/rust/apex/apex-goldilocks/docs/governance/Ξ-Constitutional-Core.md`. No hash pins any of the three.
 
 Recorded so that this fragment's own anchor is not mistaken for a repair of those. Repair is a separate change against a separate owner.
@@ -271,6 +271,8 @@ Which anchors survive outside the branch tree on which this fragment was written
 | This fragment's digest | same; **not** from `main` (`git ls-tree main -- …` empty), **not** from `PhaseMirror/The-Foundry` |
 | `c7187410` code facts (`pirtm-monitor`, `engine`) | `main`, `The-Foundry/main`, and this tree |
 | `8a0b6d9a` and the empty `c7187410..8a0b6d9a` diff | this working tree only; `8a0b6d9a` is not on `main` |
+| G3, the ADR-073 contractivity gate and its `feedback.ts` | **local-tree only** — absent from `main`; gate count is two there |
+| ADR-074's prohibition on placeholder hashes | **local-tree only** — the ADR is absent from `main`, though the placeholders it targets are on `main` |
 | `templateArxiv.tex` L222, L318, L584–626, L640, L644 | **any tree containing the note** |
 | `Ξ-Constitutional-Core.md` digest `8167719f…` | any tree containing it; the `Archive_and_Drafts` copy is byte-identical |
 | `certify_commutator` signature, doc comment, Frobenius line, and `norm <= C_MAX` gate | any tree containing `packages/rust/pirtm-monitor/` |
