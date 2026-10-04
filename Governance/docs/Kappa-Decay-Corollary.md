@@ -4,9 +4,10 @@
 # Corollary: The Free-α κ Schedule Is α := 4β, and α Is Absent From the Contraction Gate
 
 **Fragment ID:** `KAPPA-DECAY-COROLLARY-001`
-**Version:** 1.0 (4 October 2026)
-**Status:** Proposed — corollary recorded; **adoption blocked**. See §6 and DEFECT-1..DEFECT-4.
-**Type:** Derived corollary of an on-tree note. Amends nothing in the parent fragment.
+**Version:** 1.1 (4 October 2026)
+**Supersedes:** fragment digest `2137aef57499521a76cf0a42524c29eff4b44d29f569da489201d9d94a816d8b` (v1.0). That digest is **retired**: v1.0 mis-attributed the relaxation-time inequality at L640 to the asymmetric-mass case, and omitted DEFECT-5 and DEFECT-7. Corrections are itemised in §8.
+**Status:** Proposed — corollary recorded; **adoption blocked**. See §6 and DEFECT-1..DEFECT-7.
+**Provenance:** this fragment exists only in the working tree of branch `adr/0139-lexlean-declared-submodule` (commit `cbb967ef`). It is **not on `main`** (tip `c7187410`) and **not on `PhaseMirror/The-Foundry`**. Nothing here is ratified. See §8.
 **Parent fragment:** `Governance/docs/Ξ-Constitutional-Core.md` (LawfulRecursionVersion 1.0, 16 April 2026)
 **Derived from:** `Governance/publications/Endogenous Spectral Self-Regulation in Tensor-Extended DAEs/templateArxiv.tex` (5 May 2026)
 
@@ -45,9 +46,20 @@ The factor **4** is not a tuning constant. It is $\partial H/\partial\kappa = 4\
 
 $$\boxed{\;\alpha := 4\beta\;}$$
 
-Corollary (rate-normalized relaxation time). With $H(t) = 2\kappa_0^2 e^{-8\beta t}$ (L629–631), the time to reach $H(t_\alpha') \le \alpha' H(0)$ for $0<\alpha'<1$ is, from L632–641, $t_{\alpha'} \ge \ln(1/\alpha')/(8\beta)$. Substituting $\alpha := 4\beta$ eliminates β:
+**Corollary C-0 (relaxation time — symmetric-mass case only).** All of §2's relaxation-time algebra presupposes $H(\kappa)=2\kappa^2$, i.e. $m_1 = m_2$ and $\Delta(\kappa)=2\lvert\kappa\rvert$ (L584–586). In the asymmetric case the gap has a nonzero floor, so $H$ approaches a positive constant (L318) and **no** $t_{\alpha'}$ exists for $\alpha' < H_\infty/H(0)$; the boxed rate formula is undefined there, not merely loosened. Do not cite it for $m_1 \neq m_2$.
 
-$$\boxed{\;t_{\alpha'} \ge \frac{\ln(1/\alpha')}{2\alpha}\;}$$
+**Corollary C-0′ (the parent is internally inconsistent; both forms are anchored).** The parent states the relaxation time twice, with different relation symbols:
+
+| Parent location | Relation | Context |
+|---|---|---|
+| Main text, L222 | $t_\alpha = \ln(1/\alpha)/(8\beta)$ | equality |
+| Appendix B.3, L640 | $t_\alpha \ge \ln(1/\alpha)/(8\beta)$ | inequality |
+
+Both are on tree. Since $H(t)$ is strictly decreasing in $t$ for $\beta>0$, $\kappa_0>0$, the *boundary* — the first time the condition is attained — is the equality, and the *admissible set* $\{t : H(t)\le\alpha H(0)\}$ is $[\,t_\alpha,\infty)$ with the same $t_\alpha$, i.e. the inequality. Neither symbol is wrong; the parent simply never reconciles them, and DEFECT-6 records the drift. The distinction matters for a reader who treats the appendix's $\ge$ as a reportable lower bound and compares it against an independently measured crossing time.
+
+Corollary (rate-normalized relaxation time). With $H(t) = 2\kappa_0^2 e^{-8\beta t}$ (L629–631) and the condition $H(t_{\alpha'}) \le \alpha' H(0)$ for $0<\alpha'<1$ (L632–638), the boundary time is $t_{\alpha'} = \ln(1/\alpha')/(8\beta)$. Substituting $\alpha := 4\beta$ eliminates β:
+
+$$\boxed{\;t_{\alpha'} = \frac{\ln(1/\alpha')}{2\alpha}\;}$$
 
 The relaxation time is a function of the *rate* alone. β and α carry no independent content: any claim of the form "tune β for the timescale" and "tune α for the timescale" is the same claim, and dropping the $4\beta$ derivation deletes the gap Lyapunov that is the sole justification for the decay.
 
@@ -88,7 +100,8 @@ Consequences for the governance surface:
 
 1. Any schedule of the form $\kappa_0 e^{-\alpha t}$ is admissible for the parent gate **iff** its $t=0$ value passes the static gate. The gate is checked at $t=0$ and nowhere else.
 2. A decaying κ is therefore *governed by*, and adds nothing to, the static $0<\kappa<1$ budget. It is not a relaxation of §4; it is a restatement of it plus a decay.
-3. The relaxation time (§2) is the only quantity α genuinely controls, and it is bounded below by the parent's own value (L640), which the parent writes as an inequality for the asymmetric-mass case where the gap has a floor (L318).
+3. The relaxation time (§2, Corollary C-0) is the only quantity α genuinely controls, and it exists in the symmetric-mass case only. In the asymmetric case $H\to H_\infty>0$ (L318) and there is no $t_{\alpha'}$; the formula is undefined, not relaxed.
+4. α does not appear in $c$, in the margin $M(1-\kappa_0)$, or in the admissibility condition $t_{\alpha'}$. Every one of those is a function of the shape constant $M$ and the initial gain $\kappa_0$ alone.
 
 ---
 
@@ -157,6 +170,9 @@ The gain therefore ramps the ρ kill-gate (`rho_halt = 1.0`, L22, L168) monotoni
 | DEFECT-2 | `ALPHA` is unbound: no β, no $H$, no Lyapunov certificate; $\alpha := 4\beta$ is unbacked | `lib.rs:26`; zero `beta` matches in crate |
 | DEFECT-3 | `apply_gain`'s $(1-\kappa)^{+}$ is anti-monotone in the decay: gate sensitivity tracks uptime, not measured drift, so equal drift magnitudes get opposite verdicts by time | `lib.rs:92–96`, §4 table |
 | DEFECT-4 | Restart resets $\kappa \to \kappa_0$, re-arming total suppression and hiding faults escalated late in the prior run | `lib.rs:81` |
+| DEFECT-5 | `certify_constants.rs` doc comment states the commutator bound as $C\le 2.71$ (L8) while the enforced constant is `C_MAX = 4.0` (L26); the gate at L132 and the test at L234 both check against 4.0. Compounding this, the quantity being certified is scaled to meet the threshold it is checked against (`H_SCALE = 0.02`, L151, "adjusted to meet C_MAX"; L217 "modest grid size to keep the commutator norm within C_MAX"), so the certification is circular and the documented 2.71 is unenforced in either code or test | `certify_constants.rs:8, 26, 132, 151, 217, 234` |
+| DEFECT-6 | The parent note states its relaxation time three times, with both relation symbols: equality at main-text L222 ($t_\alpha=\ln(1/\alpha)/(8\beta)$) and again at L644 ($t_{95}=\ln20/(8\beta)$), inequality at appendix L640 ($t_\alpha\ge\ln(1/\alpha)/(8\beta)$), never reconciled. All three derive from the same symmetric-mass $H=2\kappa^2$. A downstream reader cannot tell whether $t_\alpha$ is a boundary or a bound without re-deriving the monotonicity of $H$. Not a mathematical error; an unreconciled-duplication defect that will propagate into any α := 4β citation | `templateArxiv.tex:222, 640, 644` |
+| DEFECT-7 | `certify_commutator`'s doc comment states its **spectral norm** is computed (L126); L131 computes `sqrt(sum of all squared entries)`, the **Frobenius** norm. Since $\lVert A\rVert_F \ge \lVert A\rVert_{\mathrm{op}}$, the mismatch is *conservative* for the pass/fail gate — it cannot accept a matrix the spectral norm would reject — but the returned `f64` is not the quantity the doc names, and L8's "commutator norm" is likewise unlabelled. Any consumer comparing this value against a spectral-norm budget is comparing incommensurable quantities. Compounds DEFECT-5: the gate is a loose upper bound, checked against an unenforced 4.0, on a quantity scaled to pass it | `certify_constants.rs:8, 126, 131` |
 
 Adoption of any decaying κ requires **all** of the following, none of which this fragment supplies:
 
@@ -180,3 +196,42 @@ Adoption of any decaying κ requires **all** of the following, none of which thi
 - A third byte-identical copy exists at `packages/rust/apex/apex-goldilocks/docs/governance/Ξ-Constitutional-Core.md`; no hash pins any of the three.
 
 Recorded here so that this fragment's own anchor is not mistaken for a repair of those. Repair is a separate change against a separate owner.
+
+---
+
+## 8. Corrections to v1.0, and the standing of this fragment
+
+### 8.1 Corrections applied
+
+| # | v1.0 said | v1.1 says |
+|---|---|---|
+| 1 | §2 attributed the appendix inequality at L640 to "the asymmetric-mass case where the gap has a floor (L318)" | **Wrong attribution.** L640 sits in appendix B.3, which follows B.1's symmetric-mass heading and derives from $H(\kappa)=2\kappa^2$. The asymmetric remark at L318 is a separate statement in §3.4 and concerns the *existence* of a relaxation time, not its sign. Corrected via Corollary C-0 and consequence 3 of §3. |
+| 2 | §2 presented $t_{\alpha'}\ge\ln(1/\alpha')/(2\alpha)$ as the parent's single form | The parent is internally inconsistent: equality at main-text L222, inequality at appendix L640. Both are on tree. The boundary time is the equality. Corrected via Corollary C-0′, with the drift recorded as part of DEFECT-5. |
+| 3 | §4 prose read "Identical at commit `c7187410` and at current HEAD `8a0b6d9a`" with no method stated | Retained, and now bounded precisely. `git diff c7187410 8a0b6d9a -- packages/rust/pirtm-monitor/src/lib.rs packages/rust/engine/src/wasm_api.rs` is empty. `8a0b6d9abec1d954c6204af5d57485227936bc33` is a real object in this checkout and an ancestor of HEAD, so the diff is reproducible **here**. It is **not** on `main` (`git merge-base --is-ancestor 8a0b6d9a main` fails), so the row remains a local-only claim: no one with only `main` or only `PhaseMirror/The-Foundry` can rerun it. |
+| 4 | No DEFECT-5 | Added: `certify_constants.rs` documents $C\le 2.71$ (L8), enforces `C_MAX = 4.0` (L26, L132, L234), and scales the certified quantity to meet the threshold it is checked against (L151, L217). |
+| 5 | Header made no claim about branch placement | Header now states the fragment is confined to branch `adr/0139-lexlean-declared-submodule` and absent from `main`. |
+| 6 | §4 gave the remote name as `origin` | The only remote in this clone is named **`The-Foundry`** (`.git/config` → `[remote "The-Foundry"]`, url `https://github.com/PhaseMirror/The-Foundry.git`). `git remote get-url origin` returns `No such remote 'origin'`. Branch sections in `.git/config` resolve through `remote = The-Foundry`. Corrected in §8.1 row 3 and in §8.3. |
+| 7 | DEFECT-6 cited two on-tree forms | The parent states relaxation time three times, not twice: equality at L222 **and** L644, inequality at L640. |
+| 8 | No DEFECT-7 | Added: `certify_commutator` documents a spectral norm (L126) and computes a Frobenius norm (L131). Conservative in direction, mislabelled in identity. |
+
+### 8.2 What the v1.0 digest did and did not establish
+
+Digest `2137aef57499521a76cf0a42524c29eff4b44d29f569da489201d9d94a816d8b` is **retired**. It attests to the v1.0 text only, and that text carried corrections 1 and 4 above. Any external record citing `2137aef5…` must be re-pointed at the current sidecar digest.
+
+Two further limits on what any digest of this fragment can mean:
+
+- It is verifiable only against the working tree of `adr/0139-lexlean-declared-submodule`. It is not reproducible from `main`, whose tip is `c7187410`, nor from any Drive-linked view, which does not contain this path.
+- A content hash attests to *bytes*, never to adoption. §6's non-authorization clause and the `Proposed` status survive every digest recomputation. Landing this file on `main` discharges none of DEFECT-1…DEFECT-7 and creates no authority to substitute a decaying κ into `λ_p`.
+
+### 8.3 Where each anchor is verifiable
+
+| Anchor | Verifiable from |
+|---|---|
+| This fragment's bytes (`Governance/docs/Kappa-Decay-Corollary.md`) | this working tree only — branch `adr/0139-lexlean-declared-submodule` |
+| Fragment digest | same; **not** from `main` (`git ls-tree main -- …` empty), **not** from `The-Foundry/main` |
+| `c7187410` code facts (`pirtm-monitor`, `engine`) | `main`, `The-Foundry/main`, and this tree |
+| `8a0b6d9a` and the zero-line `c7187410..8a0b6d9a` diff | this working tree only; not on `main` |
+| `templateArxiv.tex` L222/L318/L584–626/L640/L644 | any tree containing the note — symmetric-mass derivation, independent of all branch claims |
+| `Ξ-Constitutional-Core.md` digest `8167719f…` | any tree containing it; `Governance/Archive_and_Drafts/` copy is byte-identical |
+
+The parent note's relaxation-time algebra is the one load-bearing claim in this fragment that is **not** branch-dependent, and it is the part that survives independent checking.
