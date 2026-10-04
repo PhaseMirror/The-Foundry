@@ -183,9 +183,16 @@ def acknowledgement_for(lockstep: dict, path: str, pin: str) -> dict | None:
 
 
 def check_pins(gitlinks, declared, lockstep, probe: bool, strict: bool):
-    """Returns (errors, warnings)."""
+    """Returns (errors, warnings, grades).
+
+    `grades` records every pin the gate actually measured, in the order measured, so
+    the run's verdict is auditable from its own output rather than inferred from which
+    lines are absent. A gate that prints only its failures cannot be cited as evidence
+    that a pin was checked and passed.
+    """
     errors: list[str] = []
     warnings: list[str] = []
+    grades: list[tuple[str, str, str]] = []
     for path, pin in gitlinks:
         if exempt(path) or path not in declared:
             continue
@@ -206,11 +213,14 @@ def check_pins(gitlinks, declared, lockstep, probe: bool, strict: bool):
             warnings.append(
                 f"{path}: not checked out and remote probing is off; pin unverified"
             )
+            grades.append((path, pin, "UNGRADED (submodule not checked out)"))
             continue
         if not probe:
+            grades.append((path, pin, "UNGRADED (offline run did not contact the remote)"))
             continue
 
         grade, detail = probe_remote(url, pin)
+        grades.append((path, pin, f"{grade} ({detail})"))
         line = f"{path}: pin {pin[:12]} is {grade} ({detail})"
         ack = acknowledgement_for(lockstep, path, pin)
         if grade == GONE:
@@ -231,7 +241,7 @@ def check_pins(gitlinks, declared, lockstep, probe: bool, strict: bool):
                 errors.append(line + "; strict mode treats an unvouched pin as fatal")
             else:
                 warnings.append(line)
-    return errors, warnings
+    return errors, warnings, grades
 
 
 def check_lockstep(gitlinks) -> list[str]:
@@ -336,7 +346,7 @@ def main() -> int:
     lockstep = read_lockstep()
 
     errors = check_declaration(gitlinks, declared)
-    pin_errors, pin_warnings = check_pins(
+    pin_errors, pin_warnings, grades = check_pins(
         gitlinks, declared, lockstep, args.probe_remote, args.strict
     )
     lockstep_errors = check_lockstep(gitlinks)
@@ -348,6 +358,10 @@ def main() -> int:
     print(f".gitmodules entries: {len(declared)}")
     print(f"lockstep record: {LOCKSTEP_FILE} ({'found' if lockstep else 'MISSING'})")
     print(f"remote probing: {'on' if args.probe_remote else 'off'}")
+    if grades:
+        print("pin grades:")
+        for path, pin, grade in grades:
+            print(f"  {path} {pin[:12]} {grade}")
 
     for warning in pin_warnings:
         print(f"WARNING: {warning}")

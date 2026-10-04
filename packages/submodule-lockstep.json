@@ -1,0 +1,41 @@
+{
+  "comment": "Submodule lockstep record for the Packages repository (ADR-0139). This repository is a separate git repository nested inside PhaseMirror/The-Foundry, which pins the same dependencies at `packages/*` paths. The two records must agree on the commit each dependency is pinned at, or a build resolves different source depending on which repository it runs from. `.lake/packages/` gitlinks are omitted: Lake owns them and writes no .gitmodules entry. Verified by The-Foundry's copy of the gate: python3 scripts/check_submodule_integrity.py --root packages --probe-remote",
+  "record_version": "1.0.0",
+  "generated": "2026-10-03",
+  "submodules": [
+    {
+      "path": "lexlean",
+      "url": "https://github.com/PhaseMirror/LexLean.git",
+      "commit": "1c3e166581347f6d8c66e7ff12e2e7bdaff9b454",
+      "grade": "ADVERTISED",
+      "lexlean_version": "0.3.0",
+      "lexlean_language": "1.0",
+      "compiler_semantics": "95deb33a8d416d7bf60f02a36e251a71c3ee6f046b7e475d7bae2fc5ddc3767d",
+      "digest_binary": "lexlean",
+      "note": "Repointed from b54cd15, which upstream no longer advertises. Must stay equal to the commit The-Foundry records at packages/lexlean."
+    },
+    {
+      "path": "PIRTM",
+      "url": "https://github.com/PhaseMirror/PIRTM.git",
+      "commit": "ea5ba264879ff5cfc9dd00686c226c04771614b2",
+      "grade": "ADVERTISED",
+      "note": "Pin equals the current remote main head, so a ref names it."
+    },
+    {
+      "path": "prism",
+      "url": "https://github.com/UOR-Foundation/PrismPM.git",
+      "commit": "eea3ec8ea9e5fb395970cd933a11a6251032f587",
+      "grade": "UNVOUCHED",
+      "note": "An ancestor of the remote main head but named by no ref, so it survives only on the remote's object-retention schedule. Same stranded class as the LexLean pin ADR-0139 fixed. Tracked by ADR-0140; advanced separately because it is a 136-commit, 70k-line dependency upgrade. Must stay equal to the commit The-Foundry records at packages/prism."
+    }
+  ],
+  "acknowledged_unresolved": [
+    {
+      "path": "prism",
+      "commit": "eea3ec8ea9e5fb395970cd933a11a6251032f587",
+      "condition": "UNVOUCHED",
+      "tracked_by": "ADR-0140",
+      "reason": "The pin is an ancestor of the remote main head but is named by no ref. Fail-closed: The-Foundry's gate reports this as an error if the pin becomes ADVERTISED or if HEAD stops pinning this commit."
+    }
+  ]
+}

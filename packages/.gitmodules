@@ -1,0 +1,29 @@
+# Submodule declarations (ADR-0139).
+#
+# Every gitlink recorded in HEAD must appear here with a URL, or no fresh
+# clone can fetch it: `git clone --recursive` leaves an empty directory and
+# `git submodule status` aborts with "no submodule mapping found".
+#
+# Gitlinks under a `.lake/packages/` directory are intentionally absent. Lake
+# records its vendored dependencies as gitlinks for reproducibility and owns
+# them; a hand-written entry here would be undone by the next `lake update`.
+# The-Foundry's `scripts/check_submodule_integrity.py` applies the same
+# exemption to the same paths.
+#
+# One upstream, one path. `lexlean` is the canonical LexLean path; the former
+# `LexLean` alias is removed because two paths for one upstream is what let two
+# copies drift apart unnoticed. Both repositories must agree on this, since
+# The-Foundry pins the same dependency at `packages/lexlean`.
+
+[submodule "lexlean"]
+	path = lexlean
+	url = https://github.com/PhaseMirror/LexLean.git
+	branch = main
+[submodule "PIRTM"]
+	path = PIRTM
+	url = https://github.com/PhaseMirror/PIRTM.git
+	branch = main
+[submodule "prism"]
+	path = prism
+	url = https://github.com/UOR-Foundation/PrismPM.git
+	branch = main
